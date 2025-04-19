@@ -1,0 +1,23 @@
+# Xcode
+DerivedData/
+*.xcworkspace
+*.xcuserstate
+xcuserdata/
+*.xcassets
+
+# SwiftPM
+.build/
+Packages/
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+
+# SwiftLint
+.swiftlint.yml
+
+# User-specific
+.DS_Store
