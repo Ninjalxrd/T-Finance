@@ -16,13 +16,14 @@ protocol DistributionCoordinatorProtocol: AnyObject {
 
 final class DistributionCoordinator: DistributionCoordinatorProtocol {
     // MARK: - Properties
+
     let navigationController: UINavigationController
     private let transitionDelegate = CustomTransitioningDelegate()
     private var cancellables = Set<AnyCancellable>()
     private var distributionViewModel: DistributionViewModel?
 
     // MARK: - Init
-    
+
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
@@ -38,7 +39,7 @@ final class DistributionCoordinator: DistributionCoordinatorProtocol {
     }
     
     // MARK: - Public Methods
-    
+
     func openProcentDetailsScreen(budget: Int, selectedCategory: Category) {
         let procentDetailsController = ProcentDetailsController(
             budget: budget,

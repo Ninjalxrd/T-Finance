@@ -20,6 +20,7 @@ final class ProcentDetailsController: UIViewController {
     let onAddCategory = PassthroughSubject<Category, Never>()
     
     // MARK: - Lifecycle
+    
     init(budget: Int, remainingPercent: Int, selectedCategory: Category) {
         self.selectedCategory = selectedCategory
         self.budget = budget
@@ -141,6 +142,7 @@ final class ProcentDetailsController: UIViewController {
     }
     
     // MARK: - Keyboard
+
     
     @objc private func handleKeyboardWillChange(notification: Notification) {
         guard

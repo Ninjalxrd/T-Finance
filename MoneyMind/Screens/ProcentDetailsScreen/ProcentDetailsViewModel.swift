@@ -13,11 +13,13 @@ final class ProcentDetailsViewModel {
     private let totalBudget: Int
     
     // MARK: - Published Properties
+
     @Published private(set) var moneyValue: Int = 0
     @Published private(set) var remainingValue: Int = 0
     @Published private(set) var remainingPercent: Int
     
     // MARK: - Init
+
     init(remainingValue: Int, remainingPercent: Int) {
         self.remainingValue = remainingValue
         self.remainingPercent = remainingPercent

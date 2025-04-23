@@ -20,6 +20,11 @@ final class DistributionViewModel {
     @Published var remainingPercent: Int = 100
 
     // MARK: - Init
+    @Published var pickedCategories: [Category] = []
+    @Published var availableCategories: [Category] = []
+    @Published var remainingPercent: Int = 100
+    weak var coordinator: DistributionCoordinator?
+    var totalBudget: Int
     
     init(totalBudget: Int, coordinator: DistributionCoordinator) {
         self.coordinator = coordinator

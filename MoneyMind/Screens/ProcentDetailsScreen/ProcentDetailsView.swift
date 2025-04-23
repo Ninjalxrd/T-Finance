@@ -88,6 +88,7 @@ final class ProcentDetailsView: UIView {
         textField.becomeFirstResponder()
         return textField
     }()
+
     
     lazy var procentsBalanceLabel: UILabel = {
         let label = UILabel()
@@ -217,7 +218,6 @@ final class ProcentDetailsView: UIView {
         contentView.addSubview(balanceStack)
         contentView.addSubview(addButton)
         addGestureRecognizer(tapGestureRecognizer)
-        
         setupProcentsView()
         setupConstraints()
     }

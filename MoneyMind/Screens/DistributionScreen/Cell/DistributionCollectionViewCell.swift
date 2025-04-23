@@ -13,7 +13,6 @@ final class DistributionCollectionViewCell: UICollectionViewCell {
     var isPicked: Bool = false
     
     // MARK: - Init
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
