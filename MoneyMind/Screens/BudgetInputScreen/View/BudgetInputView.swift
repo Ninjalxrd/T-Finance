@@ -91,7 +91,6 @@ final class BudgetInputView: UIView {
     
     // MARK: - Layout & Setup
 
-    
     private func setupUI() {
         backgroundColor = .background
         addSubview(budgetInputStack)

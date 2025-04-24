@@ -104,7 +104,7 @@ final class EnterNumberController: UIViewController {
     }
 }
 
-// MARK: - UITextFieldDelegate
+    // MARK: - UITextFieldDelegate
 
 extension EnterNumberController: UITextFieldDelegate {
     func textField(

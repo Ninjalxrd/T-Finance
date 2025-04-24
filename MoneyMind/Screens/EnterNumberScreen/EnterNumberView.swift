@@ -167,7 +167,7 @@ final class EnterNumberView: UIView {
     }
 }
 
-// MARK: - UIGestureRecognizerDelegate
+    // MARK: - UIGestureRecognizerDelegate
 extension EnterNumberView:
     UIGestureRecognizerDelegate {
     func gestureRecognizer(

@@ -143,7 +143,6 @@ final class ProcentDetailsController: UIViewController {
     
     // MARK: - Keyboard
 
-    
     @objc private func handleKeyboardWillChange(notification: Notification) {
         guard
             let userInfo = notification.userInfo,
@@ -165,7 +164,7 @@ final class ProcentDetailsController: UIViewController {
     }
 }
 
-// MARK: - UITextFieldDelegate
+    // MARK: - UITextFieldDelegate
 
 extension ProcentDetailsController: UITextFieldDelegate {
     func textField(
