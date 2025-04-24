@@ -8,15 +8,21 @@
 import UIKit
 import Combine
 
+// MARK: - Enum
+
 enum Sections: CaseIterable {
     case picked
     case available
 }
 
 class DistributionViewController: UIViewController {
+    // MARK: - Properties
+    
     private let distributionView: DistributionView = .init()
     private let distributionViewModel: DistributionViewModel
     private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - Lifecycle
     
     init(distributionViewModel: DistributionViewModel) {
         self.distributionViewModel = distributionViewModel
@@ -43,6 +49,8 @@ class DistributionViewController: UIViewController {
         bindViewModel()
     }
     
+    // MARK: Setup Methods
+    
     private func addCollectionViewDependencies() {
         distributionView.categoriesCollectionView.delegate = self
         distributionView.categoriesCollectionView.dataSource = self
@@ -65,6 +73,8 @@ class DistributionViewController: UIViewController {
             .store(in: &cancellables)
     }
 }
+
+// MARK: Extensions of UICollectionView
 
 extension DistributionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

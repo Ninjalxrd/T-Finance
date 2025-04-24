@@ -11,14 +11,18 @@ import SnapKit
 import Combine
 
 final class DistributionView: UIView {
+    // MARK: - Publishers
     private let nextScreenSubject = PassthroughSubject<Void, Never>()
     var nextScreenPublisher: AnyPublisher<Void, Never> {
         nextScreenSubject.eraseToAnyPublisher()
     }
+    
+    // MARK: - Properties
     private var cancellables = Set<AnyCancellable>()
     private var entries: [PieChartDataEntry] = []
     private var dataSetColors: [NSUIColor] = []
     
+    // MARK: - Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -29,6 +33,7 @@ final class DistributionView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - UI Components
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 2
@@ -76,23 +81,48 @@ final class DistributionView: UIView {
         return button
     }()
     
+    private lazy var nextScreenAction = UIAction { [weak self] _ in
+        self?.nextScreenSubject.send()
+    }
+    
+    // MARK: - Public Methods
     func setNextScreenButtonEnabled(_ isEnabled: Bool) {
         nextScreenButton.isEnabled = isEnabled
         nextScreenButton.alpha = isEnabled ? 1.0 : 0.5
     }
     
-    private lazy var nextScreenAction = UIAction { [weak self] _ in
-        self?.nextScreenSubject.send()
+    func updateChart(with categories: [Category]) {
+        guard !categories.isEmpty else {
+            setupDefaultChart()
+            return
+        }
+        
+        entries = categories.map { category in
+            return PieChartDataEntry(value: Double(category.percent))
+        }
+        
+        dataSetColors = categories.map { category in
+            UIColor(hex: category.backgroundColor) ?? .black
+        }
+        
+        let dataSet = PieChartDataSet(entries: entries)
+        dataSet.colors = dataSetColors
+        dataSet.drawValuesEnabled = false
+        
+        chartView.data = PieChartData(dataSet: dataSet)
+        chartView.animate(yAxisDuration: 0.4, easingOption: .linear)
+        chartView.notifyDataSetChanged()
     }
     
+    // MARK: - Private Methods
     private func createLayout() -> UICollectionViewCompositionalLayout {
         let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(
-            widthDimension: .estimated(150),
-            heightDimension: .absolute(32)))
+            widthDimension: .estimated(CGFloat.estimatedCellWidth),
+            heightDimension: .absolute(CGFloat.cellHeight)))
 
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1),
-            heightDimension: .absolute(32))
+            heightDimension: .absolute(CGFloat.cellHeight))
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize,
             subitems: [item])
@@ -119,29 +149,6 @@ final class DistributionView: UIView {
         chartView.animate(yAxisDuration: 0.7, easingOption: .easeOutBack)
     }
     
-    func updateChart(with categories: [Category]) {
-        guard !categories.isEmpty else {
-            setupDefaultChart()
-            return
-        }
-        
-        entries = categories.map { category in
-            return PieChartDataEntry(value: Double(category.percent))
-        }
-        
-        dataSetColors = categories.map { category in
-            UIColor(hex: category.backgroundColor) ?? .black
-        }
-        
-        let dataSet = PieChartDataSet(entries: entries)
-        dataSet.colors = dataSetColors
-        dataSet.drawValuesEnabled = false
-        
-        chartView.data = PieChartData(dataSet: dataSet)
-        chartView.animate(yAxisDuration: 0.4, easingOption: .linear)
-        chartView.notifyDataSetChanged()
-    }
-    
     private func setupUI() {
         addSubview(titleLabel)
         addSubview(chartView)
@@ -161,7 +168,7 @@ final class DistributionView: UIView {
         chartView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(Spacing.large)
             make.centerX.equalToSuperview()
-            make.width.height.equalTo(240)
+            make.width.height.equalTo(CGFloat.chartSize)
         }
         
         categoriesCollectionView.snp.makeConstraints { make in
@@ -175,7 +182,15 @@ final class DistributionView: UIView {
             make.leading.equalToSuperview().offset(Spacing.medium)
             make.trailing.equalToSuperview().offset(-Spacing.medium)
             make.bottom.equalTo(safeAreaLayoutGuide.snp.bottom).offset(-Spacing.medium)
-            make.height.equalTo(56)
+            make.height.equalTo(CGFloat.buttonHeight)
         }
     }
+}
+
+// MARK: - Constants
+private extension CGFloat {
+    static let chartSize: CGFloat = 240
+    static let buttonHeight: CGFloat = 56
+    static let cellHeight: CGFloat = 32
+    static let estimatedCellWidth: CGFloat = 150
 }
