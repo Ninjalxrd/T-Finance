@@ -149,7 +149,7 @@ final class EnterNumberView: UIView {
         logoStack.snp.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(Spacing.large)
             make.centerX.equalToSuperview()
-            make.height.equalTo(64)
+            make.height.equalTo(CGFloat.logoStackHeight)
         }
         
         enterNumberStack.snp.makeConstraints { make in
@@ -162,7 +162,7 @@ final class EnterNumberView: UIView {
         bottomBorderImage.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview().offset(Spacing.medium)
-            make.height.equalTo(237)
+            make.height.equalTo(CGFloat.bottomBorderImageHeight)
         }
     }
 }
@@ -176,4 +176,13 @@ extension EnterNumberView:
     ) -> Bool {
         return true
     }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        numberTextField.bounds.contains(touch.location(in: numberTextField)) ? false : true    
+    }
+}
+
+private extension CGFloat {
+    static let logoStackHeight: CGFloat = 64
+    static let bottomBorderImageHeight: CGFloat = 237
 }
