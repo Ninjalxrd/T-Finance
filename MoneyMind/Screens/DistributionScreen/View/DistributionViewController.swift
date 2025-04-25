@@ -42,10 +42,6 @@ class DistributionViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .background
         addCollectionViewDependencies()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         bindViewModel()
     }
     

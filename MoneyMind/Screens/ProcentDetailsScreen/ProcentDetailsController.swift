@@ -42,16 +42,12 @@ final class ProcentDetailsController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupDelegates()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         setupCallbacks()
         bindTextField()
         bindViewModel()
         addObserver()
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
