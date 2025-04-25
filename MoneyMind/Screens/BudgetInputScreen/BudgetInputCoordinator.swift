@@ -7,16 +7,17 @@
 import UIKit
 
 final class BudgetInputCoordinator {
-    // MARK: Properties
+    // MARK: - Properties
+    
     var navigationController: UINavigationController
     private var distributionCoordinator: DistributionCoordinator?
 
-    // MARK: Init
+    // MARK: - Init
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
 
-    // MARK: Public
+    // MARK: - Public
     func start() {
         let viewModel = BudgetInputViewModel(coordinator: self)
         let controller = BudgetInputController(viewModel: viewModel)

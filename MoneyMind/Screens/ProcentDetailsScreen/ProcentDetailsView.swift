@@ -52,11 +52,8 @@ final class ProcentDetailsView: UIView {
     }()
     
     private lazy var titleLabel: UILabel = {
-        let label = UILabel()
+        let label = DefaultElements.defaultTitleLabel()
         label.numberOfLines = 2
-        label.textAlignment = .left
-        label.font = Font.smallTitle.font
-        label.textColor = .text
         return label
     }()
     
@@ -175,13 +172,8 @@ final class ProcentDetailsView: UIView {
     }()
     
     private lazy var addButton: UIButton = {
-        let button = UIButton(primaryAction: addCategoryAction)
+        let button = DefaultElements.defaultYellowButton(primaryAction: addCategoryAction)
         button.setTitle("Добавить", for: .normal)
-        button.backgroundColor = .brand
-        button.titleLabel?.font = Font.button.font
-        button.tintColor = .text
-        button.layer.cornerRadius = Size.cornerRadius
-        button.clipsToBounds = true
         return button
     }()
     

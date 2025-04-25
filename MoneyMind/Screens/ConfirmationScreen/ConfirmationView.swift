@@ -9,12 +9,12 @@ import UIKit
 import Combine
 
 final class ConfirmationView: UIView {
-    // MARK: - Publishers
+    // MARK: - Properties
     private let newCodeSubject = PassthroughSubject<Void, Never>()
     var newCodePublisher: AnyPublisher<Void, Never> {
         newCodeSubject.eraseToAnyPublisher()
     }
-    private var cancellables: Set<AnyCancellable> = []
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Init
 
@@ -30,11 +30,8 @@ final class ConfirmationView: UIView {
     // MARK: - UI Components
     
     private lazy var titleLabel: UILabel = {
-        let label = UILabel()
+        let label = DefaultElements.defaultTitleLabel()
         label.numberOfLines = 1
-        label.textAlignment = .left
-        label.font = Font.title.font
-        label.textColor = .text
         label.text = "Подтверждение"
         return label
     }()
@@ -50,23 +47,12 @@ final class ConfirmationView: UIView {
         return label
     }()
     
-    private lazy var codeTextField: UITextField = {
-        let textField = UITextField()
+    lazy var codeTextField: UITextField = {
+        let textField = DefaultElements.defaultTextField()
         textField.placeholder = "СМС-код"
         textField.textAlignment = .center
-        textField.font = Font.subtitle.font
-        textField.layer.cornerRadius = Size.cornerRadius
-        textField.backgroundColor = .component
         textField.keyboardType = .numberPad
-        textField.clipsToBounds = true
-        textField.heightAnchor.constraint(equalToConstant: Size.fieldHeight).isActive = true
         textField.widthAnchor.constraint(equalToConstant: CGFloat.codeStackWidth).isActive = true
-        
-        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: Spacing.medium, height: 0))
-        textField.leftViewMode = .always
-        textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: Spacing.medium, height: 0))
-        textField.rightViewMode = .always
-        
         return textField
     }()
     

@@ -35,6 +35,11 @@ final class ConfirmationViewController: UIViewController {
         onStartTimer()
         bindViewModel()
         setupCallbacks()
+        setupDelegates()
+    }
+    
+    private func setupDelegates() {
+        confirmationView.codeTextField.delegate = self
     }
     
     private func bindViewModel() {
@@ -69,6 +74,38 @@ final class ConfirmationViewController: UIViewController {
     }
 }
 
-// MARK: - Timer
+extension ConfirmationViewController: UITextFieldDelegate {
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        let currentText = textField.text ?? ""
+        guard let stringRange = Range(range, in: currentText) else { return false }
+        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
+        let isNumeric = updatedText.allSatisfy { $0.isNumber }
+        return updatedText.count <= 4 && isNumeric
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        guard let text = textField.text, text.count == 4 else { return }
+        guard let code = Int(text) else { return }
+        let result = viewModel.validateCode(with: code)
+        if result == false {
+            shakeTextField(textField)
+        }
+    }
+}
+
+// MARK: - Animations
 extension ConfirmationViewController {
+    private func shakeTextField(_ textField: UITextField) {
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.duration = 0.07
+        animation.repeatCount = 3
+        animation.autoreverses = true
+        animation.fromValue = NSValue(cgPoint: CGPoint(x: textField.center.x - 5, y: textField.center.y))
+        animation.toValue = NSValue(cgPoint: CGPoint(x: textField.center.x + 5, y: textField.center.y))
+        textField.layer.add(animation, forKey: "position")
+    }
 }

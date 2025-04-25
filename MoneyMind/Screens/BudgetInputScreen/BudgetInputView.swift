@@ -31,41 +31,23 @@ final class BudgetInputView: UIView {
     // MARK: - UI Components
     
     private lazy var titleLabel: UILabel = {
-        let label = UILabel()
+        let label = DefaultElements.defaultTitleLabel()
         label.numberOfLines = 2
-        label.textAlignment = .left
-        label.font = Font.title.font
-        label.textColor = .text
         label.text = "Введите сумму\nвашего дохода"
         return label
     }()
     
     lazy var budgetTextField: UITextField = {
-        let textField = UITextField()
+        let textField = DefaultElements.defaultTextField()
         textField.placeholder = "Введите свой доход"
-        textField.font = Font.subtitle.font
-        textField.layer.cornerRadius = Size.cornerRadius
-        textField.backgroundColor = .component
         textField.keyboardType = .numberPad
-        textField.returnKeyType = .next
-        textField.clipsToBounds = true
-        
-        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: Spacing.small, height: 0))
-        textField.leftViewMode = .always
-        textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: Spacing.small, height: 0))
-        textField.rightViewMode = .always
-        
+ 
         return textField
     }()
     
     private lazy var nextScreenButton: UIButton = {
-        let button = UIButton(primaryAction: nextScreenAction)
+        let button = DefaultElements.defaultYellowButton(primaryAction: nextScreenAction)
         button.setTitle("Далее", for: .normal)
-        button.backgroundColor = .brand
-        button.titleLabel?.font = Font.button.font
-        button.tintColor = .text
-        button.layer.cornerRadius = Size.cornerRadius
-        button.clipsToBounds = true
         return button
     }()
     

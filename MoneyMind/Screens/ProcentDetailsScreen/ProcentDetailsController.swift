@@ -15,7 +15,7 @@ final class ProcentDetailsController: UIViewController {
     private let selectedCategory: Category
     private let procentsView: ProcentDetailsView = .init()
     private let procentsViewModel: ProcentDetailsViewModel
-    private var cancellables = Set<AnyCancellable>()
+    private var bag = Set<AnyCancellable>()
     private var budget: Int
     let onAddCategory = PassthroughSubject<Category, Never>()
     
@@ -71,7 +71,7 @@ final class ProcentDetailsController: UIViewController {
             .sink { [weak self] in
                 self?.dismiss(animated: true)
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
         
         procentsView.addCategoryPublisher
             .sink { [weak self] in
@@ -88,7 +88,7 @@ final class ProcentDetailsController: UIViewController {
                 onAddCategory.send(updatedCategory)
                 self.dismiss(animated: true)
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
     }
     
     private func bindTextField() {
@@ -99,7 +99,7 @@ final class ProcentDetailsController: UIViewController {
                 guard let self else { return }
                 procentsViewModel.updateValues(value: value)
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
     }
     
     private func bindViewModel() {
@@ -109,7 +109,7 @@ final class ProcentDetailsController: UIViewController {
                 guard let self else { return }
                 procentsView.procentSumLabel.text = "\(value) ₽"
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
         
         procentsViewModel.$remainingValue
             .receive(on: DispatchQueue.main)
@@ -117,7 +117,7 @@ final class ProcentDetailsController: UIViewController {
                 guard let self else { return }
                 procentsView.balanceLabel.text = "\(value) ₽"
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
         
         procentsViewModel.$remainingPercent
             .receive(on: DispatchQueue.main)
@@ -125,7 +125,7 @@ final class ProcentDetailsController: UIViewController {
                 guard let self else { return }
                 procentsView.procentsBalanceLabel.text = "Всего процентов осталось: \(value)%"
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
     }
     
     func setupModalStyle(

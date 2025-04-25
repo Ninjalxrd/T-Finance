@@ -12,10 +12,10 @@ final class AppCoordinator {
     func start(_ scene: UIWindowScene) {
         let window = UIWindow(windowScene: scene)
         let navigationController = UINavigationController()
-        let budgetInputCoordinator = BudgetInputCoordinator(navigationController: navigationController)
+        let confirmationCoordinator = ConfirmationCoordinator(navigationController: navigationController)
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
         self.window = window
-        budgetInputCoordinator.start()
+        confirmationCoordinator.start()
     }
 }

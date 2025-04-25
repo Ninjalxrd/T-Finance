@@ -35,11 +35,8 @@ final class DistributionView: UIView {
     
     // MARK: - UI Components
     private lazy var titleLabel: UILabel = {
-        let label = UILabel()
+        let label = DefaultElements.defaultTitleLabel()
         label.numberOfLines = 2
-        label.textAlignment = .left
-        label.font = Font.title.font
-        label.textColor = .text
         label.text = "Распределите\nбюджет"
         return label
     }()
@@ -71,13 +68,8 @@ final class DistributionView: UIView {
     }()
     
     private lazy var nextScreenButton: UIButton = {
-        let button = UIButton(primaryAction: nextScreenAction)
+        let button = DefaultElements.defaultYellowButton(primaryAction: nextScreenAction)
         button.setTitle("Далее", for: .normal)
-        button.backgroundColor = .brand
-        button.titleLabel?.font = Font.button.font
-        button.tintColor = .text
-        button.layer.cornerRadius = Size.cornerRadius
-        button.clipsToBounds = true
         return button
     }()
     

@@ -20,7 +20,7 @@ class DistributionViewController: UIViewController {
     
     private let distributionView: DistributionView = .init()
     private let distributionViewModel: DistributionViewModel
-    private var cancellables = Set<AnyCancellable>()
+    private var bag = Set<AnyCancellable>()
     
     // MARK: - Lifecycle
     
@@ -59,14 +59,14 @@ class DistributionViewController: UIViewController {
                 self?.distributionView.categoriesCollectionView.reloadData()
                 self?.distributionView.updateChart(with: picked)
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
         
         distributionViewModel.$availableCategories
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.distributionView.categoriesCollectionView.reloadData()
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
     }
 }
 

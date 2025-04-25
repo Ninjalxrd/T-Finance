@@ -12,7 +12,7 @@ final class BudgetInputController: UIViewController {
     // MARK: Properties
     private let budgetInputView: BudgetInputView = .init()
     private let viewModel: BudgetInputViewModel
-    private var cancellables = Set<AnyCancellable>()
+    private var bag = Set<AnyCancellable>()
 
     // MARK: Init
     init(viewModel: BudgetInputViewModel) {
@@ -35,12 +35,12 @@ final class BudgetInputController: UIViewController {
     private func bindViewModel() {
         budgetInputView.budgetTextField.textPublisher
             .assign(to: \.incomeText, on: viewModel)
-            .store(in: &cancellables)
+            .store(in: &bag)
 
         viewModel.isInputValid
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.budgetInputView.setNextScreenButtonEnabled($0) }
-            .store(in: &cancellables)
+            .store(in: &bag)
     }
 
     // MARK: Callbacks
@@ -53,6 +53,6 @@ final class BudgetInputController: UIViewController {
                     let budget = Int(text) else { return }
                 self.viewModel.nextScreenButtonTapped(with: budget)
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
     }
 }
