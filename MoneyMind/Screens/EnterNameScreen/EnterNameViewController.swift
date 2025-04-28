@@ -12,7 +12,7 @@ final class EnterNameViewController: UIViewController {
     private let enterNameView: EnterNameView = .init()
     private let viewModel: EnterNameViewModel
     
-    //MARK: - Lifecycle
+    // MARK: - Lifecycle
     
     init(viewModel: EnterNameViewModel) {
         self.viewModel = viewModel

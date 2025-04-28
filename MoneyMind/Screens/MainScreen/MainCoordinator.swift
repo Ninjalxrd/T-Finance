@@ -1,17 +1,17 @@
-//  BudgetInputCoordinator.swift
+//
+//  MainCoordinator.swift
 //  MoneyMind
 //
-//  Created by Павел on 12.04.2025.
+//  Created by Павел on 26.04.2025.
 //
 
 import UIKit
 
-final class BudgetInputCoordinator: Coordinator {
+final class MainCoordinator {
     // MARK: - Properties
     
     private let navigationController: UINavigationController
     private let window: UIWindow
-    private var distributionCoordinator: DistributionCoordinator?
     var childCoordinators: [Coordinator] = []
 
     // MARK: - Init
@@ -22,15 +22,10 @@ final class BudgetInputCoordinator: Coordinator {
 
     // MARK: - Public
     func start() {
-        let viewModel = BudgetInputViewModel(coordinator: self)
-        let controller = BudgetInputController(viewModel: viewModel)
+        let viewModel = MainViewModel(coordinator: self)
+        let controller = MainViewController(viewModel: viewModel)
         navigationController.setViewControllers([controller], animated: false)
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
-    }
-
-    func openDistributionScreen(with budget: Int) {
-        distributionCoordinator = DistributionCoordinator(navigationController: navigationController)
-        distributionCoordinator?.start(with: budget)
     }
 }

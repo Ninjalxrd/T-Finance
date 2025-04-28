@@ -6,15 +6,16 @@
 //
 
 import UIKit
-final class EnterNameCoordinator {
+
+final class EnterNameCoordinator: Coordinator {
     // MARK: - Properties
 
     let navigationController: UINavigationController
-    
+    var childCoordinators: [Coordinator] = []
     // MARK: - Init
     
-    init(navigationController: UINavigationController) {
-        self.navigationController = navigationController
+    init() {
+        self.navigationController = UINavigationController()
     }
     
     // MARK: Methods

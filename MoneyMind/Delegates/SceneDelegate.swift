@@ -17,8 +17,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        appCoordinator = AppCoordinator()
-        appCoordinator?.start(windowScene)
+        guard let window else { return }
+        appCoordinator = AppCoordinator(window: window, windowScene: windowScene)
+        appCoordinator?.start()
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
