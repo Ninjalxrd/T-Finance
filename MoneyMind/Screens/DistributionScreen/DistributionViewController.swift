@@ -52,15 +52,15 @@ class DistributionViewController: UIViewController {
     // MARK: Setup Methods
     
     private func addCollectionViewDependencies() {
-        distributionView.setCollectionViewDelegate(self)
-        distributionView.setCollectionViewDataSource(self)
+        distributionView.categoriesCollectionView.delegate = self
+        distributionView.categoriesCollectionView.dataSource = self
     }
     
     private func bindViewModel() {
         distributionViewModel.$pickedCategories
             .receive(on: DispatchQueue.main)
             .sink { [weak self] picked in
-                self?.distributionView.collectionViewReloadData()
+                self?.distributionView.categoriesCollectionView.reloadData()
                 self?.distributionView.updateChart(with: picked)
             }
             .store(in: &cancellables)
@@ -68,7 +68,7 @@ class DistributionViewController: UIViewController {
         distributionViewModel.$availableCategories
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.distributionView.collectionViewReloadData()
+                self?.distributionView.categoriesCollectionView.reloadData()
             }
             .store(in: &cancellables)
     }

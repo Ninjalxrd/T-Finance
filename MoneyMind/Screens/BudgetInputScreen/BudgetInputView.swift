@@ -10,15 +10,12 @@ import SnapKit
 import Combine
 
 final class BudgetInputView: UIView {
-    // MARK: - Publishers
     private let nextScreenSubject = PassthroughSubject<Void, Never>()
     var nextScreenPublisher: AnyPublisher<Void, Never> {
         nextScreenSubject.eraseToAnyPublisher()
     }
     private var cancellables: Set<AnyCancellable> = []
     
-    // MARK: - Init
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -27,8 +24,6 @@ final class BudgetInputView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - UI Components
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -69,6 +64,11 @@ final class BudgetInputView: UIView {
         return button
     }()
     
+    func setNextScreenButtonEnabled(_ isEnabled: Bool) {
+        nextScreenButton.isEnabled = isEnabled
+        nextScreenButton.alpha = isEnabled ? 1.0 : 0.5
+    }
+    
     private lazy var budgetInputStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [titleLabel, budgetTextField])
         stack.axis = .vertical
@@ -82,15 +82,6 @@ final class BudgetInputView: UIView {
         self?.nextScreenSubject.send()
     }
     
-    // MARK: - Public
-    
-    func setNextScreenButtonEnabled(_ isEnabled: Bool) {
-        nextScreenButton.isEnabled = isEnabled
-        nextScreenButton.alpha = isEnabled ? 1.0 : 0.5
-    }
-    
-    // MARK: - Layout & Setup
-
     private func setupUI() {
         backgroundColor = .background
         addSubview(budgetInputStack)
@@ -118,8 +109,6 @@ final class BudgetInputView: UIView {
         }
     }
 }
-
-// MARK: - Extension UITextField
 
 extension UITextField {
     var textPublisher: AnyPublisher<String, Never> {

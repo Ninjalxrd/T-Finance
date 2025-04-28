@@ -38,7 +38,12 @@
 		E94573192DAAA97B003C6C76 /* Exceptions for "MoneyMind" folder in "MoneyMind" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Helpers/Fonts/Font.swift,
 				Info.plist,
+				Screens/BudgetInputScreen/View/BudgetInputController.swift,
+				Screens/BudgetInputScreen/View/BudgetInputView.swift,
+				Screens/DistributionScreen/DistributionView.swift,
+				Screens/DistributionScreen/DistributionViewController.swift,
 			);
 			target = E94572ED2DAAA979003C6C76 /* MoneyMind */;
 		};

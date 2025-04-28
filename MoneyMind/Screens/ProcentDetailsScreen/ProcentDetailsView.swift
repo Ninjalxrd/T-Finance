@@ -37,6 +37,8 @@ final class ProcentDetailsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
         
+    // MARK: - UI Elements
+    
     private lazy var contentView: UIView = {
         let view = UIView()
         view.backgroundColor = .background
@@ -88,7 +90,7 @@ final class ProcentDetailsView: UIView {
         textField.becomeFirstResponder()
         return textField
     }()
-    
+
     lazy var procentsBalanceLabel: UILabel = {
         let label = UILabel()
         label.textColor = .secondaryText
@@ -97,24 +99,6 @@ final class ProcentDetailsView: UIView {
         label.textAlignment = .left
         return label
     }()
-    
-    private func setupProcentsView() {
-        enterProcentsView.addSubview(procentsTextField)
-        enterProcentsView.addSubview(procentsBalanceLabel)
-        
-        procentsTextField.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().offset(Spacing.small)
-            make.bottom.equalToSuperview().offset(-Spacing.small)
-            make.width.equalTo(CGFloat.textFieldWidth)
-        }
-        
-        procentsBalanceLabel.snp.makeConstraints { make in
-            make.leading.equalTo(procentsTextField.snp.trailing).offset(Spacing.small)
-            make.top.equalToSuperview().offset(Spacing.small)
-            make.trailing.equalToSuperview().offset(-Spacing.small)
-            make.bottom.equalToSuperview().offset(-Spacing.small)
-        }
-    }
 
     private lazy var thisLabel: UILabel = {
         let label = UILabel()
@@ -185,6 +169,12 @@ final class ProcentDetailsView: UIView {
         return button
     }()
     
+    // MARK: - Actions
+    
+    @objc func tapAction() {
+        self.endEditing(true)
+    }
+    
     private lazy var addCategoryAction = UIAction { [weak self] _ in
         self?.addCategorySubject.send()
     }
@@ -196,15 +186,24 @@ final class ProcentDetailsView: UIView {
         generator.impactOccurred()
     }
     
-    private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction))
-        tap.delegate = self
-        tap.cancelsTouchesInView = false
-        return tap
-    }()
-
-    @objc func tapAction() {
-        self.endEditing(true)
+    // MARK: - Setup UI
+    
+    private func setupProcentsView() {
+        enterProcentsView.addSubview(procentsTextField)
+        enterProcentsView.addSubview(procentsBalanceLabel)
+        
+        procentsTextField.snp.makeConstraints { make in
+            make.top.leading.equalToSuperview().offset(Spacing.small)
+            make.bottom.equalToSuperview().offset(-Spacing.small)
+            make.width.equalTo(CGFloat.textFieldWidth)
+        }
+        
+        procentsBalanceLabel.snp.makeConstraints { make in
+            make.leading.equalTo(procentsTextField.snp.trailing).offset(Spacing.small)
+            make.top.equalToSuperview().offset(Spacing.small)
+            make.trailing.equalToSuperview().offset(-Spacing.small)
+            make.bottom.equalToSuperview().offset(-Spacing.small)
+        }
     }
     
     private func setupUI() {
@@ -217,7 +216,6 @@ final class ProcentDetailsView: UIView {
         contentView.addSubview(balanceStack)
         contentView.addSubview(addButton)
         addGestureRecognizer(tapGestureRecognizer)
-        
         setupProcentsView()
         setupConstraints()
     }
@@ -273,6 +271,15 @@ final class ProcentDetailsView: UIView {
     func setupTitleLabel(with category: Category) {
         titleLabel.text = "Укажите процент категории:\n\(category.name)"
     }
+    
+    // MARK: - GestureRecognizer
+    
+    private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction))
+        tap.delegate = self
+        tap.cancelsTouchesInView = false
+        return tap
+    }()
 }
 
 // MARK: - UIGestureRecognizerDelegate

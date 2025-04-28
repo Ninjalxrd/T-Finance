@@ -61,7 +61,7 @@ final class DistributionView: UIView {
         return chart
     }()
     
-    private lazy var categoriesCollectionView: UICollectionView = {
+    lazy var categoriesCollectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         collection.register(
             DistributionCollectionViewCell.self,
@@ -69,20 +69,6 @@ final class DistributionView: UIView {
         collection.backgroundColor = .background
         return collection
     }()
-    
-    // MARK: - CollectionView Internal Methods
-    
-    func setCollectionViewDelegate(_ delegate: UICollectionViewDelegate) {
-        categoriesCollectionView.delegate = delegate
-    }
-    
-    func setCollectionViewDataSource(_ dataSource: UICollectionViewDataSource) {
-        categoriesCollectionView.dataSource = dataSource
-    }
-    
-    func collectionViewReloadData() {
-        categoriesCollectionView.reloadData()
-    }
     
     private lazy var nextScreenButton: UIButton = {
         let button = UIButton(primaryAction: nextScreenAction)

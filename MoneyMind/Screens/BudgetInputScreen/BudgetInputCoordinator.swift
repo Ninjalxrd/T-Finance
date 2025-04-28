@@ -1,7 +1,8 @@
+//
 //  BudgetInputCoordinator.swift
 //  MoneyMind
 //
-//  Created by Павел on 12.04.2025.
+//  Created by Павел on 13.04.2025.
 //
 
 import UIKit
