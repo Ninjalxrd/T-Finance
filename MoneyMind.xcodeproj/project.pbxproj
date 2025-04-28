@@ -42,8 +42,8 @@
 				Info.plist,
 				Screens/BudgetInputScreen/View/BudgetInputController.swift,
 				Screens/BudgetInputScreen/View/BudgetInputView.swift,
-				Screens/DistributionScreen/View/DistributionView.swift,
-				Screens/DistributionScreen/View/DistributionViewController.swift,
+				Screens/DistributionScreen/DistributionView.swift,
+				Screens/DistributionScreen/DistributionViewController.swift,
 			);
 			target = E94572ED2DAAA979003C6C76 /* MoneyMind */;
 		};

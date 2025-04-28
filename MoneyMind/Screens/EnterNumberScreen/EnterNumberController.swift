@@ -47,7 +47,7 @@ final class EnterNumberController: UIViewController {
     // MARK: - Setup Methods
     
     private func setupDelegates() {
-        enterNumberView.numberTextField.delegate = self
+        enterNumberView.setTextFieldDelegate(self)
     }
     
     // MARK: - Keyboard Handling
@@ -78,7 +78,7 @@ final class EnterNumberController: UIViewController {
             options: UIView.AnimationOptions(rawValue: curveValue << 16),
             animations: {
                 self.enterNumberView.logoStack.transform = isKeyboardShowing ?
-                    CGAffineTransform(scaleX: 0.5, y: 0) :
+                CGAffineTransform(scaleX: 0, y: 0) :
                     .identity
                 self.view.layoutIfNeeded()
             },
@@ -89,7 +89,7 @@ final class EnterNumberController: UIViewController {
     // MARK: - Binding Methods
     
     private func bindViewModel() {
-        enterNumberView.numberTextField.textPublisher
+        enterNumberView.numberTextFieldPublisher
             .assign(
                 to: \.incomeText,
                 on: viewModel)

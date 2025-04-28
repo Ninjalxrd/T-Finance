@@ -31,10 +31,7 @@ final class EnterNumberView: UIView {
     
     // MARK: - UI Components
 
-    lazy var logoStack: UIStackView = {
-        let stack = Logo().logoStackView
-        return stack
-    }()
+    lazy var logoStack = Logo()
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -45,7 +42,7 @@ final class EnterNumberView: UIView {
         return label
     }()
     
-    lazy var numberTextField: UITextField = {
+    private lazy var numberTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "Номер телефона"
         textField.font = Font.subtitle.font
@@ -64,6 +61,18 @@ final class EnterNumberView: UIView {
         return textField
     }()
     
+    // MARK: - Internal NumberTextField Methods
+    
+    func setTextFieldDelegate(_ delegate: UITextFieldDelegate) {
+        numberTextField.delegate = delegate
+    }
+    
+    // MARK: - Internal Accessor
+
+    var numberTextFieldPublisher: AnyPublisher<String, Never> {
+        numberTextField.textPublisher
+    }
+        
     private lazy var nextScreenButton: UIButton = {
         let button = UIButton(primaryAction: nextScreenAction)
         button.setTitle("Далее", for: .normal)
