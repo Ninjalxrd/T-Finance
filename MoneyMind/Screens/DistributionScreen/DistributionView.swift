@@ -35,9 +35,7 @@ final class DistributionView: UIView {
     
     // MARK: - UI Components
     private lazy var titleLabel: UILabel = {
-        let label = DefaultElements.defaultTitleLabel()
-        label.numberOfLines = 2
-        label.text = "Распределите\nбюджет"
+        let label = DefaultLabel(numberOfLines: 2, text: "Распределите\nбюджет")
         return label
     }()
     
@@ -58,7 +56,7 @@ final class DistributionView: UIView {
         return chart
     }()
     
-    lazy var categoriesCollectionView: UICollectionView = {
+    private lazy var categoriesCollectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         collection.register(
             DistributionCollectionViewCell.self,
@@ -67,9 +65,22 @@ final class DistributionView: UIView {
         return collection
     }()
     
+    // MARK: - CollectionView Internal Methods
+    
+    func setCollectionViewDelegate(_ delegate: UICollectionViewDelegate) {
+        categoriesCollectionView.delegate = delegate
+    }
+    
+    func setCollectionViewDataSource(_ dataSource: UICollectionViewDataSource) {
+        categoriesCollectionView.dataSource = dataSource
+    }
+    
+    func collectionViewReloadData() {
+        categoriesCollectionView.reloadData()
+    }
+    
     private lazy var nextScreenButton: UIButton = {
-        let button = DefaultElements.defaultYellowButton(primaryAction: nextScreenAction)
-        button.setTitle("Далее", for: .normal)
+        let button = DefaultButton(title: "Далее", action: nextScreenAction)
         return button
     }()
     
@@ -107,6 +118,7 @@ final class DistributionView: UIView {
     }
     
     // MARK: - Private Methods
+    
     private func createLayout() -> UICollectionViewCompositionalLayout {
         let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(
             widthDimension: .estimated(CGFloat.estimatedCellWidth),
@@ -140,6 +152,8 @@ final class DistributionView: UIView {
         chartView.data = PieChartData(dataSet: dataSet)
         chartView.animate(yAxisDuration: 0.7, easingOption: .easeOutBack)
     }
+    
+    // MARK: - Setup UI
     
     private func setupUI() {
         addSubview(titleLabel)

@@ -20,6 +20,7 @@ final class ProcentDetailsController: UIViewController {
     let onAddCategory = PassthroughSubject<Category, Never>()
     
     // MARK: - Lifecycle
+    
     init(budget: Int, remainingPercent: Int, selectedCategory: Category) {
         self.selectedCategory = selectedCategory
         self.budget = budget
@@ -54,7 +55,7 @@ final class ProcentDetailsController: UIViewController {
     
     // MARK: - Setup & Binds
     private func setupDelegates() {
-        procentsView.procentsTextField.delegate = self
+        procentsView.setupTextFieldDelegate(self)
     }
 
     private func addObserver() {
@@ -76,7 +77,7 @@ final class ProcentDetailsController: UIViewController {
         procentsView.addCategoryPublisher
             .sink { [weak self] in
                 guard let self else { return }
-                guard let text = procentsView.procentsTextField.text,
+                guard let text = procentsView.getProcents(),
                 let percent = Int(text)
                 else { return }
                 
@@ -92,8 +93,7 @@ final class ProcentDetailsController: UIViewController {
     }
     
     private func bindTextField() {
-        procentsView.procentsTextField
-            .textPublisher
+        procentsView.procentsTextFieldPublisher
             .map { Int($0) ?? 0 }
             .sink { [weak self] value in
                 guard let self else { return }
@@ -107,7 +107,7 @@ final class ProcentDetailsController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
                 guard let self else { return }
-                procentsView.procentSumLabel.text = "\(value) ₽"
+                procentsView.setupProcentSumLabelText("\(value) ₽")
             }
             .store(in: &bag)
         
@@ -115,7 +115,7 @@ final class ProcentDetailsController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
                 guard let self else { return }
-                procentsView.balanceLabel.text = "\(value) ₽"
+                procentsView.setupBalanceLabelText("\(value) ₽") 
             }
             .store(in: &bag)
         
@@ -123,7 +123,7 @@ final class ProcentDetailsController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
                 guard let self else { return }
-                procentsView.procentsBalanceLabel.text = "Всего процентов осталось: \(value)%"
+                procentsView.setupProcentBalanceLabelText("Всего процентов осталось: \(value)%") 
             }
             .store(in: &bag)
     }
@@ -137,7 +137,7 @@ final class ProcentDetailsController: UIViewController {
     }
     
     // MARK: - Keyboard
-    
+
     @objc private func handleKeyboardWillChange(notification: Notification) {
         guard
             let userInfo = notification.userInfo,
@@ -159,7 +159,7 @@ final class ProcentDetailsController: UIViewController {
     }
 }
 
-// MARK: - UITextFieldDelegate
+    // MARK: - UITextFieldDelegate
 
 extension ProcentDetailsController: UITextFieldDelegate {
     func textField(

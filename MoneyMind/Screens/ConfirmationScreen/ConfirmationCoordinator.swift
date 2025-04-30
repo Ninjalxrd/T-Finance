@@ -8,34 +8,33 @@
 import Foundation
 import UIKit
 
-final class ConfirmationCoordinator: Coordinator {
+// MARK: - Protocols
+protocol ConfirmationCoordinatorProtocol: AnyObject {
+    func openEnterNameScreen()
+}
+
+final class ConfirmationCoordinator {
     // MARK: - Properties
-    var childCoordinators: [Coordinator] = []
-    private let window: UIWindow
-    let navigationController: UINavigationController
+    
+    private(set) var navigationController: UINavigationController
     private var enterNameCoordinator: EnterNameCoordinator?
 
     // MARK: - Init
     
-    // изменить
-    init(window: UIWindow) {
-        self.navigationController = UINavigationController()
-        self.window = window
+    init(navigationController: UINavigationController) {
+        self.navigationController = navigationController
     }
         
-    // with navigationController
-    func start() {
+    func start(with number: String) {
         let confirmationViewModel = ConfirmationViewModel(coordinator: self)
-        let confirmationViewController = ConfirmationViewController(viewModel: confirmationViewModel)
+        let confirmationViewController = ConfirmationViewController(viewModel: confirmationViewModel, number: number)
         navigationController.setViewControllers([confirmationViewController], animated: true)
-        window.rootViewController = navigationController
-        window.makeKeyAndVisible()
     }
         
     // MARK: - Public Methods
         
     func openEnterNameScreen() {
-        enterNameCoordinator = EnterNameCoordinator()
+        enterNameCoordinator = EnterNameCoordinator(navigationController: navigationController)
         enterNameCoordinator?.start()
     }
 }

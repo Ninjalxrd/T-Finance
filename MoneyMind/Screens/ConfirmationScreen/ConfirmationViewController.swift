@@ -14,11 +14,13 @@ final class ConfirmationViewController: UIViewController {
     private let viewModel: ConfirmationViewModel
     private var timer: Timer?
     private var bag = Set<AnyCancellable>()
+    private let number: String
     
     // MARK: - Lifecycle
     
-    init(viewModel: ConfirmationViewModel) {
+    init(viewModel: ConfirmationViewModel, number: String) {
         self.viewModel = viewModel
+        self.number = number
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -31,7 +33,7 @@ final class ConfirmationViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        confirmationView.configureLabel(with: "+7(917)-893-26-83")
+        confirmationView.configureLabel(with: number)
         onStartTimer()
         bindViewModel()
         setupCallbacks()
@@ -39,21 +41,21 @@ final class ConfirmationViewController: UIViewController {
     }
     
     private func setupDelegates() {
-        confirmationView.codeTextField.delegate = self
+        confirmationView.setupTextFieldDelegate(self)
     }
     
     private func bindViewModel() {
         viewModel.$remainingTimeText
             .receive(on: DispatchQueue.main)
             .sink { [weak self] text in
-                self?.confirmationView.timerLabel.text = "Запросить через: \(text ?? "00:00")"
+                self?.confirmationView.setupTimerLabelText("Запросить через: \(text ?? "00:00")")
             }
             .store(in: &bag)
         
         viewModel.timerFinished
             .sink { [weak self] _ in
-                self?.confirmationView.newCodeButton.isHidden = false
-                self?.confirmationView.timerLabel.isHidden = true
+                self?.confirmationView.toggleHideNewCodeButton(false)
+                self?.confirmationView.toggleHideTimerLabel(true)
             }
             .store(in: &bag)
     }
@@ -69,8 +71,8 @@ final class ConfirmationViewController: UIViewController {
     
     private func onStartTimer() {
         viewModel.startTimer()
-        confirmationView.newCodeButton.isHidden = true
-        confirmationView.timerLabel.isHidden = false
+        confirmationView.toggleHideNewCodeButton(true)
+        confirmationView.toggleHideTimerLabel(false) 
     }
 }
 
@@ -93,6 +95,7 @@ extension ConfirmationViewController: UITextFieldDelegate {
         let result = viewModel.validateCode(with: code)
         if result == false {
             shakeTextField(textField)
+            textField.text = ""
         }
     }
 }

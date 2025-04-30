@@ -16,7 +16,7 @@ final class ConfirmationViewModel {
     
     // MARK: - Properties
     
-    private var coordinator: ConfirmationCoordinator
+    private weak var coordinator: ConfirmationCoordinator?
     private let defaultWaitingValue: Int = 5
     private var remainingSeconds: Int
     private var timer: AnyCancellable?
@@ -62,7 +62,7 @@ final class ConfirmationViewModel {
     
     func validateCode(with code: Int) -> Bool {
         if code == serverCode {
-            coordinator.openEnterNameScreen()
+            coordinator?.openEnterNameScreen()
             return true
         }
         return false

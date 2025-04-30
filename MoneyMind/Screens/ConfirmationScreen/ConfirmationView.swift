@@ -10,6 +10,7 @@ import Combine
 
 final class ConfirmationView: UIView {
     // MARK: - Properties
+    
     private let newCodeSubject = PassthroughSubject<Void, Never>()
     var newCodePublisher: AnyPublisher<Void, Never> {
         newCodeSubject.eraseToAnyPublisher()
@@ -30,9 +31,7 @@ final class ConfirmationView: UIView {
     // MARK: - UI Components
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultElements.defaultTitleLabel()
-        label.numberOfLines = 1
-        label.text = "Подтверждение"
+        let label = DefaultLabel(numberOfLines: 1, text: "Подтверждение")
         return label
     }()
     
@@ -47,29 +46,43 @@ final class ConfirmationView: UIView {
         return label
     }()
     
-    lazy var codeTextField: UITextField = {
-        let textField = DefaultElements.defaultTextField()
-        textField.placeholder = "СМС-код"
-        textField.textAlignment = .center
-        textField.keyboardType = .numberPad
+    private lazy var codeTextField: UITextField = {
+        let textField = DefaultTextField(
+            placeholder: "СМС-код",
+            textAlignment: .center,
+            keyboardType: .numberPad
+        )
         textField.widthAnchor.constraint(equalToConstant: CGFloat.codeStackWidth).isActive = true
         return textField
     }()
     
-    lazy var newCodeButton: UIButton = {
-        let button = UIButton(primaryAction: newCodeAction)
-        button.setTitle("Отправить код заново", for: .normal)
+    // MARK: - Internal TextField Methods
+    
+    func setupTextFieldDelegate(_ delegate: UITextFieldDelegate) {
+        codeTextField.delegate = delegate
+    }
+        
+    private lazy var newCodeButton: UIButton = {
+        let button = DefaultButton(title: "Отправить код заново", action: newCodeAction)
         button.backgroundColor = .secondaryButton
-        button.titleLabel?.font = Font.subtitle.font
-        button.tintColor = .text
-        button.layer.cornerRadius = Size.cornerRadius
-        button.clipsToBounds = true
         button.heightAnchor.constraint(equalToConstant: Size.buttonHeight).isActive = true
         button.widthAnchor.constraint(equalToConstant: CGFloat.codeStackWidth).isActive = true
         return button
     }()
     
-    lazy var timerLabel: UILabel = {
+    // MARK: - Internal Button Methods
+
+    func toggleHideNewCodeButton(_ bool: Bool) {
+        newCodeButton.isHidden = bool
+    }
+    
+    // MARK: - Actions
+    
+    private lazy var newCodeAction = UIAction { [weak self] _ in
+        self?.newCodeSubject.send()
+    }
+    
+    private lazy var timerLabel: UILabel = {
         let label = UILabel()
         label.font = Font.subtitle.font
         label.numberOfLines = 1
@@ -79,6 +92,18 @@ final class ConfirmationView: UIView {
         label.isHidden = true
         return label
     }()
+    
+    // MARK: - Internal TimerLabel methods
+    
+    func setupTimerLabelText(_ text: String) {
+        timerLabel.text = text
+    }
+    
+    func toggleHideTimerLabel(_ bool: Bool) {
+        timerLabel.isHidden = bool
+    }
+    
+    // MARK: - Stack
     
     private lazy var codeStackView: UIStackView = {
         let stack = UIStackView(
@@ -93,10 +118,6 @@ final class ConfirmationView: UIView {
         stack.spacing = Spacing.small
         return stack
     }()
-    
-    private lazy var newCodeAction = UIAction { [weak self] _ in
-        self?.newCodeSubject.send()
-    }
     
     // MARK: - Layout & Setup
 

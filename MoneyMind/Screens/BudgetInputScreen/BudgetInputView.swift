@@ -15,7 +15,6 @@ final class BudgetInputView: UIView {
     var nextScreenPublisher: AnyPublisher<Void, Never> {
         nextScreenSubject.eraseToAnyPublisher()
     }
-    private var cancellables: Set<AnyCancellable> = []
     
     // MARK: - Init
 
@@ -31,23 +30,32 @@ final class BudgetInputView: UIView {
     // MARK: - UI Components
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultElements.defaultTitleLabel()
-        label.numberOfLines = 2
-        label.text = "Введите сумму\nвашего дохода"
+        let label = DefaultLabel(numberOfLines: 2, text: "Введите сумму\nвашего дохода")
         return label
     }()
     
-    lazy var budgetTextField: UITextField = {
-        let textField = DefaultElements.defaultTextField()
-        textField.placeholder = "Введите свой доход"
-        textField.keyboardType = .numberPad
- 
+    private lazy var budgetTextField: UITextField = {
+        let textField = DefaultTextField(
+            placeholder: "Введите свой доход",
+            textAlignment: .left,
+            keyboardType: .numberPad
+        )
         return textField
     }()
     
+    // MARK: - Internal Accessor
+
+    var budgetTextFieldPublisher: AnyPublisher<String, Never> {
+        budgetTextField.textPublisher
+    }
+    
+    // MARK: - Internal BudgetTextField Methods
+    func getBudget() -> String? {
+        return budgetTextField.text
+    }
+    
     private lazy var nextScreenButton: UIButton = {
-        let button = DefaultElements.defaultYellowButton(primaryAction: nextScreenAction)
-        button.setTitle("Далее", for: .normal)
+        let button = DefaultButton(title: "Далее", action: nextScreenAction)
         return button
     }()
     
@@ -72,7 +80,7 @@ final class BudgetInputView: UIView {
     }
     
     // MARK: - Layout & Setup
-    
+
     private func setupUI() {
         backgroundColor = .background
         addSubview(budgetInputStack)

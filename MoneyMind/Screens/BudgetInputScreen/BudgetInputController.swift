@@ -33,7 +33,7 @@ final class BudgetInputController: UIViewController {
 
     // MARK: Binding
     private func bindViewModel() {
-        budgetInputView.budgetTextField.textPublisher
+        budgetInputView.budgetTextFieldPublisher
             .assign(to: \.incomeText, on: viewModel)
             .store(in: &bag)
 
@@ -43,13 +43,14 @@ final class BudgetInputController: UIViewController {
             .store(in: &bag)
     }
 
-    // MARK: Callbacks
+    // MARK: - Callbacks
+    
     private func setupCallback() {
         budgetInputView.nextScreenPublisher
             .sink { [weak self] in
                 guard
                     let self,
-                    let text = self.budgetInputView.budgetTextField.text,
+                    let text = self.budgetInputView.getBudget(),
                     let budget = Int(text) else { return }
                 self.viewModel.nextScreenButtonTapped(with: budget)
             }

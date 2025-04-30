@@ -10,12 +10,14 @@ import Combine
 
 final class EnterNameView: UIView {
     // MARK: - Publishers
+    
     private let nextScreenSubject = PassthroughSubject<Void, Never>()
     var nextScreenPublisher: AnyPublisher<Void, Never> {
         nextScreenSubject.eraseToAnyPublisher()
     }
     
     // MARK: - Properties
+    
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Init
@@ -32,22 +34,22 @@ final class EnterNameView: UIView {
     // MARK: - UI Components
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultElements.defaultTitleLabel()
-        label.numberOfLines = 1
-        label.text = "Введите ваше имя"
+        let label = DefaultLabel(numberOfLines: 1, text: "Введите ваше имя")
         return label
     }()
     
     private lazy var nameTextField: UITextField = {
-        let textField = DefaultElements.defaultTextField()
-        textField.placeholder = "Ваше имя"
+        let textField = DefaultTextField(
+            placeholder: "Ваше имя",
+            textAlignment: .left,
+            keyboardType: .namePhonePad
+        )
         textField.widthAnchor.constraint(equalToConstant: CGFloat.nameStackWidth).isActive = true
         return textField
     }()
     
     private lazy var nextScreenButton: UIButton = {
-        let button = DefaultElements.defaultYellowButton(primaryAction: action)
-        button.setTitle("Далее", for: .normal)
+        let button = DefaultButton(title: "Далее", action: action)
         button.heightAnchor.constraint(equalToConstant: Size.buttonHeight).isActive = true
         button.widthAnchor.constraint(equalToConstant: CGFloat.nameStackWidth).isActive = true
         return button

@@ -13,6 +13,7 @@ enum Font {
     case body
     case button
     case smallTitle
+    case logo
     
     var font: UIFont {
         switch self {
@@ -23,9 +24,12 @@ enum Font {
         case .body:
             UIFont.systemFont(ofSize: 8, weight: .regular)
         case .button:
-            UIFont.systemFont(ofSize: 16, weight: .bold)
+            UIFont.systemFont(ofSize: 16, weight: .semibold)
         case .smallTitle:
             UIFont.systemFont(ofSize: 20, weight: .bold)
+        case .logo:
+            UIFont(name: "TacticSansExtExd-Blk", size: 24) ??
+            UIFont.systemFont(ofSize: 24, weight: .black)
         }
     }
 }
