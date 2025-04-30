@@ -10,12 +10,14 @@ import SnapKit
 import Combine
 
 final class BudgetInputView: UIView {
+    // MARK: - Publishers
     private let nextScreenSubject = PassthroughSubject<Void, Never>()
     var nextScreenPublisher: AnyPublisher<Void, Never> {
         nextScreenSubject.eraseToAnyPublisher()
     }
-    private var cancellables: Set<AnyCancellable> = []
     
+    // MARK: - Init
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -25,49 +27,37 @@ final class BudgetInputView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - UI Components
+    
     private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 2
-        label.textAlignment = .left
-        label.font = Font.title.font
-        label.textColor = .text
-        label.text = "Введите сумму\nвашего дохода"
+        let label = DefaultLabel(numberOfLines: 2, text: "Введите сумму\nвашего дохода")
         return label
     }()
     
-    lazy var budgetTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Введите свой доход"
-        textField.font = Font.subtitle.font
-        textField.layer.cornerRadius = Size.cornerRadius
-        textField.backgroundColor = .component
-        textField.keyboardType = .numberPad
-        textField.returnKeyType = .next
-        textField.clipsToBounds = true
-        
-        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: Spacing.small, height: 0))
-        textField.leftViewMode = .always
-        textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: Spacing.small, height: 0))
-        textField.rightViewMode = .always
-        
+    private lazy var budgetTextField: UITextField = {
+        let textField = DefaultTextField(
+            placeholder: "Введите свой доход",
+            textAlignment: .left,
+            keyboardType: .numberPad
+        )
         return textField
     }()
     
+    // MARK: - Internal Accessor
+
+    var budgetTextFieldPublisher: AnyPublisher<String, Never> {
+        budgetTextField.textPublisher
+    }
+    
+    // MARK: - Internal BudgetTextField Methods
+    func getBudget() -> String? {
+        return budgetTextField.text
+    }
+    
     private lazy var nextScreenButton: UIButton = {
-        let button = UIButton(primaryAction: nextScreenAction)
-        button.setTitle("Далее", for: .normal)
-        button.backgroundColor = .brand
-        button.titleLabel?.font = Font.button.font
-        button.tintColor = .text
-        button.layer.cornerRadius = Size.cornerRadius
-        button.clipsToBounds = true
+        let button = DefaultButton(title: "Далее", action: nextScreenAction)
         return button
     }()
-    
-    func setNextScreenButtonEnabled(_ isEnabled: Bool) {
-        nextScreenButton.isEnabled = isEnabled
-        nextScreenButton.alpha = isEnabled ? 1.0 : 0.5
-    }
     
     private lazy var budgetInputStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [titleLabel, budgetTextField])
@@ -82,6 +72,15 @@ final class BudgetInputView: UIView {
         self?.nextScreenSubject.send()
     }
     
+    // MARK: - Public
+    
+    func setNextScreenButtonEnabled(_ isEnabled: Bool) {
+        nextScreenButton.isEnabled = isEnabled
+        nextScreenButton.alpha = isEnabled ? 1.0 : 0.5
+    }
+    
+    // MARK: - Layout & Setup
+
     private func setupUI() {
         backgroundColor = .background
         addSubview(budgetInputStack)
@@ -109,6 +108,8 @@ final class BudgetInputView: UIView {
         }
     }
 }
+
+// MARK: - Extension UITextField
 
 extension UITextField {
     var textPublisher: AnyPublisher<String, Never> {

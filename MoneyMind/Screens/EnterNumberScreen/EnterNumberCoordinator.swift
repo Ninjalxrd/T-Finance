@@ -8,9 +8,10 @@
 import UIKit
 
 final class EnterNumberCoordinator {
-    // MARK: - Properties
+    // MARK: - Private Properties
     
     private(set) var navigationController: UINavigationController
+    private var confirmationCoordinator: ConfirmationCoordinator?
     
     // MARK: - Initialization
     
@@ -27,4 +28,9 @@ final class EnterNumberCoordinator {
     }
     
     // MARK: - Navigation Methods
+    
+    func openConfirmationScreen(with number: String) {
+        confirmationCoordinator = ConfirmationCoordinator(navigationController: navigationController)
+        confirmationCoordinator?.start(with: number)
+    }
 }

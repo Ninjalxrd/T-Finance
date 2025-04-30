@@ -34,4 +34,10 @@ final class EnterNumberViewModel {
         let predicate = NSPredicate(format: "SELF MATCHES %@", phoneNumberRegex)
         return predicate.evaluate(with: number)
     }
+    
+    // MARK: - Public Methods
+    
+    func openConfirmationScreen(with number: String) {
+        coordinator?.openConfirmationScreen(with: number)
+    }
 }

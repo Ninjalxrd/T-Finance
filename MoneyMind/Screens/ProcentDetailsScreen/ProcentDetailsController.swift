@@ -15,7 +15,7 @@ final class ProcentDetailsController: UIViewController {
     private let selectedCategory: Category
     private let procentsView: ProcentDetailsView = .init()
     private let procentsViewModel: ProcentDetailsViewModel
-    private var cancellables = Set<AnyCancellable>()
+    private var bag = Set<AnyCancellable>()
     private var budget: Int
     let onAddCategory = PassthroughSubject<Category, Never>()
     
@@ -43,23 +43,19 @@ final class ProcentDetailsController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupDelegates()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         setupCallbacks()
         bindTextField()
         bindViewModel()
         addObserver()
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Setup & Binds
     private func setupDelegates() {
-        procentsView.procentsTextField.delegate = self
+        procentsView.setupTextFieldDelegate(self)
     }
 
     private func addObserver() {
@@ -76,12 +72,12 @@ final class ProcentDetailsController: UIViewController {
             .sink { [weak self] in
                 self?.dismiss(animated: true)
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
         
         procentsView.addCategoryPublisher
             .sink { [weak self] in
                 guard let self else { return }
-                guard let text = procentsView.procentsTextField.text,
+                guard let text = procentsView.getProcents(),
                 let percent = Int(text)
                 else { return }
                 
@@ -93,18 +89,17 @@ final class ProcentDetailsController: UIViewController {
                 onAddCategory.send(updatedCategory)
                 self.dismiss(animated: true)
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
     }
     
     private func bindTextField() {
-        procentsView.procentsTextField
-            .textPublisher
+        procentsView.procentsTextFieldPublisher
             .map { Int($0) ?? 0 }
             .sink { [weak self] value in
                 guard let self else { return }
                 procentsViewModel.updateValues(value: value)
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
     }
     
     private func bindViewModel() {
@@ -112,25 +107,25 @@ final class ProcentDetailsController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
                 guard let self else { return }
-                procentsView.procentSumLabel.text = "\(value) ₽"
+                procentsView.setupProcentSumLabelText("\(value) ₽")
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
         
         procentsViewModel.$remainingValue
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
                 guard let self else { return }
-                procentsView.balanceLabel.text = "\(value) ₽"
+                procentsView.setupBalanceLabelText("\(value) ₽") 
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
         
         procentsViewModel.$remainingPercent
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
                 guard let self else { return }
-                procentsView.procentsBalanceLabel.text = "Всего процентов осталось: \(value)%"
+                procentsView.setupProcentBalanceLabelText("Всего процентов осталось: \(value)%") 
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
     }
     
     func setupModalStyle(

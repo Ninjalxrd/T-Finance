@@ -7,16 +7,17 @@
 
 import UIKit
 import Combine
+import PhoneNumberKit
 
 final class EnterNumberController: UIViewController {
     // MARK: - Private Properties
     
     private let enterNumberView: EnterNumberView = .init()
     private let viewModel: EnterNumberViewModel
-    private var cancellables = Set<AnyCancellable>()
+    private var bag = Set<AnyCancellable>()
     
     // MARK: - Lifecycle
-
+    
     init(viewModel: EnterNumberViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -32,11 +33,7 @@ final class EnterNumberController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupDelegates()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        setupCallbacks()
         bindViewModel()
         addObserver()
     }
@@ -44,10 +41,15 @@ final class EnterNumberController: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    // MARK: - Setup Methods
     
-    private func setupDelegates() {
-        enterNumberView.setTextFieldDelegate(self)
+    private func setupCallbacks() {
+        enterNumberView.nextScreenPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.viewModel.openConfirmationScreen(with: enterNumberView.getNumber())
+            }
+            .store(in: &bag)
     }
     
     // MARK: - Keyboard Handling
@@ -66,10 +68,10 @@ final class EnterNumberController: UIViewController {
             let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
             let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
             let curveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt else { return }
-
+        
         let keyboardHeight = view.convert(endFrame, from: nil).intersection(view.bounds).height
         let isKeyboardShowing = keyboardHeight > 0
-
+        
         enterNumberView.bottomConstraint?.update(offset: -keyboardHeight)
         
         UIView.animate(
@@ -93,45 +95,13 @@ final class EnterNumberController: UIViewController {
             .assign(
                 to: \.incomeText,
                 on: viewModel)
-            .store(in: &cancellables)
+            .store(in: &bag)
         
         viewModel.isInputValid
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isValid in
                 self?.enterNumberView.isInputValid(isValid)
             }
-            .store(in: &cancellables)
-    }
-}
-
-    // MARK: - UITextFieldDelegate
-
-extension EnterNumberController: UITextFieldDelegate {
-    func textField(
-        _ textField: UITextField,
-        shouldChangeCharactersIn range: NSRange,
-        replacementString string: String
-    ) -> Bool {
-        let currentText = textField.text ?? ""
-        guard let stringRange = Range(range, in: currentText) else { return false }
-        let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
-        
-        let allowedCharacters = CharacterSet(charactersIn: "+0123456789")
-        let forbiddenCharacters = string.rangeOfCharacter(from: allowedCharacters.inverted)
-        if forbiddenCharacters != nil && !string.isEmpty {
-            return false
-        }
-        
-        let cleanText = updatedText.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
-        
-        if cleanText.count > 11 {
-            return false
-        }
-        
-        if cleanText.count == 1 && (string == "7" || string == "8") {
-            textField.text = "+7"
-            return false
-        }
-        return true
+            .store(in: &bag)
     }
 }
