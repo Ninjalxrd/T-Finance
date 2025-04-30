@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E97ECCF92DABA8A7004305D7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97ECCF82DABA8A7004305D7 /* SnapKit */; };
 		E97F2BC22DAC0BBC00CE1AA3 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = E97F2BC12DAC0BBC00CE1AA3 /* DGCharts */; };
+		E98D3EC72DC2552400C6F657 /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = E98D3EC62DC2552400C6F657 /* PhoneNumberKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,6 +29,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		E98D3ECB2DC2552C00C6F657 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		E94572EE2DAAA979003C6C76 /* MoneyMind.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoneyMind.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E94573072DAAA97B003C6C76 /* MoneyMindTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoneyMindTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -38,12 +52,7 @@
 		E94573192DAAA97B003C6C76 /* Exceptions for "MoneyMind" folder in "MoneyMind" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Helpers/Fonts/Font.swift,
 				Info.plist,
-				Screens/BudgetInputScreen/View/BudgetInputController.swift,
-				Screens/BudgetInputScreen/View/BudgetInputView.swift,
-				Screens/DistributionScreen/DistributionView.swift,
-				Screens/DistributionScreen/DistributionViewController.swift,
 			);
 			target = E94572ED2DAAA979003C6C76 /* MoneyMind */;
 		};
@@ -70,6 +79,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E98D3EC72DC2552400C6F657 /* PhoneNumberKit in Frameworks */,
 				E97F2BC22DAC0BBC00CE1AA3 /* DGCharts in Frameworks */,
 				E97ECCF92DABA8A7004305D7 /* SnapKit in Frameworks */,
 			);
@@ -130,6 +140,7 @@
 				E94572EB2DAAA979003C6C76 /* Frameworks */,
 				E94572EC2DAAA979003C6C76 /* Resources */,
 				E94573252DAAA99B003C6C76 /* ShellScript */,
+				E98D3ECB2DC2552C00C6F657 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -142,6 +153,7 @@
 			packageProductDependencies = (
 				E97ECCF82DABA8A7004305D7 /* SnapKit */,
 				E97F2BC12DAC0BBC00CE1AA3 /* DGCharts */,
+				E98D3EC62DC2552400C6F657 /* PhoneNumberKit */,
 			);
 			productName = MoneyMind;
 			productReference = E94572EE2DAAA979003C6C76 /* MoneyMind.app */;
@@ -225,6 +237,7 @@
 			packageReferences = (
 				E97ECCF62DABA312004305D7 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				E97F2BC02DAC0BAE00CE1AA3 /* XCRemoteSwiftPackageReference "Charts" */,
+				E98D3EC52DC254F600C6F657 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E94572EF2DAAA979003C6C76 /* Products */;
@@ -628,6 +641,14 @@
 				minimumVersion = 5.1.0;
 			};
 		};
+		E98D3EC52DC254F600C6F657 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/marmelroy/PhoneNumberKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -640,6 +661,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E97F2BC02DAC0BAE00CE1AA3 /* XCRemoteSwiftPackageReference "Charts" */;
 			productName = DGCharts;
+		};
+		E98D3EC62DC2552400C6F657 /* PhoneNumberKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E98D3EC52DC254F600C6F657 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
+			productName = PhoneNumberKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

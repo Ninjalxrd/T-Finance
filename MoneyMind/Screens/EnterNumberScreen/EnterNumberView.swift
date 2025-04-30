@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import SnapKit
+import PhoneNumberKit
 
 final class EnterNumberView: UIView {
     // MARK: - Properties
@@ -15,7 +16,7 @@ final class EnterNumberView: UIView {
     var nextScreenPublisher: AnyPublisher<Void, Never> {
         nextScreenSubject.eraseToAnyPublisher()
     }
-    private var cancellables = Set<AnyCancellable>()
+    private var bag: Set<AnyCancellable> = []
     var bottomConstraint: Constraint?
     
     // MARK: - Lifecycle
@@ -31,7 +32,7 @@ final class EnterNumberView: UIView {
     
     // MARK: - UI Components
 
-    lazy var logoStack = Logo()
+    private(set) lazy var logoStack = Logo()
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -42,24 +43,37 @@ final class EnterNumberView: UIView {
         return label
     }()
     
-    private lazy var numberTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Номер телефона"
+    private lazy var numberTextField: RussianPhoneNumberTextField = {
+        let textField = RussianPhoneNumberTextField()
+        
+        textField.textAlignment = .left
+        textField.keyboardType = .numberPad
+        textField.backgroundColor = .component
+        textField.autocorrectionType = .no
         textField.font = Font.subtitle.font
         textField.layer.cornerRadius = Size.cornerRadius
         textField.backgroundColor = .component
-        textField.keyboardType = .numberPad
-        textField.returnKeyType = .next
         textField.clipsToBounds = true
-        textField.heightAnchor.constraint(equalToConstant: Size.fieldHeight).isActive = true
+        textField.withPrefix = true
+        textField.withExamplePlaceholder = true
+        textField.withDefaultPickerUI = false
+        textField.textColor = .text
         
-        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: Spacing.small, height: 0))
+        textField.delegate = self
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: Spacing.medium, height: 0))
         textField.leftViewMode = .always
-        textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: Spacing.small, height: 0))
+        textField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: Spacing.medium, height: 0))
         textField.rightViewMode = .always
-        
+        textField.heightAnchor.constraint(equalToConstant: Size.fieldHeight).isActive = true
+
         return textField
     }()
+    
+    // MARK: - Number Getter
+    
+    func getNumber() -> String {
+        return numberTextField.text ?? ""
+    }
     
     // MARK: - Internal NumberTextField Methods
     
@@ -74,18 +88,12 @@ final class EnterNumberView: UIView {
     }
         
     private lazy var nextScreenButton: UIButton = {
-        let button = UIButton(primaryAction: nextScreenAction)
-        button.setTitle("Далее", for: .normal)
-        button.backgroundColor = .brand
-        button.titleLabel?.font = Font.button.font
-        button.tintColor = .text
-        button.layer.cornerRadius = Size.cornerRadius
-        button.clipsToBounds = true
+        let button = DefaultButton(title: "Далее", action: nextScreenAction)
         button.heightAnchor.constraint(equalToConstant: Size.buttonHeight).isActive = true
         return button
     }()
     
-    lazy var enterNumberStack: UIStackView = {
+    private lazy var enterNumberStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [titleLabel, numberTextField, nextScreenButton])
         stack.axis = .vertical
         stack.alignment = .fill
@@ -187,11 +195,40 @@ extension EnterNumberView:
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        numberTextField.bounds.contains(touch.location(in: numberTextField)) ? false : true    
+        numberTextField.bounds.contains(touch.location(in: numberTextField))
+        || nextScreenButton.bounds.contains(touch.location(in: nextScreenButton))
+        ? false : true    
     }
 }
 
 private extension CGFloat {
     static let logoStackHeight: CGFloat = 64
     static let bottomBorderImageHeight: CGFloat = 237
+}
+
+extension EnterNumberView: UITextFieldDelegate {
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        guard
+            let currentText = textField.text,
+            let textRange = Range(range, in: currentText)
+        else {
+            return false
+        }
+        let updatedText = currentText.replacingCharacters(in: textRange, with: string)
+        if updatedText.count < 2 || !updatedText.hasPrefix("+7") {
+            return false
+        }
+        let currentDigits = updatedText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
+        if string.isEmpty {
+            return true
+        }
+        if currentDigits.count > 11 {
+            return false
+        }
+        return CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: string))
+    }
 }

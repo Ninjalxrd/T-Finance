@@ -20,7 +20,7 @@ class DistributionViewController: UIViewController {
     
     private let distributionView: DistributionView = .init()
     private let distributionViewModel: DistributionViewModel
-    private var cancellables = Set<AnyCancellable>()
+    private var bag = Set<AnyCancellable>()
     
     // MARK: - Lifecycle
     
@@ -42,35 +42,31 @@ class DistributionViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .background
         addCollectionViewDependencies()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         bindViewModel()
     }
     
     // MARK: Setup Methods
     
     private func addCollectionViewDependencies() {
-        distributionView.categoriesCollectionView.delegate = self
-        distributionView.categoriesCollectionView.dataSource = self
+        distributionView.setCollectionViewDelegate(self)
+        distributionView.setCollectionViewDataSource(self)
     }
     
     private func bindViewModel() {
         distributionViewModel.$pickedCategories
             .receive(on: DispatchQueue.main)
             .sink { [weak self] picked in
-                self?.distributionView.categoriesCollectionView.reloadData()
+                self?.distributionView.collectionViewReloadData()
                 self?.distributionView.updateChart(with: picked)
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
         
         distributionViewModel.$availableCategories
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.distributionView.categoriesCollectionView.reloadData()
+                self?.distributionView.collectionViewReloadData()
             }
-            .store(in: &cancellables)
+            .store(in: &bag)
     }
 }
 

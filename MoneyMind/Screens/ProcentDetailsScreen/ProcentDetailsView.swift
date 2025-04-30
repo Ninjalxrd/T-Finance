@@ -11,6 +11,7 @@ import SnapKit
 
 final class ProcentDetailsView: UIView {
     // MARK: - Publishers
+    
     private let addCategorySubject = PassthroughSubject<Void, Never>()
     var addCategoryPublisher: AnyPublisher<Void, Never> {
         return addCategorySubject.eraseToAnyPublisher()
@@ -25,7 +26,7 @@ final class ProcentDetailsView: UIView {
     var bottomConstraint: Constraint?
     private var cancellables = Set<AnyCancellable>()
 
-    // MARK: - Initialization
+    // MARK: - Init
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -54,11 +55,7 @@ final class ProcentDetailsView: UIView {
     }()
     
     private lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 2
-        label.textAlignment = .left
-        label.font = Font.smallTitle.font
-        label.textColor = .text
+        let label = DefaultLabel(numberOfLines: 2, text: "")
         return label
     }()
     
@@ -80,7 +77,7 @@ final class ProcentDetailsView: UIView {
         return stack
     }()
     
-    lazy var procentsTextField: UITextField = {
+    private lazy var procentsTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "%"
         textField.backgroundColor = .clear
@@ -90,8 +87,24 @@ final class ProcentDetailsView: UIView {
         textField.becomeFirstResponder()
         return textField
     }()
+    
+    // MARK: - Internal TextField Methods
+    
+    func setupTextFieldDelegate(_ delegate: UITextFieldDelegate) {
+        procentsTextField.delegate = delegate
+    }
+    
+    func getProcents() -> String? {
+        return procentsTextField.text
+    }
+    
+    // MARK: - Internal Accessor
+    
+    var procentsTextFieldPublisher: AnyPublisher<String, Never> {
+        procentsTextField.textPublisher
+    }
 
-    lazy var procentsBalanceLabel: UILabel = {
+    private lazy var procentsBalanceLabel: UILabel = {
         let label = UILabel()
         label.textColor = .secondaryText
         label.font = Font.subtitle.font
@@ -99,6 +112,12 @@ final class ProcentDetailsView: UIView {
         label.textAlignment = .left
         return label
     }()
+    
+    // MARK: - Internal ProcentsBalanceLabel methods
+    
+    func setupProcentBalanceLabelText(_ text: String) {
+        procentsBalanceLabel.text = text
+    }
 
     private lazy var thisLabel: UILabel = {
         let label = UILabel()
@@ -120,7 +139,7 @@ final class ProcentDetailsView: UIView {
         return label
     }()
     
-    lazy var procentSumLabel: UILabel = {
+    private lazy var procentSumLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
         label.textAlignment = .left
@@ -130,7 +149,13 @@ final class ProcentDetailsView: UIView {
         return label
     }()
     
-    lazy var balanceLabel: UILabel = {
+    // MARK: - Internal ProcentSumLabel methods
+    
+    func setupProcentSumLabelText(_ text: String) {
+        procentSumLabel.text = text
+    }
+    
+    private lazy var balanceLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
         label.textAlignment = .left
@@ -139,6 +164,12 @@ final class ProcentDetailsView: UIView {
         label.heightAnchor.constraint(equalToConstant: CGFloat.labelHeight).isActive = true
         return label
     }()
+    
+    // MARK: - Internal BalanceLabel methods
+    
+    func setupBalanceLabelText(_ text: String) {
+        balanceLabel.text = text
+    }
     
     private lazy var separator: UIView = {
         let view = UIView()
@@ -159,13 +190,7 @@ final class ProcentDetailsView: UIView {
     }()
     
     private lazy var addButton: UIButton = {
-        let button = UIButton(primaryAction: addCategoryAction)
-        button.setTitle("Добавить", for: .normal)
-        button.backgroundColor = .brand
-        button.titleLabel?.font = Font.button.font
-        button.tintColor = .text
-        button.layer.cornerRadius = Size.cornerRadius
-        button.clipsToBounds = true
+        let button = DefaultButton(title: "Добавить", action: addCategoryAction)
         return button
     }()
     
