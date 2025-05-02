@@ -42,6 +42,7 @@ class DistributionViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .background
         addCollectionViewDependencies()
+        setupCallbacks()
         bindViewModel()
     }
     
@@ -58,6 +59,7 @@ class DistributionViewController: UIViewController {
             .sink { [weak self] picked in
                 self?.distributionView.collectionViewReloadData()
                 self?.distributionView.updateChart(with: picked)
+                self?.distributionView.setNextScreenButtonEnabled(!picked.isEmpty)
             }
             .store(in: &bag)
         
@@ -65,6 +67,15 @@ class DistributionViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.distributionView.collectionViewReloadData()
+            }
+            .store(in: &bag)
+    }
+    
+    private func setupCallbacks() {
+        distributionView.nextScreenPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.distributionViewModel.openMainScreen()
             }
             .store(in: &bag)
     }

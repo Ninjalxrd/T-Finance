@@ -18,6 +18,7 @@ final class UserManager {
     private let userDefaults = UserDefaults.standard
     private let isRegisteredKey = "isRegistered"
     private let hasIncomeKey = "hasIncome"
+    private let budgetKey = "userBudget"
     
     // MARK: - Get/Set Properties
     
@@ -36,6 +37,15 @@ final class UserManager {
         }
         set {
             userDefaults.set(newValue, forKey: hasIncomeKey)
+        }
+    }
+    
+    var budget: Int {
+        get {
+            userDefaults.integer(forKey: budgetKey)
+        }
+        set {
+            userDefaults.set(newValue, forKey: budgetKey)
         }
     }
     

@@ -24,7 +24,7 @@ final class ProcentDetailsView: UIView {
     // MARK: - Properties
 
     var bottomConstraint: Constraint?
-    private var cancellables = Set<AnyCancellable>()
+    private var cancellables: Set<AnyCancellable> = []
 
     // MARK: - Init
 
@@ -56,6 +56,7 @@ final class ProcentDetailsView: UIView {
     
     private lazy var titleLabel: UILabel = {
         let label = DefaultLabel(numberOfLines: 2, text: "")
+        label.font = Font.smallTitle.font
         return label
     }()
     
@@ -241,6 +242,7 @@ final class ProcentDetailsView: UIView {
         contentView.addSubview(balanceStack)
         contentView.addSubview(addButton)
         addGestureRecognizer(tapGestureRecognizer)
+        
         setupProcentsView()
         setupConstraints()
     }
@@ -294,7 +296,7 @@ final class ProcentDetailsView: UIView {
     }
     
     func setupTitleLabel(with category: Category) {
-        titleLabel.text = "Укажите процент категории:\n\(category.name)"
+        titleLabel.text = "Укажите процент категории: \n \(category.name)"
     }
     
     // MARK: - GestureRecognizer

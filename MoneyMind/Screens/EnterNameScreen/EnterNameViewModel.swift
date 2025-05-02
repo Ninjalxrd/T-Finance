@@ -11,4 +11,8 @@ final class EnterNameViewModel {
     init(coordinator: EnterNameCoordinator) {
         self.coordinator = coordinator
     }
+    
+    func openBudgetInputScreen() {
+        coordinator.openBudgetInputScreen()
+    }
 }

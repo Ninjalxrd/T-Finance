@@ -6,11 +6,14 @@
 //
 
 import UIKit
+import Combine
 
 final class EnterNameViewController: UIViewController {
     // MARK: - Properties
+    
     private let enterNameView: EnterNameView = .init()
     private let viewModel: EnterNameViewModel
+    private var bag: Set<AnyCancellable> = []
     
     // MARK: - Lifecycle
     
@@ -28,6 +31,15 @@ final class EnterNameViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(123)
+        setupCallbacks()
+    }
+    
+    // MARK: - Setup Methods
+    private func setupCallbacks() {
+        enterNameView.nextScreenPublisher
+            .sink { [weak self] _ in
+                self?.viewModel.openBudgetInputScreen()
+            }
+            .store(in: &bag)
     }
 }

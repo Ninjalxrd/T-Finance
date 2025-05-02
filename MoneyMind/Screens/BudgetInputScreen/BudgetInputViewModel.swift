@@ -21,5 +21,9 @@ final class BudgetInputViewModel {
     }
 
     // MARK: Actions
-    func nextScreenButtonTapped(with budget: Int) { coordinator?.openDistributionScreen(with: budget) }
+    func nextScreenButtonTapped(with budget: Int) {
+        UserManager.shared.budget = budget
+        UserManager.shared.hasIncome = true
+        coordinator?.openDistributionScreen(with: budget)
+    }
 }

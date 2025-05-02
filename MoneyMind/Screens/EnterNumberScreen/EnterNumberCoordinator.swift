@@ -7,16 +7,19 @@
 
 import UIKit
 
-final class EnterNumberCoordinator {
+final class EnterNumberCoordinator: Coordinator {
     // MARK: - Private Properties
     
+    private let window: UIWindow
     private(set) var navigationController: UINavigationController
     private var confirmationCoordinator: ConfirmationCoordinator?
-    
+    var childCoordinators: [Coordinator] = []
+
     // MARK: - Initialization
     
-    init(navigationController: UINavigationController) {
-        self.navigationController = navigationController
+    init(window: UIWindow) {
+        self.navigationController = UINavigationController()
+        self.window = window
     }
     
     // MARK: - Public Methods
@@ -24,13 +27,13 @@ final class EnterNumberCoordinator {
     func start() {
         let enterNumberViewModel = EnterNumberViewModel(coordinator: self)
         let enterNumberController = EnterNumberController(viewModel: enterNumberViewModel)
-        navigationController.pushViewController(enterNumberController, animated: true)
+        navigationController.setViewControllers([enterNumberController], animated: true)
     }
     
     // MARK: - Navigation Methods
     
     func openConfirmationScreen(with number: String) {
-        confirmationCoordinator = ConfirmationCoordinator(navigationController: navigationController)
+        confirmationCoordinator = ConfirmationCoordinator(navigationController: navigationController, window: window)
         confirmationCoordinator?.start(with: number)
     }
 }

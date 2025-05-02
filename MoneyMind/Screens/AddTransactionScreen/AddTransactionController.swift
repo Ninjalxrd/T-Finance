@@ -9,6 +9,7 @@ import UIKit
 
 final class AddTransactionController: UIViewController {
     private let viewModel: AddTransactionViewModel
+    private let addTransactionView: AddTransactionView = .init(frame: .zero)
     
     init(viewModel: AddTransactionViewModel) {
         self.viewModel = viewModel
@@ -17,6 +18,11 @@ final class AddTransactionController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func loadView() {
+        super.loadView()
+        view = addTransactionView
     }
     
     override func viewDidLoad() {

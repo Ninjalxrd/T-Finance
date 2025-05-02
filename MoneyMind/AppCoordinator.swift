@@ -14,7 +14,7 @@ protocol Coordinator: AnyObject {
 final class AppCoordinator: Coordinator {
     private let window: UIWindow
     private let windowScene: UIWindowScene
-    var childCoordinators = [Coordinator]()
+    var childCoordinators: [Coordinator] = []
     
     init(window: UIWindow, windowScene: UIWindowScene) {
         self.window = window
@@ -22,6 +22,8 @@ final class AppCoordinator: Coordinator {
     }
     
     func start() {
+        window.windowScene = windowScene
+        window.makeKeyAndVisible()
         let userManager = UserManager.shared
         if !userManager.isRegistered {
             startAuthFlow()
@@ -32,25 +34,28 @@ final class AppCoordinator: Coordinator {
         }
     }
 
-    
-    // изменить на стартовый экран
     private func startAuthFlow() {
-        let confirmationCoordinator = ConfirmationCoordinator(window: window)
-        childCoordinators.append(confirmationCoordinator)
-        confirmationCoordinator.start()
+        let enterNumberCoordinator = EnterNumberCoordinator(window: window)
+        childCoordinators.append(enterNumberCoordinator)
+        window.rootViewController = enterNumberCoordinator.navigationController
+        enterNumberCoordinator.start()
     }
     
     private func startBudgetInputFlow() {
-        let budgetInputCoordinator = BudgetInputCoordinator(window: window)
+        let budgetInputCoordinator = BudgetInputCoordinator(
+            navigationController: UINavigationController(), window: window)
         childCoordinators.append(budgetInputCoordinator)
+        window.rootViewController = budgetInputCoordinator.navigationController
         budgetInputCoordinator.start()
     }
     
     private func startMainFlow() {
-        
+        let tabBarCoordinator = TabBarCoordinator(window: window)
+        childCoordinators.append(tabBarCoordinator)
+        window.rootViewController = tabBarCoordinator.tabBarController
+        tabBarCoordinator.start()
     }
 }
-
 
 extension Coordinator {
     func removeChildCoordinator(_ coordinator: Coordinator) {

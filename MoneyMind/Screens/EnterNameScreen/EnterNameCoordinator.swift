@@ -10,12 +10,14 @@ import UIKit
 final class EnterNameCoordinator: Coordinator {
     // MARK: - Properties
 
-    let navigationController: UINavigationController
+    private let window: UIWindow
+    private let navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
     // MARK: - Init
     
-    init() {
-        self.navigationController = UINavigationController()
+    init(navigationController: UINavigationController, window: UIWindow) {
+        self.navigationController = navigationController
+        self.window = window
     }
     
     // MARK: Methods
@@ -23,6 +25,11 @@ final class EnterNameCoordinator: Coordinator {
     func start() {
         let viewModel = EnterNameViewModel(coordinator: self)
         let enterNameViewController = EnterNameViewController(viewModel: viewModel)
-        navigationController.pushViewController(enterNameViewController, animated: true)
+        navigationController.setViewControllers([enterNameViewController], animated: true)
+    }
+    
+    func openBudgetInputScreen() {
+        let budgetInputCoordinator = BudgetInputCoordinator(navigationController: navigationController, window: window)
+        budgetInputCoordinator.start()
     }
 }

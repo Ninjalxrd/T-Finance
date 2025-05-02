@@ -7,18 +7,16 @@
 
 import UIKit
 
-final class MoreCoordinator {
+final class MoreCoordinator: Coordinator {
     // MARK: - Properties
     
     private let navigationController: UINavigationController
-    private let window: UIWindow
-    var childCoordinators = [Coordinator]()
+    var childCoordinators: [Coordinator] = []
 
     // MARK: - Init
     
-    init(window: UIWindow) {
-        self.navigationController = UINavigationController()
-        self.window = window
+    init(navigationController: UINavigationController) {
+        self.navigationController = navigationController
     }
 
     // MARK: - Public
@@ -27,7 +25,5 @@ final class MoreCoordinator {
         let viewModel = MoreViewModel(coordinator: self)
         let controller = MoreViewController(viewModel: viewModel)
         navigationController.setViewControllers([controller], animated: false)
-        window.rootViewController = navigationController
-        window.makeKeyAndVisible()
     }
 }

@@ -7,18 +7,16 @@
 
 import UIKit
 
-final class GoalsCoordinator {
+final class GoalsCoordinator: Coordinator {
     // MARK: - Properties
     
     private let navigationController: UINavigationController
-    private let window: UIWindow
     var childCoordinators: [Coordinator] = []
 
     // MARK: - Init
     
-    init(window: UIWindow) {
-        self.navigationController = UINavigationController()
-        self.window = window
+    init(navigationController: UINavigationController) {
+        self.navigationController = navigationController
     }
 
     // MARK: - Public
@@ -27,7 +25,5 @@ final class GoalsCoordinator {
         let viewModel = GoalsViewModel(coordinator: self)
         let controller = GoalsController(viewModel: viewModel)
         navigationController.setViewControllers([controller], animated: false)
-        window.rootViewController = navigationController
-        window.makeKeyAndVisible()
     }
 }

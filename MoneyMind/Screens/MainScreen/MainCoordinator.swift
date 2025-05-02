@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MainCoordinator {
+final class MainCoordinator: Coordinator {
     // MARK: - Properties
     
     private let navigationController: UINavigationController
@@ -21,11 +21,14 @@ final class MainCoordinator {
     }
 
     // MARK: - Public
+    
     func start() {
         let viewModel = MainViewModel(coordinator: self)
         let controller = MainViewController(viewModel: viewModel)
         navigationController.setViewControllers([controller], animated: false)
-        window.rootViewController = navigationController
-        window.makeKeyAndVisible()
+    }
+    
+    func getNavigationController() -> UINavigationController {
+        return navigationController
     }
 }
