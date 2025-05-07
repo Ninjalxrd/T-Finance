@@ -1,12 +1,12 @@
 //
-//  ViewState.swift
+//  ExpencesViewState.swift
 //  MoneyMind
 //
 //  Created by Павел on 06.05.2025.
 //
 
-enum ViewState {
+enum ExpencesViewState {
     case loading
-    case content([MyModel])
+    case content([Expence])
     case error(String)
 }

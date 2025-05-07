@@ -12,21 +12,20 @@ import Combine
 
 final class DistributionView: UIView {
     // MARK: - Publishers
+    
     private let nextScreenSubject = PassthroughSubject<Void, Never>()
     var nextScreenPublisher: AnyPublisher<Void, Never> {
         nextScreenSubject.eraseToAnyPublisher()
     }
     
     // MARK: - Properties
+    
     private var cancellables = Set<AnyCancellable>()
-    private var entries: [PieChartDataEntry] = []
-    private var dataSetColors: [NSUIColor] = []
     
     // MARK: - Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
-        setupDefaultChart()
     }
     
     required init?(coder: NSCoder) {
@@ -34,25 +33,14 @@ final class DistributionView: UIView {
     }
     
     // MARK: - UI Components
+    
     private lazy var titleLabel: UILabel = {
         let label = DefaultLabel(numberOfLines: 2, text: "Распределите\nбюджет")
         return label
     }()
     
-    private lazy var chartView: PieChartView = {
-        let chart = PieChartView()
-        chart.legend.enabled = false
-        chart.drawHoleEnabled = true
-        chart.holeRadiusPercent = 0.6
-        chart.holeColor = .clear
-        chart.transparentCircleRadiusPercent = 0
-        chart.usePercentValuesEnabled = true
-        
-        chart.layer.shadowColor = UIColor.black.cgColor
-        chart.layer.shadowOffset = CGSize(width: 0, height: 2)
-        chart.layer.shadowOpacity = 0.5
-        chart.layer.shadowRadius = 4
-        chart.layer.masksToBounds = false
+    private lazy var chartView: ChartView = {
+        let chart = ChartView()
         return chart
     }()
     
@@ -95,26 +83,7 @@ final class DistributionView: UIView {
     }
     
     func updateChart(with categories: [Category]) {
-        guard !categories.isEmpty else {
-            setupDefaultChart()
-            return
-        }
-        
-        entries = categories.map { category in
-            return PieChartDataEntry(value: Double(category.percent))
-        }
-        
-        dataSetColors = categories.map { category in
-            UIColor(hex: category.backgroundColor) ?? .black
-        }
-        
-        let dataSet = PieChartDataSet(entries: entries)
-        dataSet.colors = dataSetColors
-        dataSet.drawValuesEnabled = false
-        
-        chartView.data = PieChartData(dataSet: dataSet)
-        chartView.animate(yAxisDuration: 0.4, easingOption: .linear)
-        chartView.notifyDataSetChanged()
+        chartView.updateChart(with: categories)
     }
     
     // MARK: - Private Methods
@@ -142,15 +111,6 @@ final class DistributionView: UIView {
             trailing: 0)
 
         return UICollectionViewCompositionalLayout(section: section)
-    }
-    
-    private func setupDefaultChart() {
-        let entry = PieChartDataEntry(value: 1)
-        let dataSet = PieChartDataSet(entries: [entry])
-        dataSet.colors = [UIColor(.defaultChart)]
-        dataSet.drawValuesEnabled = false
-        chartView.data = PieChartData(dataSet: dataSet)
-        chartView.animate(yAxisDuration: 0.7, easingOption: .easeOutBack)
     }
     
     // MARK: - Setup UI

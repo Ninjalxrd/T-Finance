@@ -123,6 +123,7 @@ final class DistributionViewModel {
     }
     
     func openMainScreen() {
+        UserManager.shared.categories = pickedCategories
         coordinator?.openMainScreen()
     }
 }

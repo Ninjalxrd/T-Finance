@@ -5,10 +5,40 @@
 //  Created by Павел on 26.04.2025.
 //
 
-final class MainViewModel {
-    // MARK: Properties
-    var coordinator: MainCoordinator?
+import Combine
+import Foundation
 
-    // MARK: Init
-    init(coordinator: MainCoordinator) { self.coordinator = coordinator }
+final class MainViewModel {
+    // MARK: - Published Properties
+    @Published private(set) var state: ExpencesViewState = .loading
+    @Published private(set) var lastExpences: [Expence] = []
+
+    // MARK: - Properties
+    
+    var coordinator: MainCoordinator?
+    private var bag: Set<AnyCancellable> = []
+    private let expencesManager = ExpencesManager.shared
+
+    // MARK: - Init
+    
+    init(coordinator: MainCoordinator) {
+        self.coordinator = coordinator
+        getLastExpences()
+    }
+    
+    private func getLastExpences() {
+        expencesManager.fetchFromServer()
+        expencesManager.$allExpences
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] expences in
+                guard let self else { return }
+                if expences.isEmpty {
+                    self.state = .loading
+                } else {
+                    self.lastExpences = Array(expences.prefix(3))
+                    self.state = .content(lastExpences)
+                }
+            }
+            .store(in: &bag)
+    }
 }

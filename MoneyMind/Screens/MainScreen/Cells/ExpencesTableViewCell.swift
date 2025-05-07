@@ -7,6 +7,7 @@
 
 import SnapKit
 import UIKit
+import SkeletonView
 
 class ExpencesTableViewCell: UITableViewCell {
     // MARK: - Init
@@ -14,6 +15,7 @@ class ExpencesTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
+        setupSkeleton()
     }
     
     required init?(coder: NSCoder) {
@@ -33,13 +35,15 @@ class ExpencesTableViewCell: UITableViewCell {
     
     private lazy var expencePlaceLabel: UILabel = {
         let label = DefaultLabel(numberOfLines: 1, text: "")
+        label.text = "Default Skeleton Placeholder"
         label.font = Font.subtitle.font
         return label
     }()
     
     private lazy var expenceCategoryLabel: UILabel = {
         let label = DefaultLabel(numberOfLines: 1, text: "")
-        label.font = Font.body.font
+        label.font = Font.bigBody.font
+        label.text = "Default Skeleton Placeholder"
         label.textColor = .secondaryText
         return label
     }()
@@ -47,6 +51,7 @@ class ExpencesTableViewCell: UITableViewCell {
     private lazy var expenceSumLabel: UILabel = {
         let label = DefaultLabel(numberOfLines: 1, text: "")
         label.font = Font.subtitle.font
+        label.text = "Placeholder"
         return label
     }()
     
@@ -82,6 +87,8 @@ class ExpencesTableViewCell: UITableViewCell {
     // MARK: - Setup UI
     
     private func setupUI() {
+        isSkeletonable = true
+        contentView.isSkeletonable = true
         contentView.addSubview(categoryImage)
         contentView.addSubview(expenceTextStack)
         
@@ -103,15 +110,29 @@ class ExpencesTableViewCell: UITableViewCell {
     func configureCell(with expence: Expence) {
         categoryImage.image = expence.image
         expencePlaceLabel.text = expence.shop
-        expenceCategoryLabel.text = expence.category.name
-        expenceSumLabel.text = String(describing: expence.sum)
+        expenceCategoryLabel.text = expence.category
+        expenceSumLabel.text = "-\(expence.sum) ₽"
+    }
+    
+    func setupSkeleton() {
+        [
+            categoryImage,
+            expenceSumLabel,
+            expencePlaceLabel,
+            expenceCategoryLabel,
+            expenceTextStack,
+            expencePlaceAndCategoryStack
+        ].forEach {
+            $0.isSkeletonable = true
+            $0.skeletonCornerRadius = Float(CGFloat.imageSize / 2)
+        }
     }
 }
 
 // MARK: - Extensions
 
 private extension CGFloat {
-    static let imageSize: CGFloat = 32
+    static let imageSize: CGFloat = 48
     static let stackHeight: CGFloat = 48
 }
 
