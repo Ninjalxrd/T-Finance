@@ -19,11 +19,16 @@ final class GoalsCoordinator: Coordinator {
         self.navigationController = navigationController
     }
 
-    // MARK: - Public
+    // MARK: - Public Methods
     
     func start() {
         let viewModel = GoalsViewModel(coordinator: self)
         let controller = GoalsController(viewModel: viewModel)
+        controller.tabBarItem = UITabBarItem(
+            title: "Цели",
+            image: UIImage(named: "goals"),
+            selectedImage: UIImage(named: "goals_selected")
+        )
         navigationController.setViewControllers([controller], animated: false)
     }
 }

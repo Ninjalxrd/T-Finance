@@ -18,11 +18,16 @@ final class AddTransactionCoordinator: Coordinator {
         self.navigationController = navigationController
     }
 
-    // MARK: - Public
+    // MARK: - Public Methods
     
     func start() {
         let viewModel = AddTransactionViewModel(coordinator: self)
         let controller = AddTransactionController(viewModel: viewModel)
+        controller.tabBarItem = UITabBarItem(
+            title: "Добавить",
+            image: UIImage(named: "add_transaction"),
+            selectedImage: UIImage(named: "add_selected")
+        )
         navigationController.setViewControllers([controller], animated: false)
     }
 }

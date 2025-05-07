@@ -11,29 +11,25 @@ final class BudgetInputCoordinator: Coordinator {
     // MARK: - Properties
     
     let navigationController: UINavigationController
-    private let window: UIWindow
     private var distributionCoordinator: DistributionCoordinator?
     var childCoordinators: [Coordinator] = []
-
+    
     // MARK: - Init
     
-    init(navigationController: UINavigationController, window: UIWindow) {
+    init(navigationController: UINavigationController) {
         self.navigationController = navigationController
-        self.window = window
     }
     
-    // MARK: - Public
+    // MARK: - Public Methods
     
     func start() {
         let viewModel = BudgetInputViewModel(coordinator: self)
         let controller = BudgetInputController(viewModel: viewModel)
-        window.rootViewController = navigationController
-        window.makeKeyAndVisible()
         navigationController.setViewControllers([controller], animated: true)
     }
-
+    
     func openDistributionScreen(with budget: Int) {
-        distributionCoordinator = DistributionCoordinator(navigationController: navigationController, window: window)
+        distributionCoordinator = DistributionCoordinator(navigationController: navigationController)
         guard let distributionCoordinator else { return }
         childCoordinators.append(distributionCoordinator)
         distributionCoordinator.start(with: budget)

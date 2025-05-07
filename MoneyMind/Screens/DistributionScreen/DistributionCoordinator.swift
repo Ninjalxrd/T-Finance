@@ -14,16 +14,14 @@ final class DistributionCoordinator: Coordinator {
     var childCoordinators: [Coordinator] = []
     let navigationController: UINavigationController
     private let transitionDelegate = CustomTransitioningDelegate()
-    private let window: UIWindow
     private var cancellables = Set<AnyCancellable>()
     private var distributionViewModel: DistributionViewModel?
     private var budget: Int?
     
     // MARK: - Init
 
-    init(navigationController: UINavigationController, window: UIWindow) {
+    init(navigationController: UINavigationController) {
         self.navigationController = navigationController
-        self.window = window
     }
     
     // MARK: - Start
@@ -43,6 +41,11 @@ final class DistributionCoordinator: Coordinator {
             coordinator: self)
         let distributionViewController = DistributionViewController(
             distributionViewModel: distributionViewModel)
+        distributionViewController.tabBarItem = UITabBarItem(
+            title: "Бюджет",
+            image: UIImage(named: "budget"),
+            selectedImage: UIImage(named: "budget_selected")
+            )
         self.distributionViewModel = distributionViewModel
         navigationController.pushViewController(distributionViewController, animated: true)
     }
@@ -68,10 +71,10 @@ final class DistributionCoordinator: Coordinator {
     }
     
     func openMainScreen() {
-        let tabBarCoordinator = TabBarCoordinator(window: window)
+        let tabBarCoordinator = TabBarCoordinator()
         childCoordinators.append(tabBarCoordinator)
         tabBarCoordinator.start()
-        window.rootViewController = tabBarCoordinator.tabBarController
-        window.makeKeyAndVisible()
+            
+        navigationController.setViewControllers([tabBarCoordinator.tabBarController], animated: true)
     }
 }

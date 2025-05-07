@@ -19,11 +19,16 @@ final class MoreCoordinator: Coordinator {
         self.navigationController = navigationController
     }
 
-    // MARK: - Public
+    // MARK: - Public Methods
     
     func start() {
         let viewModel = MoreViewModel(coordinator: self)
         let controller = MoreViewController(viewModel: viewModel)
+        controller.tabBarItem = UITabBarItem(
+            title: "Еще",
+            image: UIImage(named: "more"),
+            selectedImage: UIImage(named: "more_selected")
+        )
         navigationController.setViewControllers([controller], animated: false)
     }
 }

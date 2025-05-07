@@ -11,13 +11,12 @@ final class MainCoordinator: Coordinator {
     // MARK: - Properties
     
     private let navigationController: UINavigationController
-    private let window: UIWindow
     var childCoordinators: [Coordinator] = []
 
     // MARK: - Init
-    init(window: UIWindow) {
-        self.navigationController = UINavigationController()
-        self.window = window
+    
+    init(navigationController: UINavigationController) {
+        self.navigationController = navigationController
     }
 
     // MARK: - Public
@@ -25,10 +24,11 @@ final class MainCoordinator: Coordinator {
     func start() {
         let viewModel = MainViewModel(coordinator: self)
         let controller = MainViewController(viewModel: viewModel)
+        controller.tabBarItem = UITabBarItem(
+            title: "Главная",
+            image: UIImage(named: "home"),
+            selectedImage: UIImage(named: "home_selected")
+        )
         navigationController.setViewControllers([controller], animated: false)
-    }
-    
-    func getNavigationController() -> UINavigationController {
-        return navigationController
     }
 }

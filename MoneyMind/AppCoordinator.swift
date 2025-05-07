@@ -8,21 +8,17 @@ import UIKit
 
 protocol Coordinator: AnyObject {
     func start()
-    var childCoordinators: [Coordinator] { get set }
 }
 
 final class AppCoordinator: Coordinator {
     private let window: UIWindow
-    private let windowScene: UIWindowScene
     var childCoordinators: [Coordinator] = []
     
-    init(window: UIWindow, windowScene: UIWindowScene) {
+    init(window: UIWindow) {
         self.window = window
-        self.windowScene = windowScene
     }
     
     func start() {
-        window.windowScene = windowScene
         window.makeKeyAndVisible()
         let userManager = UserManager.shared
         if !userManager.isRegistered {
@@ -35,7 +31,7 @@ final class AppCoordinator: Coordinator {
     }
 
     private func startAuthFlow() {
-        let enterNumberCoordinator = EnterNumberCoordinator(window: window)
+        let enterNumberCoordinator = EnterNumberCoordinator(navigationController: UINavigationController())
         childCoordinators.append(enterNumberCoordinator)
         window.rootViewController = enterNumberCoordinator.navigationController
         enterNumberCoordinator.start()
@@ -43,22 +39,16 @@ final class AppCoordinator: Coordinator {
     
     private func startBudgetInputFlow() {
         let budgetInputCoordinator = BudgetInputCoordinator(
-            navigationController: UINavigationController(), window: window)
+            navigationController: UINavigationController())
         childCoordinators.append(budgetInputCoordinator)
         window.rootViewController = budgetInputCoordinator.navigationController
         budgetInputCoordinator.start()
     }
     
     private func startMainFlow() {
-        let tabBarCoordinator = TabBarCoordinator(window: window)
+        let tabBarCoordinator = TabBarCoordinator()
         childCoordinators.append(tabBarCoordinator)
         window.rootViewController = tabBarCoordinator.tabBarController
         tabBarCoordinator.start()
-    }
-}
-
-extension Coordinator {
-    func removeChildCoordinator(_ coordinator: Coordinator) {
-        childCoordinators.removeAll { $0 === coordinator }
     }
 }

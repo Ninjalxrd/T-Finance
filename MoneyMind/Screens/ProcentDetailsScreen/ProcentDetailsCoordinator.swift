@@ -36,7 +36,7 @@ final class ProcentDetailsCoordinator: Coordinator {
         self.onCategoryAdded = onCategoryAdded
     }
 
-    // MARK: - Start
+    // MARK: - Public Methods
 
     func start() {
         let controller = ProcentDetailsController(
