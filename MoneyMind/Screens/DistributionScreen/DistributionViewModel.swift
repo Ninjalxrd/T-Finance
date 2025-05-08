@@ -121,4 +121,8 @@ final class DistributionViewModel {
     func showError() {
         coordinator?.showErrorAlert()
     }
+    
+    func openMainScreen() {
+        coordinator?.openMainScreen()
+    }
 }

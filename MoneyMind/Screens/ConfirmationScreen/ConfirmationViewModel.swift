@@ -62,6 +62,7 @@ final class ConfirmationViewModel {
     
     func validateCode(with code: Int) -> Bool {
         if code == serverCode {
+            UserManager.shared.isRegistered = true
             coordinator?.openEnterNameScreen()
             return true
         }

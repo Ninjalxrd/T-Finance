@@ -15,7 +15,7 @@ final class ProcentDetailsController: UIViewController {
     private let selectedCategory: Category
     private let procentsView: ProcentDetailsView = .init()
     private let procentsViewModel: ProcentDetailsViewModel
-    private var bag = Set<AnyCancellable>()
+    private var bag: Set<AnyCancellable> = []
     private var budget: Int
     let onAddCategory = PassthroughSubject<Category, Never>()
     
@@ -46,6 +46,10 @@ final class ProcentDetailsController: UIViewController {
         setupCallbacks()
         bindTextField()
         bindViewModel()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         addObserver()
     }
 
@@ -54,6 +58,7 @@ final class ProcentDetailsController: UIViewController {
     }
     
     // MARK: - Setup & Binds
+    
     private func setupDelegates() {
         procentsView.setupTextFieldDelegate(self)
     }

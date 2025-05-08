@@ -7,12 +7,13 @@
 
 import UIKit
 
-final class EnterNumberCoordinator {
+final class EnterNumberCoordinator: Coordinator {
     // MARK: - Private Properties
     
     private(set) var navigationController: UINavigationController
     private var confirmationCoordinator: ConfirmationCoordinator?
-    
+    var childCoordinators: [Coordinator] = []
+
     // MARK: - Initialization
     
     init(navigationController: UINavigationController) {
@@ -24,7 +25,7 @@ final class EnterNumberCoordinator {
     func start() {
         let enterNumberViewModel = EnterNumberViewModel(coordinator: self)
         let enterNumberController = EnterNumberController(viewModel: enterNumberViewModel)
-        navigationController.pushViewController(enterNumberController, animated: true)
+        navigationController.setViewControllers([enterNumberController], animated: true)
     }
     
     // MARK: - Navigation Methods

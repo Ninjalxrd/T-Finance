@@ -13,22 +13,33 @@ protocol ConfirmationCoordinatorProtocol: AnyObject {
     func openEnterNameScreen()
 }
 
-final class ConfirmationCoordinator {
+final class ConfirmationCoordinator: Coordinator {
     // MARK: - Properties
     
     private(set) var navigationController: UINavigationController
     private var enterNameCoordinator: EnterNameCoordinator?
+    var childCoordinators: [Coordinator] = []
+    private var number: String?
 
     // MARK: - Init
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
-        
-    func start(with number: String) {
+
+    func start() {
+        guard let number else {
+            assertionFailure("Number must be set for start Confirmation screen")
+            return
+        }
         let confirmationViewModel = ConfirmationViewModel(coordinator: self)
         let confirmationViewController = ConfirmationViewController(viewModel: confirmationViewModel, number: number)
         navigationController.setViewControllers([confirmationViewController], animated: true)
+    }
+    
+    func start(with number: String) {
+        self.number = number
+        start()
     }
         
     // MARK: - Public Methods
