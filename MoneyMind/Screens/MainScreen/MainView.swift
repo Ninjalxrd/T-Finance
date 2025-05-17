@@ -41,14 +41,12 @@ final class MainView: UIView {
         label.textAlignment = .left
         label.text = "Доступно"
         label.heightAnchor.constraint(equalToConstant: CGFloat.availableLabel).isActive = true
-        label.isSkeletonable = true
         label.skeletonCornerRadius = CGFloat.skeletonCornerRadius
         return label
     }()
     
     private lazy var availableBudgetLabel: UILabel = {
         let label = DefaultLabel(numberOfLines: 1, text: "")
-        label.isSkeletonable = true
         label.skeletonCornerRadius = CGFloat.skeletonCornerRadius
         label.heightAnchor.constraint(equalToConstant: CGFloat.availableBudgetLabel).isActive = true
         return label
@@ -99,9 +97,8 @@ final class MainView: UIView {
     }()
     
     private lazy var expensesTitleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "На этой неделе")
+        let label = DefaultLabel(numberOfLines: 1, text: "Последние")
         label.font = Font.smallViewTitle.font
-        label.isSkeletonable = true
         label.skeletonCornerRadius = CGFloat.skeletonCornerRadius
         label.heightAnchor.constraint(equalToConstant: CGFloat.expenceTitleLabel).isActive = true
         return label
@@ -150,8 +147,6 @@ final class MainView: UIView {
     }
     
     func showSkeletonAnimations() {
-        availableLabel.showAnimatedGradientSkeleton()
-        availableBudgetLabel.showAnimatedGradientSkeleton()
         budgetChartView.showAnimatedGradientSkeleton()
         expensesTitleLabel.showAnimatedGradientSkeleton()
         expensesDetailsButton.showAnimatedGradientSkeleton()
@@ -159,8 +154,6 @@ final class MainView: UIView {
     }
     
     func hideSkeletonAnimations() {
-        availableLabel.hideSkeleton()
-        availableBudgetLabel.hideSkeleton()
         budgetChartView.hideSkeleton()
         expensesTitleLabel.hideSkeleton()
         expensesTableView.hideSkeleton()
