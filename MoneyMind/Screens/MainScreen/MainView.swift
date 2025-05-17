@@ -216,8 +216,6 @@ final class MainView: UIView {
     }
     
     func showExpencesSkeletonAnimations() {
-        availableLabel.showAnimatedGradientSkeleton()
-        availableBudgetLabel.showAnimatedGradientSkeleton()
         budgetChartView.showAnimatedGradientSkeleton()
         expensesTitleLabel.showAnimatedGradientSkeleton()
         expensesDetailsButton.showAnimatedGradientSkeleton()
@@ -225,8 +223,6 @@ final class MainView: UIView {
     }
     
     func hideExpencesSkeletonAnimations() {
-        availableLabel.hideSkeleton()
-        availableBudgetLabel.hideSkeleton()
         budgetChartView.hideSkeleton()
         expensesTitleLabel.hideSkeleton()
         expensesTableView.hideSkeleton()

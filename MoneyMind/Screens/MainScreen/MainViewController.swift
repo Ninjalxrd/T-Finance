@@ -35,6 +35,8 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        mainView.showExpencesSkeletonAnimations()
+        mainView.showGoalsSkeletonAnimations()
         setupChart()
         setupView()
         bindViewModel()
@@ -62,7 +64,7 @@ class MainViewController: UIViewController {
                 guard let self else { return }
                 switch state {
                 case .loading:
-                    self.mainView.showExpencesSkeletonAnimations()
+                    break
                 case .content(let content):
                     self.lastExpences = content
                     self.mainView.reloadExpencesTableView()
@@ -79,7 +81,7 @@ class MainViewController: UIViewController {
                 guard let self else { return }
                 switch state {
                 case .loading:
-                    self.mainView.showGoalsSkeletonAnimations()
+                    break
                 case .content(let content):
                     self.lastGoals = content
                     self.mainView.reloadGoalsTableView()
