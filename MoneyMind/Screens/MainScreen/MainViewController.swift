@@ -35,11 +35,9 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mainView.showExpencesSkeletonAnimations()
-        mainView.showGoalsSkeletonAnimations()
+        bindViewModel()
         setupChart()
         setupView()
-        bindViewModel()
     }
     
     // MARK: - Private Methods
@@ -59,12 +57,11 @@ class MainViewController: UIViewController {
     
     private func bindViewModel() {
         viewModel.$expencesState
-            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 guard let self else { return }
                 switch state {
                 case .loading:
-                    break
+                    mainView.showExpencesSkeletonAnimations()
                 case .content(let content):
                     self.lastExpences = content
                     self.mainView.reloadExpencesTableView()
@@ -76,12 +73,11 @@ class MainViewController: UIViewController {
             .store(in: &bag)
         
         viewModel.$goalsState
-            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 guard let self else { return }
                 switch state {
                 case .loading:
-                    break
+                    mainView.showGoalsSkeletonAnimations()
                 case .content(let content):
                     self.lastGoals = content
                     self.mainView.reloadGoalsTableView()
