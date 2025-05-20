@@ -9,11 +9,6 @@ import Combine
 import UIKit
 
 final class ExpencesManager {
-    // MARK: - Singleton
-    
-    static let shared = ExpencesManager()
-    private init() { }
-    
     // MARK: - Published Properties
     
     @Published var allExpences: [Expence] = []

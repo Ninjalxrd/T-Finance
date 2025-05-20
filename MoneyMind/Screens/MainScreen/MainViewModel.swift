@@ -10,6 +10,7 @@ import Foundation
 
 final class MainViewModel {
     // MARK: - Published Properties
+    
     @Published private(set) var state: ExpencesViewState = .loading
     @Published private(set) var lastExpences: [Expence] = []
 
@@ -17,12 +18,13 @@ final class MainViewModel {
     
     var coordinator: MainCoordinator?
     private var bag: Set<AnyCancellable> = []
-    private let expencesManager = ExpencesManager.shared
+    private let expencesManager: ExpencesManager
 
     // MARK: - Init
     
-    init(coordinator: MainCoordinator) {
+    init(coordinator: MainCoordinator, expencesManager: ExpencesManager) {
         self.coordinator = coordinator
+        self.expencesManager = expencesManager
         getLastExpences()
     }
     
