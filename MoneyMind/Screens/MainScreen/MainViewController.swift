@@ -34,9 +34,9 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mainView.showSkeletonAnimations()
         setupChart()
         setupView()
+        setupCallbacks()
         bindViewModel()
     }
     
@@ -57,7 +57,6 @@ class MainViewController: UIViewController {
     
     private func bindViewModel() {
         viewModel.$state
-            .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 guard let self else { return }
                 switch state {
@@ -67,13 +66,21 @@ class MainViewController: UIViewController {
                     self.lastExpences = content
                     self.mainView.reloadTableView()
                     self.mainView.hideSkeletonAnimations()
-                case .error(_):
+                case .error:
                     self.mainView.hideSkeletonAnimations()
-//                    self.mainView.showError()
                 }
             }
             .store(in: &bag)
     }
+    
+    private func setupCallbacks() {
+        mainView.expensesScreenPublisher
+            .sink { [weak self] _ in
+                guard let self else { return }
+                viewModel.openExpencesScreen()
+            }
+            .store(in: &bag)
+        }
 }
 
 // MARK: - Extensions

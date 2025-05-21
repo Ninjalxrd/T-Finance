@@ -8,6 +8,16 @@
 import UIKit
 
 final class ExpencesController: UIViewController {
+    let viewModel: ExpencesViewModel
+    
+    init(viewModel: ExpencesViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
     }

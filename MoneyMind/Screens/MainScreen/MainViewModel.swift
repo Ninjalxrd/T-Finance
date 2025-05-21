@@ -13,13 +13,13 @@ final class MainViewModel {
     
     @Published private(set) var state: ExpencesViewState = .loading
     @Published private(set) var lastExpences: [Expence] = []
-
+    
     // MARK: - Properties
     
     var coordinator: MainCoordinator?
     private var bag: Set<AnyCancellable> = []
     private let expencesManager: ExpencesManager
-
+    
     // MARK: - Init
     
     init(coordinator: MainCoordinator, expencesManager: ExpencesManager) {
@@ -27,6 +27,8 @@ final class MainViewModel {
         self.expencesManager = expencesManager
         getLastExpences()
     }
+    
+    // MARK: - Private Methods
     
     private func getLastExpences() {
         expencesManager.fetchFromServer()
@@ -42,5 +44,11 @@ final class MainViewModel {
                 }
             }
             .store(in: &bag)
+    }
+    
+    // MARK: - Public Methods
+    
+    func openExpencesScreen() {
+        coordinator?.openExpencesScreen()
     }
 }

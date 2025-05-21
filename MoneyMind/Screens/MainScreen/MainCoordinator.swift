@@ -9,7 +9,6 @@ import UIKit
 
 final class MainCoordinator: Coordinator {
     // MARK: - Properties
-    
     private let navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
 
@@ -30,5 +29,10 @@ final class MainCoordinator: Coordinator {
             selectedImage: UIImage(named: "home_selected")
         )
         navigationController.setViewControllers([controller], animated: false)
+    }
+
+    func openExpencesScreen() {
+        let expencesCoordinator = ExpencesCoordinator(navigationController: navigationController)
+        expencesCoordinator.start()
     }
 }

@@ -17,4 +17,12 @@ final class ExpencesCoordinator {
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
+    
+    // MARK: - Public Methods
+    
+    func start() {
+        let expencesViewModel = ExpencesViewModel(coordinator: self)
+        let expencesContoller = ExpencesController(viewModel: expencesViewModel)
+        navigationController.pushViewController(expencesContoller, animated: true)
+    }
 }

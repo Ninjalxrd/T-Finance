@@ -52,7 +52,6 @@ final class TabBarCoordinator: NSObject, Coordinator {
 
         tabBarController.viewControllers = [mainNav, budgetNav, addNav, goalsNav, moreNav]
     }
-    
     // MARK: - Private Methods
 
     private func addChild(_ coordinator: Coordinator) {
