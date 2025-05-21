@@ -12,7 +12,10 @@ final class ConfirmationViewModel {
     // MARK: - Published Properties
 
     @Published private(set) var remainingTimeText: String?
+    @Published var errorMessage: String?
+    
     var timerFinished = PassthroughSubject<Void, Never>()
+    var didAuthorize = PassthroughSubject<Void, Never>()
     
     // MARK: - Properties
     
@@ -20,18 +23,22 @@ final class ConfirmationViewModel {
     private let defaultWaitingValue: Int = 5
     private var remainingSeconds: Int
     private var timer: AnyCancellable?
-    private var serverCode = 7777
+    private var bag: Set<AnyCancellable> = []
     
+    private let authService = AuthService()
+    private let phoneNumber: String
     // MARK: Init
     
-    init(coordinator: ConfirmationCoordinator) {
+    init(coordinator: ConfirmationCoordinator, phoneNumber: String) {
         self.coordinator = coordinator
         self.remainingSeconds = defaultWaitingValue
+        self.phoneNumber = phoneNumber
     }
     
     // MARK: - Methods
     
     func startTimer() {
+        timer?.cancel()
         remainingTimeText = formatTime(defaultWaitingValue)
         timer = Timer
             .publish(every: 1.0, on: .main, in: .common)
@@ -59,13 +66,33 @@ final class ConfirmationViewModel {
         let seconds = seconds % 60
         return String(format: "%02d:%02d", minutes, seconds)
     }
+    // MARK: - Network
+
+    func confirmCode(_ code: String) {
+        authService
+            .confirmSMS(phoneNumber: phoneNumber, code: code)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                if case let .failure(error) = completion {
+                    print("Error: \(error)")
+                    let message = self?.errorMessage(for: error) ?? "Неизвестная ошибка"
+                    self?.errorMessage = message
+                }
+            } receiveValue: { [weak self] response in
+                print("Received response: \(response)")
+                UserManager.shared.isRegistered = true
+                KeychainManager.shared.saveAccessToken(response.accessToken)
+                KeychainManager.shared.saveRefreshToken(response.refreshToken)
+                self?.didAuthorize.send()
+                self?.coordinator?.openEnterNameScreen()
+            }
+            .store(in: &bag)
+    }
     
-    func validateCode(with code: Int) -> Bool {
-        if code == serverCode {
-            UserManager.shared.isRegistered = true
-            coordinator?.openEnterNameScreen()
-            return true
+    private func errorMessage(for error: Error) -> String {
+        if let afError = error.asAFError, afError.isResponseValidationError {
+            return "Неверный код подтверждения"
         }
-        return false
+        return "Ошибка сети. Проверьте соединение"
     }
 }

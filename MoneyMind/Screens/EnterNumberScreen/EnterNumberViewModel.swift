@@ -11,7 +11,9 @@ import Foundation
 final class EnterNumberViewModel {
     // MARK: - Properties
     private weak var coordinator: EnterNumberCoordinator?
+    private let authService = AuthService()
     @Published var incomeText: String = ""
+    private var bag: Set<AnyCancellable> = []
     
     // MARK: - Initialization
     
@@ -38,6 +40,15 @@ final class EnterNumberViewModel {
     // MARK: - Public Methods
     
     func openConfirmationScreen(with number: String) {
-        coordinator?.openConfirmationScreen(with: number)
+        authService.sendSMS(phoneNumber: number)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    print("Failed to send SMS:", error.localizedDescription)
+                    return
+                }
+                self?.coordinator?.openConfirmationScreen(with: number)
+            }, receiveValue: { _ in })
+            .store(in: &bag)
     }
 }
