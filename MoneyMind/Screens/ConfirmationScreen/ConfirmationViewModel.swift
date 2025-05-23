@@ -66,8 +66,9 @@ final class ConfirmationViewModel {
         let seconds = seconds % 60
         return String(format: "%02d:%02d", minutes, seconds)
     }
+    
     // MARK: - Network
-
+    
     func confirmCode(_ code: String) {
         authService
             .confirmSMS(phoneNumber: phoneNumber, code: code)

@@ -10,9 +10,10 @@ import Foundation
 
 final class EnterNumberViewModel {
     // MARK: - Properties
+    
+    @Published var incomeText: String = ""
     private weak var coordinator: EnterNumberCoordinator?
     private let authService = AuthService()
-    @Published var incomeText: String = ""
     private var bag: Set<AnyCancellable> = []
     
     // MARK: - Initialization
