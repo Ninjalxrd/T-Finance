@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E9092E5F2DDCB24A0056C9AE /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = E9092E5E2DDCB24A0056C9AE /* Swinject */; };
 		E974DA872DC5EA1300D24F0E /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = E974DA862DC5EA1300D24F0E /* SkeletonView */; };
 		E97ECCF92DABA8A7004305D7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97ECCF82DABA8A7004305D7 /* SnapKit */; };
 		E97F2BC22DAC0BBC00CE1AA3 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = E97F2BC12DAC0BBC00CE1AA3 /* DGCharts */; };
 		E98D3EC72DC2552400C6F657 /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = E98D3EC62DC2552400C6F657 /* PhoneNumberKit */; };
-		E9DBBF5D2DDA0D9000216DDE /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = E9DBBF5C2DDA0D9000216DDE /* Swinject */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,7 +82,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E974DA872DC5EA1300D24F0E /* SkeletonView in Frameworks */,
-				E9DBBF5D2DDA0D9000216DDE /* Swinject in Frameworks */,
+				E9092E5F2DDCB24A0056C9AE /* Swinject in Frameworks */,
 				E98D3EC72DC2552400C6F657 /* PhoneNumberKit in Frameworks */,
 				E97F2BC22DAC0BBC00CE1AA3 /* DGCharts in Frameworks */,
 				E97ECCF92DABA8A7004305D7 /* SnapKit in Frameworks */,
@@ -159,7 +159,7 @@
 				E97F2BC12DAC0BBC00CE1AA3 /* DGCharts */,
 				E98D3EC62DC2552400C6F657 /* PhoneNumberKit */,
 				E974DA862DC5EA1300D24F0E /* SkeletonView */,
-				E9DBBF5C2DDA0D9000216DDE /* Swinject */,
+				E9092E5E2DDCB24A0056C9AE /* Swinject */,
 			);
 			productName = MoneyMind;
 			productReference = E94572EE2DAAA979003C6C76 /* MoneyMind.app */;
@@ -245,7 +245,7 @@
 				E97F2BC02DAC0BAE00CE1AA3 /* XCRemoteSwiftPackageReference "Charts" */,
 				E98D3EC52DC254F600C6F657 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
 				E974DA852DC5EA0A00D24F0E /* XCRemoteSwiftPackageReference "SkeletonView" */,
-				E9DBBF5B2DDA0D8000216DDE /* XCRemoteSwiftPackageReference "Swinject" */,
+				E9092E5D2DDCB2410056C9AE /* XCRemoteSwiftPackageReference "Swinject" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E94572EF2DAAA979003C6C76 /* Products */;
@@ -633,6 +633,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E9092E5D2DDCB2410056C9AE /* XCRemoteSwiftPackageReference "Swinject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/Swinject";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.1;
+			};
+		};
 		E974DA852DC5EA0A00D24F0E /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Juanpe/SkeletonView";
@@ -665,17 +673,14 @@
 				minimumVersion = 4.0.2;
 			};
 		};
-		E9DBBF5B2DDA0D8000216DDE /* XCRemoteSwiftPackageReference "Swinject" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Swinject/Swinject";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.9.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E9092E5E2DDCB24A0056C9AE /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E9092E5D2DDCB2410056C9AE /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
+		};
 		E974DA862DC5EA1300D24F0E /* SkeletonView */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E974DA852DC5EA0A00D24F0E /* XCRemoteSwiftPackageReference "SkeletonView" */;
@@ -695,11 +700,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E98D3EC52DC254F600C6F657 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
 			productName = PhoneNumberKit;
-		};
-		E9DBBF5C2DDA0D9000216DDE /* Swinject */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E9DBBF5B2DDA0D8000216DDE /* XCRemoteSwiftPackageReference "Swinject" */;
-			productName = Swinject;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

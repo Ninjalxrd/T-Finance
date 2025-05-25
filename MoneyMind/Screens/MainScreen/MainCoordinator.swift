@@ -22,8 +22,8 @@ final class MainCoordinator: Coordinator {
     // MARK: - Public
     
     func start() {
-        let viewModel = MainViewModel(coordinator: self)
-        let controller = MainViewController(viewModel: viewModel)
+        let container = SwinjectManager()
+        let controller = container.resolveMainController(navigationController: navigationController)
         controller.tabBarItem = UITabBarItem(
             title: "Главная",
             image: UIImage(named: "home"),

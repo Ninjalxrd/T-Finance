@@ -24,8 +24,9 @@ final class MainViewModel {
 
     // MARK: - Init
     
-    init(coordinator: MainCoordinator) {
+    init(coordinator: MainCoordinator, expencesManager: ExpencesManager) {
         self.coordinator = coordinator
+        self.expencesManager = expencesManager
         getLastExpences()
         getLastGoals()
     }
