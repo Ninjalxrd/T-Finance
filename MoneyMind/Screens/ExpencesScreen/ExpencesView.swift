@@ -14,5 +14,15 @@ final class ExpencesView: UIView {
         return label
     }()
     
+    private lazy var dateSegmentControl: UISegmentedControl = {
+        let segmentControl = UISegmentedControl(items: ["День", "Неделя", "Месяц", "Год"])
+        
+        return segmentControl
+    }()
+    
+    private lazy var expencesTableView: UITableView = {
+        let tableView = UITableView()
+        return tableView
+    }
     
 }
