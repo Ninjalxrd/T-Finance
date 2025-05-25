@@ -16,6 +16,7 @@ class MainViewController: UIViewController {
     private let mainView: MainView = .init(frame: .zero)
     private var bag: Set<AnyCancellable> = []
     private var lastExpences: [Expence] = []
+    private var lastGoals: [Goal] = []
     
     // MARK: - Lifecycle
     
@@ -34,10 +35,9 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mainView.showSkeletonAnimations()
+        bindViewModel()
         setupChart()
         setupView()
-        bindViewModel()
     }
     
     // MARK: - Private Methods
@@ -56,20 +56,34 @@ class MainViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        viewModel.$state
-            .receive(on: DispatchQueue.main)
+        viewModel.$expencesState
             .sink { [weak self] state in
                 guard let self else { return }
                 switch state {
                 case .loading:
-                    self.mainView.showSkeletonAnimations()
+                    mainView.showExpencesSkeletonAnimations()
                 case .content(let content):
                     self.lastExpences = content
-                    self.mainView.reloadTableView()
-                    self.mainView.hideSkeletonAnimations()
-                case .error(_):
-                    self.mainView.hideSkeletonAnimations()
-//                    self.mainView.showError()
+                    self.mainView.reloadExpencesTableView()
+                    self.mainView.hideExpencesSkeletonAnimations()
+                default:
+                    break
+                }
+            }
+            .store(in: &bag)
+        
+        viewModel.$goalsState
+            .sink { [weak self] state in
+                guard let self else { return }
+                switch state {
+                case .loading:
+                    mainView.showGoalsSkeletonAnimations()
+                case .content(let content):
+                    self.lastGoals = content
+                    self.mainView.reloadGoalsTableView()
+                    self.mainView.hideGoalsSkeletonAnimations()
+                default:
+                    break
                 }
             }
             .store(in: &bag)
@@ -82,18 +96,34 @@ extension MainViewController: UITableViewDelegate, SkeletonTableViewDataSource {
     // MARK: - TableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return lastExpences.count
+        if tableView == mainView.getExpencesTableView() {
+            return lastExpences.count
+        } else {
+            return lastGoals.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard
-            let cell = tableView.dequeueReusableCell(
-                withIdentifier: ExpencesTableViewCell.identifier, for: indexPath) as? ExpencesTableViewCell
-        else {
-            return UITableViewCell()
+        if tableView == mainView.getExpencesTableView() {
+            guard
+                let cell = tableView.dequeueReusableCell(
+                    withIdentifier: ExpencesTableViewCell.identifier, for: indexPath) as? ExpencesTableViewCell
+            else {
+                return UITableViewCell()
+            }
+            cell.configureCell(with: lastExpences[indexPath.row])
+            return cell
+        } else {
+            guard
+                let cell = tableView.dequeueReusableCell(
+                    withIdentifier: GoalsTableViewCell.identifier, for: indexPath) as?
+                    GoalsTableViewCell
+            else {
+                return UITableViewCell()
+            }
+            cell.configureCell(with: lastGoals[indexPath.row])
+            return cell
         }
-        cell.configureCell(with: lastExpences[indexPath.row])
-        return cell
     }
     
     // MARK: - Skeleton TableView DataSource
@@ -102,18 +132,18 @@ extension MainViewController: UITableViewDelegate, SkeletonTableViewDataSource {
         _ skeletonView: UITableView,
         cellIdentifierForRowAt indexPath: IndexPath
     ) -> ReusableCellIdentifier {
-        return ExpencesTableViewCell.identifier
+        if skeletonView == mainView.getExpencesTableView() {
+            return ExpencesTableViewCell.identifier
+        } else {
+            return GoalsTableViewCell.identifier
+        }
     }
-    
+
     func collectionSkeletonView(
         _ skeletonView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
         return 3
-    }
-    
-    func numSections(in collectionSkeletonView: UITableView) -> Int {
-        return 1
     }
     
     // MARK: - TableViewDelegate
