@@ -19,6 +19,7 @@ final class UserManager {
     private let isRegisteredKey = "isRegistered"
     private let hasIncomeKey = "hasIncome"
     private let budgetKey = "userBudget"
+    private let categoriesKey = "categories"
     
     // MARK: - Get/Set Properties
     
@@ -46,6 +47,23 @@ final class UserManager {
         }
         set {
             userDefaults.set(newValue, forKey: budgetKey)
+        }
+    }
+    
+    var categories: [Category] {
+        get {
+            guard
+                let data = userDefaults.data(forKey: categoriesKey),
+                let decoded = try? JSONDecoder().decode([Category].self, from: data)
+            else {
+                return []
+            }
+            return decoded
+        }
+        set {
+            if let encoded = try? JSONEncoder().encode(newValue) {
+                userDefaults.set(encoded, forKey: categoriesKey)
+            }
         }
     }
     

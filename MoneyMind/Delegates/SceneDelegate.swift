@@ -19,7 +19,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         self.window = window
-        
+//        if let appDomain = Bundle.main.bundleIdentifier {
+//            UserDefaults.standard.removePersistentDomain(forName: appDomain)
+//            UserDefaults.standard.synchronize()
+//        }
         let appCoordinator = AppCoordinator(window: window)
         self.appCoordinator = appCoordinator
         appCoordinator.start()

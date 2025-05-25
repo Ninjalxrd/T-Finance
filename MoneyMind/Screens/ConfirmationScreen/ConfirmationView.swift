@@ -15,7 +15,6 @@ final class ConfirmationView: UIView {
     var newCodePublisher: AnyPublisher<Void, Never> {
         newCodeSubject.eraseToAnyPublisher()
     }
-    private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Init
 
