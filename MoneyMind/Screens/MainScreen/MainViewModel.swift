@@ -20,13 +20,13 @@ final class MainViewModel {
     var coordinator: MainCoordinator?
     private var bag: Set<AnyCancellable> = []
     private let expencesManager: ExpencesManager
-    private let goalsManager = GoalsManager.shared
+    private let goalsManager: GoalsManager
 
     // MARK: - Init
     
-    init(coordinator: MainCoordinator, expencesManager: ExpencesManager) {
-        self.coordinator = coordinator
+    init(expencesManager: ExpencesManager, goalsManager: GoalsManager) {
         self.expencesManager = expencesManager
+        self.goalsManager = goalsManager
         getLastExpences()
         getLastGoals()
     }

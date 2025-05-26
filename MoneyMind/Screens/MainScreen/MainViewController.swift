@@ -12,11 +12,11 @@ import SkeletonView
 class MainViewController: UIViewController {
     // MARK: - Properties
     
-    private let viewModel: MainViewModel
     private let mainView: MainView = .init(frame: .zero)
     private var bag: Set<AnyCancellable> = []
     private var lastExpences: [Expence] = []
     private var lastGoals: [Goal] = []
+    let viewModel: MainViewModel
     
     // MARK: - Lifecycle
     

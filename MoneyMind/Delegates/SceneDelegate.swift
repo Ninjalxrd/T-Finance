@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Swinject
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
@@ -19,9 +20,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         self.window = window
-        let appCoordinator = AppCoordinator(window: window)
+        let diContainer = registerAppDIContainer()
+        let appCoordinator = AppCoordinator(window: window, diContainer: diContainer)
         self.appCoordinator = appCoordinator
         appCoordinator.start()
+    }
+    
+    func registerAppDIContainer() -> AppDIContainer {
+        let assemblies: [Assembly] = [
+            MainAssembly()
+        ]
+        let diContainer = AppDIContainer(assemblies: assemblies)
+        return diContainer
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {

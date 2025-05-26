@@ -12,12 +12,14 @@ final class BudgetInputCoordinator: Coordinator {
     
     let navigationController: UINavigationController
     private var distributionCoordinator: DistributionCoordinator?
+    private let diContainer: AppDIContainer
     var childCoordinators: [Coordinator] = []
     
     // MARK: - Init
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
         self.navigationController = navigationController
+        self.diContainer = diContainer
     }
     
     // MARK: - Public Methods
@@ -29,7 +31,7 @@ final class BudgetInputCoordinator: Coordinator {
     }
     
     func openDistributionScreen(with budget: Int) {
-        distributionCoordinator = DistributionCoordinator(navigationController: navigationController)
+        distributionCoordinator = DistributionCoordinator(navigationController: navigationController, diContainer: diContainer)
         guard let distributionCoordinator else { return }
         childCoordinators.append(distributionCoordinator)
         distributionCoordinator.start(with: budget)

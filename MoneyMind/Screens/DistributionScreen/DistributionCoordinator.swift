@@ -13,6 +13,7 @@ final class DistributionCoordinator: Coordinator {
 
     var childCoordinators: [Coordinator] = []
     let navigationController: UINavigationController
+    private let diContainer: AppDIContainer
     private let transitionDelegate = CustomTransitioningDelegate()
     private var cancellables = Set<AnyCancellable>()
     private var distributionViewModel: DistributionViewModel?
@@ -20,8 +21,9 @@ final class DistributionCoordinator: Coordinator {
     
     // MARK: - Init
 
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
         self.navigationController = navigationController
+        self.diContainer = diContainer
     }
     
     // MARK: - Start
@@ -71,7 +73,7 @@ final class DistributionCoordinator: Coordinator {
     }
     
     func openMainScreen() {
-        let tabBarCoordinator = TabBarCoordinator()
+        let tabBarCoordinator = TabBarCoordinator(diContainer: diContainer)
         childCoordinators.append(tabBarCoordinator)
         tabBarCoordinator.start()
             

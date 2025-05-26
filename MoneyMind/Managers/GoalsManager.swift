@@ -9,10 +9,6 @@ import Combine
 import UIKit
 
 final class GoalsManager {
-    // MARK: - Singleton
-    
-    static let shared = GoalsManager()
-    private init() { }
     
     // MARK: - Published Properties
     

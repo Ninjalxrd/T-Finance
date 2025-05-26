@@ -11,11 +11,13 @@ final class EnterNameCoordinator: Coordinator {
     // MARK: - Properties
     
     private let navigationController: UINavigationController
+    private let diContainer: AppDIContainer
     var childCoordinators: [Coordinator] = []
     // MARK: - Init
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
         self.navigationController = navigationController
+        self.diContainer = diContainer
     }
     
     // MARK: - Public Methods
@@ -27,7 +29,7 @@ final class EnterNameCoordinator: Coordinator {
     }
     
     func openBudgetInputScreen() {
-        let budgetInputCoordinator = BudgetInputCoordinator(navigationController: navigationController)
+        let budgetInputCoordinator = BudgetInputCoordinator(navigationController: navigationController, diContainer: diContainer)
         budgetInputCoordinator.start()
     }
 }

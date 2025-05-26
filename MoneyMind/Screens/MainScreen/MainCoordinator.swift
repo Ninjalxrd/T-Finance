@@ -6,24 +6,26 @@
 //
 
 import UIKit
+import Swinject
 
 final class MainCoordinator: Coordinator {
     // MARK: - Properties
     
     private let navigationController: UINavigationController
-    var childCoordinators: [Coordinator] = []
-
+    private let resolver: Resolver
+    
     // MARK: - Init
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, resolver: Resolver) {
         self.navigationController = navigationController
+        self.resolver = resolver
     }
 
     // MARK: - Public
     
     func start() {
-        let container = SwinjectManager()
-        let controller = container.resolveMainController(navigationController: navigationController)
+        let controller = resolver.safeResolve(MainViewController.self)
+        controller.viewModel.coordinator = self
         controller.tabBarItem = UITabBarItem(
             title: "Главная",
             image: UIImage(named: "home"),
