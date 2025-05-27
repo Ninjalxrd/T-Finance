@@ -29,7 +29,10 @@ final class EnterNameCoordinator: Coordinator {
     }
     
     func openBudgetInputScreen() {
-        let budgetInputCoordinator = BudgetInputCoordinator(navigationController: navigationController, diContainer: diContainer)
+        let budgetInputCoordinator = BudgetInputCoordinator(
+            navigationController: navigationController,
+            diContainer: diContainer
+        )
         budgetInputCoordinator.start()
     }
 }

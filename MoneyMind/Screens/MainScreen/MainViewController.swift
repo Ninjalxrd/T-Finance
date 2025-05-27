@@ -40,14 +40,14 @@ class MainViewController: UIViewController {
         setupView()
     }
     
-    // MARK: - Private Methods
+    // MARK: - Public Methods
     
-    private func setupChart() {
+    func setupChart() {
         let categories = UserManager.shared.categories
         mainView.updateChartView(with: categories)
     }
     
-    private func setupView() {
+    func setupView() {
         let budget = UserManager.shared.budget
         mainView.setupBudget(with: budget)
         
@@ -55,7 +55,7 @@ class MainViewController: UIViewController {
         mainView.setupTableViewDataSource(self)
     }
     
-    private func bindViewModel() {
+    func bindViewModel() {
         viewModel.$expencesState
             .sink { [weak self] state in
                 guard let self else { return }

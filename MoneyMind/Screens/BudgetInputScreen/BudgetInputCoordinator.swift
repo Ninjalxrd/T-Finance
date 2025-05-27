@@ -31,7 +31,10 @@ final class BudgetInputCoordinator: Coordinator {
     }
     
     func openDistributionScreen(with budget: Int) {
-        distributionCoordinator = DistributionCoordinator(navigationController: navigationController, diContainer: diContainer)
+        distributionCoordinator = DistributionCoordinator(
+            navigationController: navigationController,
+            diContainer: diContainer
+        )
         guard let distributionCoordinator else { return }
         childCoordinators.append(distributionCoordinator)
         distributionCoordinator.start(with: budget)

@@ -8,10 +8,23 @@
 import Combine
 import UIKit
 
-final class ExpencesManager {
+protocol ExpencesManagerProtocol {
+    var allExpences: [Expence] { get }
+    var allExpencesPublisher: AnyPublisher<[Expence], Never> { get }
+    func fetchFromServer()
+}
+
+final class ExpencesManager: ExpencesManagerProtocol {
     // MARK: - Published Properties
-    
-    @Published var allExpences: [Expence] = []
+        @Published private(set) var allExpences: [Expence] = []
+        
+        // MARK: - Public Properties
+        var allExpencesPublisher: AnyPublisher<[Expence], Never> {
+            $allExpences.eraseToAnyPublisher()
+        }
+        
+        // MARK: - Private Properties
+    private var cancellables: Set<AnyCancellable> = []
     
     // MARK: - Methods
     

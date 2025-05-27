@@ -47,7 +47,10 @@ final class ConfirmationCoordinator: Coordinator {
     // MARK: - Public Methods
         
     func openEnterNameScreen() {
-        enterNameCoordinator = EnterNameCoordinator(navigationController: navigationController, diContainer: diContainer)
+        enterNameCoordinator = EnterNameCoordinator(
+            navigationController: navigationController,
+            diContainer: diContainer
+        )
         enterNameCoordinator?.start()
     }
 }

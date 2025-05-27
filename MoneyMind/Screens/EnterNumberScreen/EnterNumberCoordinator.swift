@@ -33,7 +33,10 @@ final class EnterNumberCoordinator: Coordinator {
     // MARK: - Navigation Methods
     
     func openConfirmationScreen(with number: String) {
-        confirmationCoordinator = ConfirmationCoordinator(navigationController: navigationController, diContainer: diContainer)
+        confirmationCoordinator = ConfirmationCoordinator(
+            navigationController: navigationController,
+            diContainer: diContainer
+        )
         confirmationCoordinator?.start(with: number)
     }
 }

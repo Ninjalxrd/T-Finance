@@ -27,7 +27,8 @@ final class TabBarCoordinator: NSObject, Coordinator {
     
     func start() {
         let mainNav = UINavigationController()
-        let mainCoordinator = diContainer.resolve(MainCoordinator.self, argument: mainNav)
+        let resolver = diContainer.assembler.resolver
+        let mainCoordinator = MainCoordinator(navigationController: mainNav, resolver: resolver)
         addChild(mainCoordinator)
 
         let budgetNav = UINavigationController()

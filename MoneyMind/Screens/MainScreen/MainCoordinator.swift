@@ -24,8 +24,14 @@ final class MainCoordinator: Coordinator {
     // MARK: - Public
     
     func start() {
-        let controller = resolver.safeResolve(MainViewController.self)
-        controller.viewModel.coordinator = self
+        let expencesManager = resolver.safeResolve(ExpencesManagerProtocol.self)
+        let goalsManager = resolver.safeResolve(GoalsManagerProtocol.self)
+        let viewModel = MainViewModel(
+            expencesManager: expencesManager,
+            goalsManager: goalsManager,
+            coordinator: self
+        )
+        let controller = MainViewController(viewModel: viewModel)
         controller.tabBarItem = UITabBarItem(
             title: "Главная",
             image: UIImage(named: "home"),
