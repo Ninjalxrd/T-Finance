@@ -21,6 +21,8 @@ final class ExpencesCoordinator {
     // MARK: - Public Methods
     
     func start() {
+        let container = SwinjectManager()
+        let expencesService = container.
         let expencesViewModel = ExpencesViewModel(coordinator: self)
         let expencesContoller = ExpencesController(viewModel: expencesViewModel)
         navigationController.pushViewController(expencesContoller, animated: true)

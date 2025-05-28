@@ -9,6 +9,7 @@ import UIKit
 
 final class MainCoordinator: Coordinator {
     // MARK: - Properties
+    
     private let navigationController: UINavigationController
     var childCoordinators: [Coordinator] = []
 

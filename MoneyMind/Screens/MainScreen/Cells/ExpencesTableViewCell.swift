@@ -108,10 +108,10 @@ class ExpencesTableViewCell: UITableViewCell {
     }
     
     func configureCell(with expence: Expence) {
-        categoryImage.image = expence.image
-        expencePlaceLabel.text = expence.shop
-        expenceCategoryLabel.text = expence.category
-        expenceSumLabel.text = "-\(expence.sum) ₽"
+//        categoryImage.image = expence.category.icon
+        expencePlaceLabel.text = expence.name
+        expenceCategoryLabel.text = expence.category.name
+        expenceSumLabel.text = "-\(expence.amount) ₽"
     }
     
     func setupSkeleton() {
