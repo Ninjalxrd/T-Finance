@@ -33,6 +33,22 @@ final class MainView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Private UI Elements
+    
+    private lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.alwaysBounceVertical = true
+        scrollView.isSkeletonable = true
+        return scrollView
+    }()
+
+    private lazy var contentView: UIView = {
+        let view = UIView()
+        view.isSkeletonable = true
+        return view
+    }()
+    
     private lazy var availableLabel: UILabel = {
         let label = UILabel()
         label.textColor = .secondaryText
@@ -82,48 +98,14 @@ final class MainView: UIView {
         return stack
     }()
     
-    private lazy var expensesView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .background
-        view.layer.cornerRadius = Size.cornerRadius
-        view.clipsToBounds = true
+    // MARK: - Expences View
+    
+    private let expencesView = MainExpenсesView()
+    
+    // MARK: - Goals View
+    
+    private let goalsView = MainGoalsView()
 
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.2
-        view.layer.shadowOffset = CGSize(width: 4, height: 4)
-        view.layer.shadowRadius = Size.cornerRadius / 2
-        view.layer.masksToBounds = false
-        return view
-    }()
-    
-    private lazy var expensesTitleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "Последние")
-        label.font = Font.smallViewTitle.font
-        label.skeletonCornerRadius = CGFloat.skeletonCornerRadius
-        label.heightAnchor.constraint(equalToConstant: CGFloat.expenceTitleLabel).isActive = true
-        return label
-    }()
-    
-    private lazy var expensesTableView: UITableView = {
-        let tableView = UITableView()
-        tableView.separatorColor = .clear
-        tableView.isSkeletonable = true
-        tableView.skeletonCornerRadius = CGFloat.skeletonCornerRadius
-        tableView.register(ExpencesTableViewCell.self, forCellReuseIdentifier: ExpencesTableViewCell.identifier)
-        return tableView
-    }()
-    
-    private lazy var expensesDetailsButton: UIButton = {
-        let button = DefaultButton(title: "Подробнее", action: expensesButtonAction)
-        button.isSkeletonable = true
-        button.heightAnchor.constraint(equalToConstant: CGFloat.buttonHeight).isActive = true
-        return button
-    }()
-    
-    private lazy var expensesButtonAction = UIAction { [weak self] _ in
-        self?.expensesScreenSubject.send()
-    }
-    
     // MARK: - Update Values
     
     func updateChartView(with categories: [Category]) {
@@ -135,74 +117,91 @@ final class MainView: UIView {
     }
     
     func setupTableViewDataSource(_ dataSource: UITableViewDataSource) {
-        expensesTableView.dataSource = dataSource
+        expencesView.tableView.dataSource = dataSource
+        goalsView.tableView.dataSource = dataSource
     }
     
     func setupTableViewDelegate(_ delegate: UITableViewDelegate) {
-        expensesTableView.delegate = delegate
+        expencesView.tableView.delegate = delegate
+        goalsView.tableView.delegate = delegate
     }
     
-    func reloadTableView() {
-        expensesTableView.reloadData()
+    func reloadExpencesTableView() {
+        expencesView.tableView.reloadData()
     }
     
-    func showSkeletonAnimations() {
+    func reloadGoalsTableView() {
+        goalsView.tableView.reloadData()
+    }
+    
+    func showExpencesSkeletonAnimations() {
         budgetChartView.showAnimatedGradientSkeleton()
-        expensesTitleLabel.showAnimatedGradientSkeleton()
-        expensesDetailsButton.showAnimatedGradientSkeleton()
-        expensesTableView.showAnimatedGradientSkeleton()
+        expencesView.showSkeleton()
     }
     
-    func hideSkeletonAnimations() {
+    func hideExpencesSkeletonAnimations() {
         budgetChartView.hideSkeleton()
-        expensesTitleLabel.hideSkeleton()
-        expensesTableView.hideSkeleton()
-        expensesDetailsButton.hideSkeleton()
+        expencesView.hideSkeleton()
+    }
+    
+    func showGoalsSkeletonAnimations() {
+        goalsView.showSkeleton()
+    }
+    
+    func hideGoalsSkeletonAnimations() {
+        goalsView.hideSkeleton()
+    }
+    
+    // MARK: - Getters
+    
+    func getGoalsTableView() -> UITableView {
+        return goalsView.tableView
+    }
+    
+    func getExpencesTableView() -> UITableView {
+        return expencesView.tableView
     }
         
     // MARK: - Setup UI
     
     private func setupUI() {
-        addSubview(topStackView)
-        addSubview(expensesView)
-        
-        expensesView.addSubview(expensesTitleLabel)
-        expensesView.addSubview(expensesTableView)
-        expensesView.addSubview(expensesDetailsButton)
-        
+        addSubview(scrollView)
+        scrollView.addSubview(contentView)
+
+        contentView.addSubview(topStackView)
+        contentView.addSubview(expencesView)
+        contentView.addSubview(goalsView)
+
         setupConstraints()
     }
-    
+
     private func setupConstraints() {
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.edges.equalTo(scrollView.contentLayoutGuide)
+            make.width.equalTo(scrollView.frameLayoutGuide)
+        }
+
         topStackView.snp.makeConstraints { make in
-            make.top.equalTo(safeAreaLayoutGuide.snp.top)
+            make.top.equalToSuperview()
             make.leading.equalToSuperview().offset(Spacing.medium)
             make.trailing.equalToSuperview().offset(-Spacing.medium)
         }
-        
-        expensesView.snp.makeConstraints { make in
+
+        expencesView.snp.makeConstraints { make in
             make.top.equalTo(topStackView.snp.bottom).offset(Spacing.medium)
             make.leading.trailing.equalTo(topStackView)
-            make.height.equalTo(304)
+            make.height.equalTo(CGFloat.viewHeight)
         }
-        setupExpencesView()
-    }
-    
-    private func setupExpencesView() {
-        expensesTitleLabel.snp.makeConstraints { make in
-            make.top.leading.equalToSuperview().offset(Spacing.small)
-        }
-        
-        expensesTableView.snp.makeConstraints { make in
-            make.top.equalTo(expensesTitleLabel.snp.bottom).offset(Spacing.smallest)
-            make.leading.equalToSuperview().offset(Spacing.small)
-            make.trailing.equalToSuperview().offset(-Spacing.small)
-            make.bottom.equalTo(expensesDetailsButton.snp.top).offset(-Spacing.smallest)
-        }
-        
-        expensesDetailsButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(Spacing.small)
-            make.bottom.trailing.equalToSuperview().offset(-Spacing.small)
+
+        goalsView.snp.makeConstraints { make in
+            make.top.equalTo(expencesView.snp.bottom).offset(Spacing.medium)
+            make.leading.trailing.equalTo(expencesView)
+            make.height.equalTo(CGFloat.viewHeight)
+            make.bottom.equalToSuperview().offset(-Spacing.large)
         }
     }
 }
@@ -210,7 +209,8 @@ final class MainView: UIView {
 private extension CGFloat {
     static let buttonHeight: CGFloat = 56
     static let availableLabel: CGFloat = 16
-    static let expenceTitleLabel: CGFloat = 48
     static let availableBudgetLabel: CGFloat = 48
     static let skeletonCornerRadius: Float = 8
+    static let viewHeight: CGFloat = 304
+    static let topOffset: CGFloat = Spacing.large * 2
 }

@@ -87,6 +87,7 @@ class ExpencesTableViewCell: UITableViewCell {
     // MARK: - Setup UI
     
     private func setupUI() {
+        selectionStyle = .none
         isSkeletonable = true
         contentView.isSkeletonable = true
         contentView.addSubview(categoryImage)
@@ -114,7 +115,7 @@ class ExpencesTableViewCell: UITableViewCell {
         expenceSumLabel.text = "-\(expence.amount) ₽"
     }
     
-    func setupSkeleton() {
+    private func setupSkeleton() {
         [
             categoryImage,
             expenceSumLabel,

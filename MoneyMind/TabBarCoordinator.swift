@@ -13,10 +13,12 @@ final class TabBarCoordinator: NSObject, Coordinator {
     let tabBarController: UITabBarController
     let budget = UserManager.shared.budget
     private var childCoordinators: [Coordinator] = []
+    private let diContainer: AppDIContainer
 
     // MARK: - Init
     
-    override init() {
+    init(diContainer: AppDIContainer) {
+        self.diContainer = diContainer
         self.tabBarController = UITabBarController()
         super.init()
     }
@@ -25,11 +27,12 @@ final class TabBarCoordinator: NSObject, Coordinator {
     
     func start() {
         let mainNav = UINavigationController()
-        let mainCoordinator = MainCoordinator(navigationController: mainNav)
+        let resolver = diContainer.assembler.resolver
+        let mainCoordinator = MainCoordinator(navigationController: mainNav, resolver: resolver)
         addChild(mainCoordinator)
 
         let budgetNav = UINavigationController()
-        let budgetCoordinator = DistributionCoordinator(navigationController: budgetNav)
+        let budgetCoordinator = DistributionCoordinator(navigationController: budgetNav, diContainer: diContainer)
         addChild(budgetCoordinator)
 
         let addNav = UINavigationController()

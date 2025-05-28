@@ -17,14 +17,16 @@ final class ConfirmationCoordinator: Coordinator {
     // MARK: - Properties
     
     private(set) var navigationController: UINavigationController
+    private let diContainer: AppDIContainer
     private var enterNameCoordinator: EnterNameCoordinator?
     var childCoordinators: [Coordinator] = []
     private var number: String?
 
     // MARK: - Init
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
         self.navigationController = navigationController
+        self.diContainer = diContainer
     }
 
     func start() {
@@ -45,7 +47,10 @@ final class ConfirmationCoordinator: Coordinator {
     // MARK: - Public Methods
         
     func openEnterNameScreen() {
-        enterNameCoordinator = EnterNameCoordinator(navigationController: navigationController)
+        enterNameCoordinator = EnterNameCoordinator(
+            navigationController: navigationController,
+            diContainer: diContainer
+        )
         enterNameCoordinator?.start()
     }
 }
