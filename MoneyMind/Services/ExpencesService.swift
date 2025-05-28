@@ -10,8 +10,19 @@ import Combine
 import Alamofire
 
 protocol ExpencesServiceProtocol {
-    func fetchExpenses(startDate: Date, endDate: Date, categoryId: Int?, page: Int, pageSize: Int) -> AnyPublisher<[Expence], Error>
-    func fetchExpensesByCategory(startDate: Date, endDate: Date, page: Int, pageSize: Int) -> AnyPublisher<SumByCategoryOfPeriodWrapper, Error>
+    func fetchExpenses(
+        startDate: Date,
+        endDate: Date,
+        categoryId: Int?,
+        page: Int,
+        pageSize: Int
+    ) -> AnyPublisher<[Expence], Error>
+    func fetchExpensesByCategory(
+        startDate: Date,
+        endDate: Date,
+        page: Int,
+        pageSize: Int
+    ) -> AnyPublisher<SumByCategoryOfPeriodWrapper, Error>
     func fetchCategories() -> AnyPublisher<[TransactionCategory], Error>
     func deleteTransaction(id: Int) -> AnyPublisher<Void, Error>
 }
@@ -24,15 +35,23 @@ final class ExpencesService: ExpencesServiceProtocol {
     
     // MARK: - Initialization
     
-    init(baseURL: URL = URL(string: "https://t-bank-finance.ru")!,
-         session: Session) {
+    init(
+        baseURL: URL = URL(string: "https://t-bank-finance.ru")!,
+        session: Session
+    ) {
         self.baseURL = baseURL
         self.session = session
     }
     
     // MARK: - Public Methods
     
-    func fetchExpenses(startDate: Date, endDate: Date, categoryId: Int?, page: Int, pageSize: Int) -> AnyPublisher<[Expence], Error> {
+    func fetchExpenses(
+        startDate: Date,
+        endDate: Date,
+        categoryId: Int?,
+        page: Int,
+        pageSize: Int
+    ) -> AnyPublisher<[Expence], Error> {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         
@@ -54,7 +73,12 @@ final class ExpencesService: ExpencesServiceProtocol {
         )
     }
     
-    func fetchExpensesByCategory(startDate: Date, endDate: Date, page: Int, pageSize: Int) -> AnyPublisher<SumByCategoryOfPeriodWrapper, Error> {
+    func fetchExpensesByCategory(
+        startDate: Date,
+        endDate: Date,
+        page: Int,
+        pageSize: Int
+    ) -> AnyPublisher<SumByCategoryOfPeriodWrapper, Error> {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         
@@ -93,8 +117,9 @@ final class ExpencesService: ExpencesServiceProtocol {
             .response { response in
                 switch response.result {
                 case .success:
-                    if let statusCode = response.response?.statusCode,
-                       (200...204).contains(statusCode) {
+                    if
+                        let statusCode = response.response?.statusCode,
+                        (200...204).contains(statusCode) {
                         promise(.success(()))
                     } else {
                         promise(.failure(NetworkError.httpError(statusCode: response.response?.statusCode ?? 0)))
@@ -134,8 +159,9 @@ final class ExpencesService: ExpencesServiceProtocol {
                 case .success(let value):
                     promise(.success(value))
                 case .failure(let error):
-                    if let data = response.data,
-                       let apiError = try? JSONDecoder().decode(APIError.self, from: data) {
+                    if
+                        let data = response.data,
+                        let apiError = try? JSONDecoder().decode(APIError.self, from: data) {
                         promise(.failure(NetworkError.apiError(apiError)))
                     } else {
                         promise(.failure(error))

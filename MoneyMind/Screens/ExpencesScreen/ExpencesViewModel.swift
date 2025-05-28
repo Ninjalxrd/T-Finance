@@ -12,7 +12,7 @@ final class ExpencesViewModel {
     // MARK: - Properties
     
     let coordinator: ExpencesCoordinator
-    private let expencesService: ExpencesService
+    private let expencesService: ExpencesServiceProtocol
     private var cancellables = Set<AnyCancellable>()
     
     // MARK: - Published Properties
@@ -21,7 +21,7 @@ final class ExpencesViewModel {
     @Published var totalExpenses: Int = 0
     @Published var expensesCategories: [Category] = []
     
-    init(coordinator: ExpencesCoordinator, expencesService: ExpencesService) {
+    init(coordinator: ExpencesCoordinator, expencesService: ExpencesServiceProtocol) {
         self.coordinator = coordinator
         self.expencesService = expencesService
     }

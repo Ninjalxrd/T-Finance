@@ -14,5 +14,3 @@ struct Expence: Identifiable, Codable {
     let amount: Double
     let description: String
 }
-    
-

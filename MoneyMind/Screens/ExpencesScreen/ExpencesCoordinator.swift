@@ -6,24 +6,26 @@
 //
 
 import UIKit
+import Swinject
 
 final class ExpencesCoordinator {
     // MARK: - Properties
     
     private(set) var navigationController: UINavigationController
+    private let resolver: Resolver
     
     // MARK: - Init
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, resolver: Resolver) {
         self.navigationController = navigationController
+        self.resolver = resolver
     }
     
     // MARK: - Public Methods
     
     func start() {
-        let container = SwinjectManager()
-        let expencesService = container.
-        let expencesViewModel = ExpencesViewModel(coordinator: self)
+        let expencesService = resolver.safeResolve(ExpencesServiceProtocol.self)
+        let expencesViewModel = ExpencesViewModel(coordinator: self, expencesService: expencesService)
         let expencesContoller = ExpencesController(viewModel: expencesViewModel)
         navigationController.pushViewController(expencesContoller, animated: true)
     }

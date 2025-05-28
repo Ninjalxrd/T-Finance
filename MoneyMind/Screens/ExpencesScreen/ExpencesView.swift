@@ -111,7 +111,9 @@ extension ExpencesView: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ExpenceCell.identifier, for: indexPath) as? ExpenceCell else {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: ExpenceCell.identifier,
+            for: indexPath) as? ExpenceCell else {
             return UITableViewCell()
         }
 //        cell.configure(with: )

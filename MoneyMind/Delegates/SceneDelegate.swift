@@ -28,7 +28,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func registerAppDIContainer() -> AppDIContainer {
         let assemblies: [Assembly] = [
-            MainAssembly()
+            MainAssembly(),
+            ServicesAssembly()
         ]
         let diContainer = AppDIContainer(assemblies: assemblies)
         return diContainer

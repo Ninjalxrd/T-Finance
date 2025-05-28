@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import Alamofire
 
-protocol TokenManagerProtocol: Sendable {
+protocol TokenManagerProtocol: Sendable, RequestInterceptor {
     var accessToken: String? { get async }
     func refreshToken() -> AnyPublisher<String, Error>
 }
@@ -40,9 +40,11 @@ final class TokenManager: TokenManagerProtocol, RequestInterceptor {
     
     // MARK: - Initialization
     
-    init(keychainManager: KeychainManagerProtocol,
-         baseURL: URL = URL(string: "https://t-bank-finance.ru")!,
-         session: Session = .default) {
+    init(
+        keychainManager: KeychainManagerProtocol,
+        baseURL: URL = URL(string: "https://t-bank-finance.ru")!,
+        session: Session = .default
+    ) {
         self.keychainManager = keychainManager
         self.baseURL = baseURL
         self.session = session
@@ -100,8 +102,9 @@ final class TokenManager: TokenManagerProtocol, RequestInterceptor {
                     promise(.success(tokenResponse.accessToken))
                     
                 case .failure(let error):
-                    if let statusCode = response.response?.statusCode,
-                       statusCode == 401 {
+                    if
+                        let statusCode = response.response?.statusCode,
+                        statusCode == 401 {
                         self?.clearTokens()
                         promise(.failure(TokenError.refreshTokenExpired))
                     } else {
@@ -116,7 +119,12 @@ final class TokenManager: TokenManagerProtocol, RequestInterceptor {
     
     // MARK: - Request Adapter
     
-    func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
+    func adapt(
+        _ urlRequest: URLRequest,
+        for session: Session,
+        completion: @escaping (Result<URLRequest, Error>
+        ) -> Void
+    ) {
         var urlRequest = urlRequest
         
         Task {
@@ -184,10 +192,17 @@ private extension Request {
 // MARK: - Request Retrier
 
 extension TokenManager: RequestRetrier {
-    func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
-        guard let response = request.response,
-              response.statusCode == 401,
-              request.retryCount == 0 else {
+    func retry(
+        _ request: Request,
+        for session: Session,
+        dueTo error: Error,
+        completion: @escaping (RetryResult
+        ) -> Void
+    ) {
+        guard
+            let response = request.response,
+            response.statusCode == 401,
+            request.retryCount == 0 else {
             completion(.doNotRetry)
             return
         }
