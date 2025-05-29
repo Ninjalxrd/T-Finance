@@ -6,24 +6,32 @@
 //
 
 import UIKit
+import Swinject
 
 final class MainCoordinator: Coordinator {
     // MARK: - Properties
     
     private let navigationController: UINavigationController
-    var childCoordinators: [Coordinator] = []
-
+    private let diContainer: AppDIContainer
+    
     // MARK: - Init
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
         self.navigationController = navigationController
+        self.diContainer = diContainer
     }
 
     // MARK: - Public
     
     func start() {
-        let container = SwinjectManager()
-        let controller = container.resolveMainController(navigationController: navigationController)
+        let expencesManager = diContainer.resolve(ExpencesManagerProtocol.self)
+        let goalsManager = diContainer.resolve(GoalsManagerProtocol.self)
+        let viewModel = MainViewModel(
+            expencesManager: expencesManager,
+            goalsManager: goalsManager,
+            coordinator: self
+        )
+        let controller = MainViewController(viewModel: viewModel)
         controller.tabBarItem = UITabBarItem(
             title: "Главная",
             image: UIImage(named: "home"),

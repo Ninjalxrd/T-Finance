@@ -8,15 +8,24 @@
 import Combine
 import UIKit
 
-final class GoalsManager {
-    // MARK: - Singleton
+protocol GoalsManagerProtocol {
+    var allGoals: [Goal] { get }
+    var allGoalsPublisher: AnyPublisher<[Goal], Never> { get }
     
-    static let shared = GoalsManager()
-    private init() { }
-    
+    func fetchFromServer()
+}
+
+final class GoalsManager: GoalsManagerProtocol {
     // MARK: - Published Properties
     
-    @Published var allGoals: [Goal] = []
+    @Published private(set) var allGoals: [Goal] = []
+    // MARK: - Public Properties
+    var allGoalsPublisher: AnyPublisher<[Goal], Never> {
+        $allGoals.eraseToAnyPublisher()
+    }
+    
+    // MARK: - Private Properties
+private var cancellables: Set<AnyCancellable> = []
     
     // MARK: - Methods
     

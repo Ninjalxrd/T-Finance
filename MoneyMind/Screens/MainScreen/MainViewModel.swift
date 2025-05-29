@@ -19,21 +19,24 @@ final class MainViewModel {
     
     var coordinator: MainCoordinator?
     private var bag: Set<AnyCancellable> = []
-    private let expencesManager: ExpencesManager
-    private let goalsManager = GoalsManager.shared
+    private let expencesManager: ExpencesManagerProtocol
+    private let goalsManager: GoalsManagerProtocol
 
     // MARK: - Init
     
-    init(coordinator: MainCoordinator, expencesManager: ExpencesManager) {
-        self.coordinator = coordinator
+    init(expencesManager: ExpencesManagerProtocol, goalsManager: GoalsManagerProtocol, coordinator: MainCoordinator) {
         self.expencesManager = expencesManager
+        self.goalsManager = goalsManager
+        self.coordinator = coordinator
         getLastExpences()
         getLastGoals()
     }
     
-    private func getLastExpences() {
+    // MARK: - Public Methods
+    
+    func getLastExpences() {
         expencesManager.fetchFromServer()
-        expencesManager.$allExpences
+        expencesManager.allExpencesPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] expences in
                 guard let self else { return }
@@ -47,9 +50,9 @@ final class MainViewModel {
             .store(in: &bag)
     }
     
-    private func getLastGoals() {
+    func getLastGoals() {
         goalsManager.fetchFromServer()
-        goalsManager.$allGoals
+        goalsManager.allGoalsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] goals in
                 guard let self else { return }

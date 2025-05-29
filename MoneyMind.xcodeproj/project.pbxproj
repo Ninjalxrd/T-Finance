@@ -13,6 +13,7 @@
 		E97ECCF92DABA8A7004305D7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97ECCF82DABA8A7004305D7 /* SnapKit */; };
 		E97F2BC22DAC0BBC00CE1AA3 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = E97F2BC12DAC0BBC00CE1AA3 /* DGCharts */; };
 		E98D3EC72DC2552400C6F657 /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = E98D3EC62DC2552400C6F657 /* PhoneNumberKit */; };
+		E9C0493E2DE763550033F1BA /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = E9C0493D2DE763550033F1BA /* Alamofire */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,7 +86,7 @@
 				E974DA872DC5EA1300D24F0E /* SkeletonView in Frameworks */,
 				E9092E5F2DDCB24A0056C9AE /* Swinject in Frameworks */,
 				E98D3EC72DC2552400C6F657 /* PhoneNumberKit in Frameworks */,
-				E92871002DDDC809004556F9 /* Alamofire in Frameworks */,
+				E9C0493E2DE763550033F1BA /* Alamofire in Frameworks */,
 				E97F2BC22DAC0BBC00CE1AA3 /* DGCharts in Frameworks */,
 				E97ECCF92DABA8A7004305D7 /* SnapKit in Frameworks */,
 			);
@@ -162,7 +163,7 @@
 				E98D3EC62DC2552400C6F657 /* PhoneNumberKit */,
 				E974DA862DC5EA1300D24F0E /* SkeletonView */,
 				E9092E5E2DDCB24A0056C9AE /* Swinject */,
-				E92870FF2DDDC809004556F9 /* Alamofire */,
+				E9C0493D2DE763550033F1BA /* Alamofire */,
 			);
 			productName = MoneyMind;
 			productReference = E94572EE2DAAA979003C6C76 /* MoneyMind.app */;
@@ -249,7 +250,7 @@
 				E98D3EC52DC254F600C6F657 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
 				E974DA852DC5EA0A00D24F0E /* XCRemoteSwiftPackageReference "SkeletonView" */,
 				E9092E5D2DDCB2410056C9AE /* XCRemoteSwiftPackageReference "Swinject" */,
-				E92870FE2DDDC7FC004556F9 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				E9C0493C2DE7634E0033F1BA /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E94572EF2DAAA979003C6C76 /* Products */;
@@ -685,6 +686,14 @@
 				minimumVersion = 4.0.2;
 			};
 		};
+		E9C0493C2DE7634E0033F1BA /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -717,6 +726,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E98D3EC52DC254F600C6F657 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
 			productName = PhoneNumberKit;
+		};
+		E9C0493D2DE763550033F1BA /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E9C0493C2DE7634E0033F1BA /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
