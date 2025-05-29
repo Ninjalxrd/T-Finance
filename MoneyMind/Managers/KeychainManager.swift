@@ -47,7 +47,7 @@ final class KeychainManager: KeychainManagerProtocol {
     // MARK: - Private Methods
     
     private func save(_ value: String, forKey key: String) {
-        let data = value.data(using: .utf8)!
+        guard let data = value.data(using: .utf8) else { return }
         let query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service as CFString,
@@ -63,7 +63,7 @@ final class KeychainManager: KeychainManagerProtocol {
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service as CFString,
             kSecAttrAccount: key as CFString,
-            kSecReturnData: kCFBooleanTrue!,
+            kSecReturnData: kCFBooleanTrue,
             kSecMatchLimit: kSecMatchLimitOne
         ]
         

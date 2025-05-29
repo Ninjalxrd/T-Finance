@@ -27,8 +27,8 @@ final class TokenManager: TokenManagerProtocol, RequestInterceptor {
     
     private let keychainManager: KeychainManagerProtocol
     private let baseURL: URL
-    private let session: Session
     private let state: TokenState
+    private(set) var session: Session?
     
     // MARK: - Public Properties
     
@@ -42,12 +42,10 @@ final class TokenManager: TokenManagerProtocol, RequestInterceptor {
     
     init(
         keychainManager: KeychainManagerProtocol,
-        baseURL: URL = URL(string: "https://t-bank-finance.ru")!,
-        session: Session = .default
+        baseURL: URL = URL(string: "https://t-bank-finance.ru")!
     ) {
         self.keychainManager = keychainManager
         self.baseURL = baseURL
-        self.session = session
         self.state = TokenState()
         Task {
             await state.updateToken(keychainManager.getAccessToken())
@@ -55,6 +53,10 @@ final class TokenManager: TokenManagerProtocol, RequestInterceptor {
     }
     
     // MARK: - Public Methods
+    
+    func setSession(_ session: Session) {
+        self.session = session
+    }
     
     func saveTokens(accessToken: String, refreshToken: String) {
         keychainManager.saveAccessToken(accessToken)

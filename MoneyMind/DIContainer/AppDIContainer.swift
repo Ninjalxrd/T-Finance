@@ -28,19 +28,3 @@ final class AppDIContainer {
         return resolved
     }
 }
-
-extension Resolver {
-    func safeResolve<T>(_ type: T.Type) -> T {
-        guard let resolved = resolve(type) else {
-            fatalError("Failed to resolve \(String(describing: type))")
-        }
-        return resolved
-    }
-    
-    func safeResolve<T, Arg>(_ type: T.Type, argument: Arg.Type) -> T {
-        guard let resolved = resolve(type, argument: argument) else {
-            fatalError("Failed to resolve \(String(describing: type)) with argument \(argument)")
-        }
-        return resolved
-    }
-}

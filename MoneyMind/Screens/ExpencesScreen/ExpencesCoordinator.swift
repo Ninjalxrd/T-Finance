@@ -24,7 +24,7 @@ final class ExpencesCoordinator {
     // MARK: - Public Methods
     
     func start() {
-        let expencesService = resolver.safeResolve(ExpencesServiceProtocol.self)
+        guard let expencesService = resolver.resolve(ExpencesServiceProtocol.self) else { return }
         let expencesViewModel = ExpencesViewModel(coordinator: self, expencesService: expencesService)
         let expencesContoller = ExpencesController(viewModel: expencesViewModel)
         navigationController.pushViewController(expencesContoller, animated: true)

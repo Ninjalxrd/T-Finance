@@ -15,7 +15,7 @@ final class ServicesAssembly: Assembly {
         
         container.register(Session.self) { _ in
             let configuration = URLSessionConfiguration.af.default
-            let interceptor = container.safeResolve(TokenManagerProtocol.self)
+            let interceptor = container.resolve(TokenManagerProtocol.self)
             return Session(configuration: configuration, interceptor: interceptor)
         }
         .inObjectScope(.container)
@@ -23,9 +23,15 @@ final class ServicesAssembly: Assembly {
         // MARK: - Token Manager
         
         container.register(TokenManagerProtocol.self) { resolver in
-            let keychainManager = resolver.safeResolve(KeychainManagerProtocol.self)
-            let baseURL = URL(string: "https://t-bank-finance.ru")!
-            let session = resolver.safeResolve(Session.self)
+            guard let keychainManager = resolver.resolve(KeychainManagerProtocol.self) else {
+                fatalError("Failed to resolve KeychainManagerProtocol")
+            }
+            guard let baseURL = URL(string: "https://t-bank-finance.ru") else {
+                fatalError("Failed to get URL")
+            }
+            guard let session = resolver.resolve(Session.self) else {
+                fatalError("Failed to resolve Session")
+            }
             return TokenManager(
                 keychainManager: keychainManager,
                 baseURL: baseURL,
@@ -44,8 +50,12 @@ final class ServicesAssembly: Assembly {
         // MARK: - Expences Service
         
         container.register(ExpencesServiceProtocol.self) { resolver in
-            let baseURL = URL(string: "https://t-bank-finance.ru")!
-            let session = resolver.safeResolve(Session.self)
+            guard let baseURL = URL(string: "https://t-bank-finance.ru") else {
+                fatalError("Failed to get URL")
+            }
+            guard let session = resolver.resolve(Session.self) else {
+                fatalError("Failed to resolve Session")
+            }
             return ExpencesService(
                 baseURL: baseURL,
                 session: session

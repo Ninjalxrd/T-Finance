@@ -24,10 +24,10 @@ final class MainCoordinator: Coordinator {
     // MARK: - Public
     
     func start() {
-        let expencesManager = resolver.safeResolve(ExpencesServiceProtocol.self)
-        let goalsManager = resolver.safeResolve(GoalsManagerProtocol.self)
+        guard let expencesService = resolver.resolve(ExpencesServiceProtocol.self) else { return }
+        guard let goalsManager = resolver.resolve(GoalsManagerProtocol.self) else { return }
         let viewModel = MainViewModel(
-            expencesManager: expencesManager,
+            expencesManager: expencesService,
             goalsManager: goalsManager,
             coordinator: self
         )
