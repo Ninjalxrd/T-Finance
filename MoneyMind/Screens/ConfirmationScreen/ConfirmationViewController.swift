@@ -15,6 +15,7 @@ final class ConfirmationViewController: UIViewController {
     private var timer: Timer?
     private var bag = Set<AnyCancellable>()
     private let number: String
+    private let codeLength = 4
     
     // MARK: - Lifecycle
     
@@ -58,6 +59,21 @@ final class ConfirmationViewController: UIViewController {
                 self?.confirmationView.toggleHideTimerLabel(true)
             }
             .store(in: &bag)
+        
+        viewModel.didAuthorize
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.confirmationView.showSuccessState()
+            }
+            .store(in: &bag)
+        
+        viewModel.$errorMessage
+            .sink { [weak self] message in
+                guard let self = self, let message = message else { return }
+                shakeTextField(confirmationView.getCodeTextField())
+                confirmationView.cleanTextField()
+            }
+            .store(in: &bag)
     }
     
     private func setupCallbacks() {
@@ -86,17 +102,12 @@ extension ConfirmationViewController: UITextFieldDelegate {
         guard let stringRange = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
         let isNumeric = updatedText.allSatisfy { $0.isNumber }
-        return updatedText.count <= 4 && isNumeric
+        return updatedText.count <= codeLength && isNumeric
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        guard let text = textField.text, text.count == 4 else { return }
-        guard let code = Int(text) else { return }
-        let result = viewModel.validateCode(with: code)
-        if result == false {
-            shakeTextField(textField)
-            textField.text = ""
-        }
+        guard let text = textField.text, text.count == codeLength else { return }
+        viewModel.confirmCode(text)
     }
 }
 
