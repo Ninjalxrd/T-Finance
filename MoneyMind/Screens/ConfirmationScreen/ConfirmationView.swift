@@ -55,6 +55,24 @@ final class ConfirmationView: UIView {
         return textField
     }()
     
+    // MARK: - TextField Public Methods
+    
+    func getCodeTextField() -> UITextField {
+        return codeTextField
+    }
+    
+    func showSuccessState() {
+        UIView.animate(withDuration: 0.3) {
+            self.codeTextField.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.1)
+            self.codeTextField.layer.borderColor = UIColor.systemGreen.cgColor
+            self.codeTextField.layer.borderWidth = 1
+        }
+    }
+    
+    func cleanTextField() {
+        codeTextField.text = ""
+    }
+    
     // MARK: - Internal TextField Methods
     
     func setupTextFieldDelegate(_ delegate: UITextFieldDelegate) {
