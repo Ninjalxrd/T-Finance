@@ -34,7 +34,7 @@ final class ConfirmationCoordinator: Coordinator {
             assertionFailure("Number must be set for start Confirmation screen")
             return
         }
-        let confirmationViewModel = ConfirmationViewModel(coordinator: self)
+        let confirmationViewModel = ConfirmationViewModel(coordinator: self, phoneNumber: number)
         let confirmationViewController = ConfirmationViewController(viewModel: confirmationViewModel, number: number)
         navigationController.setViewControllers([confirmationViewController], animated: true)
     }

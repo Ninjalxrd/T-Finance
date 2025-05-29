@@ -12,20 +12,20 @@ final class MainCoordinator: Coordinator {
     // MARK: - Properties
     
     private let navigationController: UINavigationController
-    private let resolver: Resolver
+    private let diContainer: AppDIContainer
     
     // MARK: - Init
     
-    init(navigationController: UINavigationController, resolver: Resolver) {
+    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
         self.navigationController = navigationController
-        self.resolver = resolver
+        self.diContainer = diContainer
     }
 
     // MARK: - Public
     
     func start() {
-        let expencesManager = resolver.safeResolve(ExpencesServiceProtocol.self)
-        let goalsManager = resolver.safeResolve(GoalsManagerProtocol.self)
+        let expencesManager = diContainer.resolve(ExpencesManagerProtocol.self)
+        let goalsManager = diContainer.resolve(GoalsManagerProtocol.self)
         let viewModel = MainViewModel(
             expencesManager: expencesManager,
             goalsManager: goalsManager,
