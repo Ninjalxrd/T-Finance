@@ -24,8 +24,8 @@ final class MainCoordinator: Coordinator {
     // MARK: - Public
     
     func start() {
-        guard let expencesService = resolver.resolve(ExpencesServiceProtocol.self) else { return }
-        guard let goalsManager = resolver.resolve(GoalsManagerProtocol.self) else { return }
+        let expencesManager = diContainer.resolve(ExpencesServiceProtocol.self)
+        let goalsManager = diContainer.resolve(GoalsManagerProtocol.self)
         let viewModel = MainViewModel(
             expencesManager: expencesService,
             goalsManager: goalsManager,
@@ -41,7 +41,7 @@ final class MainCoordinator: Coordinator {
     }
 
     func openExpencesScreen() {
-        let expencesCoordinator = ExpencesCoordinator(navigationController: navigationController, resolver: resolver)
+        let expencesCoordinator = ExpencesCoordinator(navigationController: navigationController, diContainer: diContainer)
         expencesCoordinator.start()
     }
 }

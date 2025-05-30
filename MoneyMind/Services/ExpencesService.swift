@@ -31,13 +31,13 @@ final class ExpencesService: ExpencesServiceProtocol {
     // MARK: - Properties
     
     private let baseURL: URL
-    private let session: Session
+    private let session: NetworkSessionProtocol
     
     // MARK: - Initialization
     
     init(
         baseURL: URL = URL(string: "https://t-bank-finance.ru")!,
-        session: Session
+        session: NetworkSessionProtocol
     ) {
         self.baseURL = baseURL
         self.session = session
@@ -112,7 +112,10 @@ final class ExpencesService: ExpencesServiceProtocol {
             
             self.session.request(
                 self.baseURL.appendingPathComponent("/api/v1/transactions/\(id)"),
-                method: .delete
+                method: .delete,
+                headers: nil,
+                parameters: nil,
+                encoding: nil
             )
             .response { response in
                 switch response.result {
@@ -150,6 +153,7 @@ final class ExpencesService: ExpencesServiceProtocol {
             self.session.request(
                 self.baseURL.appendingPathComponent(path),
                 method: method,
+                headers: nil,
                 parameters: parameters,
                 encoding: encoding
             )

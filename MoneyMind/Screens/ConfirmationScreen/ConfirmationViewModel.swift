@@ -17,6 +17,7 @@ final class ConfirmationViewModel {
     // MARK: - Properties
     
     private weak var coordinator: ConfirmationCoordinator?
+    private let diContainer: AppDIContainer
     private let defaultWaitingValue: Int = 5
     private var remainingSeconds: Int
     private var timer: AnyCancellable?
@@ -24,9 +25,11 @@ final class ConfirmationViewModel {
     
     // MARK: Init
     
-    init(coordinator: ConfirmationCoordinator) {
+    init(coordinator: ConfirmationCoordinator, phoneNumber: String, diContainer: AppDIContainer) {
         self.coordinator = coordinator
         self.remainingSeconds = defaultWaitingValue
+        self.phoneNumber = phoneNumber
+        self.diContainer = diContainer
     }
     
     // MARK: - Methods
@@ -60,11 +63,33 @@ final class ConfirmationViewModel {
         return String(format: "%02d:%02d", minutes, seconds)
     }
     
-    func validateCode(with code: Int) -> Bool {
-        if code == serverCode {
-            UserManager.shared.isRegistered = true
-            coordinator?.openEnterNameScreen()
-            return true
+    // MARK: - Network
+    
+    func confirmCode(_ code: String) {
+        let keychainManager = diContainer.resolve(KeychainManagerProtocol.self)
+        authService
+            .confirmSMS(phoneNumber: phoneNumber, code: code)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                if case let .failure(error) = completion {
+                    print("Error: \(error)")
+                    let message = self?.errorMessage(for: error) ?? "Неизвестная ошибка"
+                    self?.errorMessage = message
+                }
+            } receiveValue: { [weak self] response in
+                print("Received response: \(response)")
+                UserManager.shared.isRegistered = true
+                keychainManager.saveAccessToken(response.accessToken)
+                keychainManager.saveRefreshToken(response.refreshToken)
+                self?.didAuthorize.send()
+                self?.coordinator?.openEnterNameScreen()
+            }
+            .store(in: &bag)
+    }
+    
+    private func errorMessage(for error: Error) -> String {
+        if let afError = error.asAFError, afError.isResponseValidationError {
+            return "Неверный код подтверждения"
         }
         return false
     }

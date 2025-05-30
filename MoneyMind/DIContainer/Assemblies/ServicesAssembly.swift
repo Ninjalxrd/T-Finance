@@ -9,37 +9,42 @@ import Swinject
 import Alamofire
 import Foundation
 
+// MARK: - Session Protocol
+
+protocol NetworkSessionProtocol {
+    func request(
+        _ url: URLConvertible,
+        method: HTTPMethod,
+        headers: HTTPHeaders?,
+        parameters: Parameters?,
+        encoding: (any ParameterEncoding)?
+    ) -> DataRequest
+}
+
+// MARK: - Session Adapter
+
+final class NetworkServiceAdapter: NetworkSessionProtocol {
+    private let session: Session
+    
+    init(session: Session) {
+        self.session = session
+    }
+
+    func request(
+        _ url: any URLConvertible,
+        method: HTTPMethod,
+        headers: HTTPHeaders?,
+        parameters: Parameters?,
+        encoding: (any ParameterEncoding)?
+    ) -> DataRequest {
+        session.request(url, method: method, headers: headers)
+    }
+}
+
+// MARK: - Services Assembly
+
 final class ServicesAssembly: Assembly {
     func assemble(container: Container) {
-        // MARK: - Session
-        
-        container.register(Session.self) { _ in
-            let configuration = URLSessionConfiguration.af.default
-            let interceptor = container.resolve(TokenManagerProtocol.self)
-            return Session(configuration: configuration, interceptor: interceptor)
-        }
-        .inObjectScope(.container)
-        
-        // MARK: - Token Manager
-        
-        container.register(TokenManagerProtocol.self) { resolver in
-            guard let keychainManager = resolver.resolve(KeychainManagerProtocol.self) else {
-                fatalError("Failed to resolve KeychainManagerProtocol")
-            }
-            guard let baseURL = URL(string: "https://t-bank-finance.ru") else {
-                fatalError("Failed to get URL")
-            }
-            guard let session = resolver.resolve(Session.self) else {
-                fatalError("Failed to resolve Session")
-            }
-            return TokenManager(
-                keychainManager: keychainManager,
-                baseURL: baseURL,
-                session: session
-            )
-        }
-        .inObjectScope(.container)
-        
         // MARK: - Keychain Manager
         
         container.register(KeychainManagerProtocol.self) { _ in
@@ -47,14 +52,41 @@ final class ServicesAssembly: Assembly {
         }
         .inObjectScope(.container)
         
+        // MARK: - Token Manager
+        
+        container.register(TokenManagerProtocol.self) { resolver in
+            guard let keychainManager = resolver.resolve(KeychainManagerProtocol.self) else {
+                fatalError("Error when resolve KeychainManager")
+            }
+            let baseURL = URL(string: "https://t-bank-finance.ru")!
+
+            return TokenManager(
+                keychainManager: keychainManager,
+                baseURL: baseURL
+            )
+        }
+        .inObjectScope(.container)
+        
+        // MARK: - Session
+        
+        container.register(NetworkSessionProtocol.self) { _ in
+            let configuration = URLSessionConfiguration.af.default
+            guard let tokenManager = container.resolve(TokenManagerProtocol.self) else {
+                fatalError("TokenManagerProtocol not resolved")
+            }
+            let session = Session(configuration: configuration, interceptor: tokenManager)
+            tokenManager.setSession(session)
+            
+            return NetworkServiceAdapter(session: session)
+        }
+        .inObjectScope(.container)
+        
         // MARK: - Expences Service
         
-        container.register(ExpencesServiceProtocol.self) { resolver in
-            guard let baseURL = URL(string: "https://t-bank-finance.ru") else {
-                fatalError("Failed to get URL")
-            }
-            guard let session = resolver.resolve(Session.self) else {
-                fatalError("Failed to resolve Session")
+        container.register(ExpencesServiceProtocol.self) { _ in
+            let baseURL = URL(string: "https://t-bank-finance.ru")!
+            guard let session = container.resolve(NetworkSessionProtocol.self) else {
+                fatalError("Error when resolve KeychainManager")
             }
             return ExpencesService(
                 baseURL: baseURL,
