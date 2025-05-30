@@ -11,10 +11,7 @@ import UIKit
 final class MainAssembly: Assembly {
     func assemble(container: Container) {
         // MARK: - Services
-        
-        let servicesAssembly = ServicesAssembly()
-        servicesAssembly.assemble(container: container)
-        
+
         container.register(GoalsManagerProtocol.self) { _ in
             GoalsManager()
         }

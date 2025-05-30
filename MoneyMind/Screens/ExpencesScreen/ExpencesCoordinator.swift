@@ -12,19 +12,19 @@ final class ExpencesCoordinator {
     // MARK: - Properties
     
     private(set) var navigationController: UINavigationController
-    private let resolver: Resolver
+    private let diContainer: AppDIContainer
     
     // MARK: - Init
     
-    init(navigationController: UINavigationController, resolver: Resolver) {
+    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
         self.navigationController = navigationController
-        self.resolver = resolver
+        self.diContainer = diContainer
     }
     
     // MARK: - Public Methods
     
     func start() {
-        let expencesService = resolver.safeResolve(ExpencesServiceProtocol.self)
+        let expencesService = diContainer.resolve(ExpencesServiceProtocol.self)
         let expencesViewModel = ExpencesViewModel(coordinator: self, expencesService: expencesService)
         let expencesContoller = ExpencesController(viewModel: expencesViewModel)
         navigationController.pushViewController(expencesContoller, animated: true)

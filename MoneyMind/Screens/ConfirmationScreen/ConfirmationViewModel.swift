@@ -20,6 +20,7 @@ final class ConfirmationViewModel {
     // MARK: - Properties
     
     private weak var coordinator: ConfirmationCoordinator?
+    private let diContainer: AppDIContainer
     private let defaultWaitingValue: Int = 5
     private var remainingSeconds: Int
     private var timer: AnyCancellable?
@@ -29,10 +30,11 @@ final class ConfirmationViewModel {
     private let phoneNumber: String
     // MARK: Init
     
-    init(coordinator: ConfirmationCoordinator, phoneNumber: String) {
+    init(coordinator: ConfirmationCoordinator, phoneNumber: String, diContainer: AppDIContainer) {
         self.coordinator = coordinator
         self.remainingSeconds = defaultWaitingValue
         self.phoneNumber = phoneNumber
+        self.diContainer = diContainer
     }
     
     // MARK: - Methods
@@ -70,6 +72,7 @@ final class ConfirmationViewModel {
     // MARK: - Network
     
     func confirmCode(_ code: String) {
+        let keychainManager = diContainer.resolve(KeychainManagerProtocol.self)
         authService
             .confirmSMS(phoneNumber: phoneNumber, code: code)
             .receive(on: DispatchQueue.main)
@@ -82,8 +85,8 @@ final class ConfirmationViewModel {
             } receiveValue: { [weak self] response in
                 print("Received response: \(response)")
                 UserManager.shared.isRegistered = true
-                KeychainManager.shared.saveAccessToken(response.accessToken)
-                KeychainManager.shared.saveRefreshToken(response.refreshToken)
+                keychainManager.saveAccessToken(response.accessToken)
+                keychainManager.saveRefreshToken(response.refreshToken)
                 self?.didAuthorize.send()
                 self?.coordinator?.openEnterNameScreen()
             }

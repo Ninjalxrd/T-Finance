@@ -9,9 +9,10 @@ import Foundation
 import Combine
 import Alamofire
 
-protocol TokenManagerProtocol: Sendable, RequestInterceptor {
+protocol TokenManagerProtocol: RequestInterceptor, Sendable {
     var accessToken: String? { get async }
     func refreshToken() -> AnyPublisher<String, Error>
+    func setSession(_ session: Session)
 }
 
 private actor TokenState {
@@ -22,19 +23,33 @@ private actor TokenState {
     }
 }
 
+private actor SessionState {
+    var session: Session?
+    
+    func setSession(_ session: Session?) {
+        self.session = session
+    }
+}
+
 final class TokenManager: TokenManagerProtocol, RequestInterceptor {
     // MARK: - Properties
     
     private let keychainManager: KeychainManagerProtocol
     private let baseURL: URL
-    private let session: Session
-    private let state: TokenState
+    private let sessionState: SessionState
+    private let tokenState: TokenState
     
     // MARK: - Public Properties
     
     var accessToken: String? {
         get async {
-            await state.accessToken
+            await tokenState.accessToken
+        }
+    }
+    
+    var session: Session? {
+        get async {
+            await sessionState.session
         }
     }
     
@@ -42,25 +57,30 @@ final class TokenManager: TokenManagerProtocol, RequestInterceptor {
     
     init(
         keychainManager: KeychainManagerProtocol,
-        baseURL: URL = URL(string: "https://t-bank-finance.ru")!,
-        session: Session = .default
+        baseURL: URL = URL(string: "https://t-bank-finance.ru")!
     ) {
         self.keychainManager = keychainManager
         self.baseURL = baseURL
-        self.session = session
-        self.state = TokenState()
+        self.tokenState = TokenState()
+        self.sessionState = SessionState()
         Task {
-            await state.updateToken(keychainManager.getAccessToken())
+            await tokenState.updateToken(keychainManager.getAccessToken())
         }
     }
     
     // MARK: - Public Methods
     
+    func setSession(_ session: Alamofire.Session) {
+        Task {
+            await sessionState.setSession(session)
+        }
+    }
+    
     func saveTokens(accessToken: String, refreshToken: String) {
         keychainManager.saveAccessToken(accessToken)
         keychainManager.saveRefreshToken(refreshToken)
         Task {
-            await state.updateToken(accessToken)
+            await tokenState.updateToken(accessToken)
         }
     }
     
@@ -68,7 +88,7 @@ final class TokenManager: TokenManagerProtocol, RequestInterceptor {
         keychainManager.saveAccessToken("")
         keychainManager.saveRefreshToken("")
         Task {
-            await state.updateToken(nil)
+            await tokenState.updateToken(nil)
         }
     }
     
@@ -86,29 +106,35 @@ final class TokenManager: TokenManagerProtocol, RequestInterceptor {
                 promise(.failure(TokenError.invalidResponse))
                 return
             }
-            
-            self.session.request(
-                self.baseURL.appendingPathComponent("/api/v1/auth/refresh-token"),
-                method: .post,
-                headers: headers
-            )
-            .responseDecodable(of: TokenResponse.self) { [weak self] response in
-                switch response.result {
-                case .success(let tokenResponse):
-                    self?.saveTokens(
-                        accessToken: tokenResponse.accessToken,
-                        refreshToken: tokenResponse.refreshToken
-                    )
-                    promise(.success(tokenResponse.accessToken))
-                    
-                case .failure(let error):
-                    if
-                        let statusCode = response.response?.statusCode,
-                        statusCode == 401 {
-                        self?.clearTokens()
-                        promise(.failure(TokenError.refreshTokenExpired))
-                    } else {
-                        promise(.failure(error))
+            Task {
+                guard let session = await self.session else {
+                    promise(.failure(TokenError.invalidResponse))
+                    return
+                }
+                
+                session.request(
+                    self.baseURL.appendingPathComponent("/api/v1/auth/refresh-token"),
+                    method: .post,
+                    headers: headers
+                )
+                .responseDecodable(of: TokenResponse.self) { [weak self] response in
+                    switch response.result {
+                    case .success(let tokenResponse):
+                        self?.saveTokens(
+                            accessToken: tokenResponse.accessToken,
+                            refreshToken: tokenResponse.refreshToken
+                        )
+                        promise(.success(tokenResponse.accessToken))
+                        
+                    case .failure(let error):
+                        if
+                            let statusCode = response.response?.statusCode,
+                            statusCode == 401 {
+                            self?.clearTokens()
+                            promise(.failure(TokenError.refreshTokenExpired))
+                        } else {
+                            promise(.failure(error))
+                        }
                     }
                 }
             }
@@ -128,7 +154,7 @@ final class TokenManager: TokenManagerProtocol, RequestInterceptor {
         var urlRequest = urlRequest
         
         Task {
-            if let token = await state.accessToken {
+            if let token = await tokenState.accessToken {
                 urlRequest.headers.add(.authorization(bearerToken: token))
             }
             completion(.success(urlRequest))
