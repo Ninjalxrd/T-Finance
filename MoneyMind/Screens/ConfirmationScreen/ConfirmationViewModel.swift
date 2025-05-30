@@ -12,7 +12,10 @@ final class ConfirmationViewModel {
     // MARK: - Published Properties
 
     @Published private(set) var remainingTimeText: String?
+    @Published var errorMessage: String?
+    
     var timerFinished = PassthroughSubject<Void, Never>()
+    var didAuthorize = PassthroughSubject<Void, Never>()
     
     // MARK: - Properties
     
@@ -21,8 +24,10 @@ final class ConfirmationViewModel {
     private let defaultWaitingValue: Int = 5
     private var remainingSeconds: Int
     private var timer: AnyCancellable?
-    private var serverCode = 7777
+    private var bag: Set<AnyCancellable> = []
     
+    private let authService = AuthService()
+    private let phoneNumber: String
     // MARK: Init
     
     init(coordinator: ConfirmationCoordinator, phoneNumber: String, diContainer: AppDIContainer) {
@@ -35,6 +40,7 @@ final class ConfirmationViewModel {
     // MARK: - Methods
     
     func startTimer() {
+        timer?.cancel()
         remainingTimeText = formatTime(defaultWaitingValue)
         timer = Timer
             .publish(every: 1.0, on: .main, in: .common)
@@ -91,6 +97,6 @@ final class ConfirmationViewModel {
         if let afError = error.asAFError, afError.isResponseValidationError {
             return "Неверный код подтверждения"
         }
-        return false
+        return "Ошибка сети. Проверьте соединение"
     }
 }

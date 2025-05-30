@@ -25,8 +25,8 @@ final class MainViewModel {
 
     // MARK: - Init
     
-    init(expencesManager: ExpencesServiceProtocol, goalsManager: GoalsManagerProtocol, coordinator: MainCoordinator) {
-        self.expencesService = expencesManager
+    init(expencesService: ExpencesServiceProtocol, goalsManager: GoalsManagerProtocol, coordinator: MainCoordinator) {
+        self.expencesService = expencesService
         self.goalsManager = goalsManager
         self.coordinator = coordinator
         getLastExpences()
