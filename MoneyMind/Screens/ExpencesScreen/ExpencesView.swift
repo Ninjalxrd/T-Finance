@@ -7,16 +7,44 @@
 
 import UIKit
 import SnapKit
+import Combine
 
 final class ExpencesView: UIView {
+    // MARK: - Publishers
+    
+    private let refreshSubject = PassthroughSubject<Void, Never>()
+    var refreshPublisher: AnyPublisher<Void, Never> {
+        refreshSubject.eraseToAnyPublisher()
+    }
+    private let periodSubject = PassthroughSubject<TimePeriod, Never>()
+    var periodPublisher: AnyPublisher<TimePeriod, Never> {
+        periodSubject.eraseToAnyPublisher()
+    }
+    
+    // MARK: - Init
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+        setupRefreshControl()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - UI Elements
+    
     private lazy var titleLabel: UILabel = {
         let label = DefaultLabel(numberOfLines: 1, text: "Расходы")
         return label
     }()
     
     private lazy var dateSegmentControl: UISegmentedControl = {
-        let segmentControl = UISegmentedControl(items: ["День", "Неделя", "Месяц", "Год"])
-        
+        let titles = TimePeriod.allCases.map { $0.title }
+        let segmentControl = UISegmentedControl(items: titles)
+        segmentControl.selectedSegmentIndex = TimePeriod.month.rawValue
+        segmentControl.addAction(segmentChangedAction, for: .valueChanged)
         return segmentControl
     }()
     
@@ -40,13 +68,30 @@ final class ExpencesView: UIView {
         return tableView
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupUI()
+    private lazy var refreshControl: UIRefreshControl = {
+        let refresh = UIRefreshControl()
+        return refresh
+    }()
+    
+    private lazy var refreshAction = UIAction { [weak self] _ in
+        self?.refreshSubject.send()
+    }
+
+    private lazy var segmentChangedAction = UIAction { [weak self] _ in
+        guard
+            let self,
+            let selectedIndex = self.dateSegmentControl.selectedSegmentIndex as Int?,
+            let selectedPeriod = TimePeriod(rawValue: selectedIndex)
+        else { return }
+              
+        self.periodSubject.send(selectedPeriod)
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    // MARK: - Private Methods
+    
+    private func setupRefreshControl() {
+        refreshControl.addAction(refreshAction, for: .valueChanged)
+        expencesTableView.refreshControl = refreshControl
     }
     
     private func setupUI() {
@@ -76,51 +121,40 @@ final class ExpencesView: UIView {
         expensesChartView.snp.makeConstraints { make in
             make.top.equalTo(totalExpensesLabel.snp.bottom).offset(Spacing.medium)
             make.leading.trailing.equalToSuperview().inset(Spacing.medium)
-            make.height.equalTo(200)
+            make.height.equalTo(CGFloat.chartViewHeight)
         }
         
         expencesTableView.snp.makeConstraints { make in
             make.top.equalTo(expensesChartView.snp.bottom).offset(Spacing.medium)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(safeAreaLayoutGuide.snp.bottom)
         }
     }
     
-    func setupExpenceTableView() {
-        expencesTableView.delegate = self
-        expencesTableView.dataSource = self
+    // MARK: - Public Methods
+    
+    func setupExpenceTableView(_ dataSource: UITableViewDataSource, _ delegate: UITableViewDelegate) {
+        expencesTableView.delegate = delegate
+        expencesTableView.dataSource = dataSource
     }
     
     func reloadExpencesTableView() {
         expencesTableView.reloadData()
     }
     
-    func updateTotalExpenses(amount: Int) {
-        totalExpensesLabel.text = "\(amount) ₽"
+    func updateTotalExpenses(amount: Double) {
+        totalExpensesLabel.text = "\(Int(amount.rounded())) ₽"
     }
     
     func updateExpensesChart(with categories: [Category]) {
         expensesChartView.updateChart(with: categories)
     }
+    
+    func endRefreshing() {
+        refreshControl.endRefreshing()
+    }
 }
 
-// MARK: - UITableViewDelegate, UITableViewDataSource
-
-extension ExpencesView: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: ExpenceCell.identifier,
-            for: indexPath) as? ExpenceCell else {
-            return UITableViewCell()
-        }
-//        cell.configure(with: )
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
+private extension CGFloat {
+    static let chartViewHeight: CGFloat = 200
 }

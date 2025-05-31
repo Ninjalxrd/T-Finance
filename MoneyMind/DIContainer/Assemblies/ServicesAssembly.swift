@@ -31,13 +31,19 @@ final class NetworkServiceAdapter: NetworkSessionProtocol {
     }
 
     func request(
-        _ url: any URLConvertible,
+        _ url: URLConvertible,
         method: HTTPMethod,
         headers: HTTPHeaders?,
         parameters: Parameters?,
         encoding: (any ParameterEncoding)?
     ) -> DataRequest {
-        session.request(url, method: method, headers: headers)
+        session.request(
+            url,
+            method: method,
+            parameters: parameters,
+            encoding: encoding ?? URLEncoding.default,
+            headers: headers
+        )
     }
 }
 
@@ -88,10 +94,20 @@ final class ServicesAssembly: Assembly {
             guard let session = container.resolve(NetworkSessionProtocol.self) else {
                 fatalError("Error when resolve KeychainManager")
             }
+            guard let tokenManager = container.resolve(TokenManagerProtocol.self) else {
+                fatalError("TokenManagerProtocol not resolved")
+            }
             return ExpencesService(
                 baseURL: baseURL,
-                session: session
+                session: session,
+                tokenManager: tokenManager
             )
+        }
+        .inObjectScope(.container)
+        
+        // MARK: - Image Service
+        container.register(ImageServiceProtocol.self) { _ in
+            ImageService()
         }
         .inObjectScope(.container)
     }

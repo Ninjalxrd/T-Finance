@@ -38,6 +38,7 @@ class MainViewController: UIViewController {
         bindViewModel()
         setupChart()
         setupView()
+        setupCallbacks()
     }
     
     // MARK: - Private Methods
@@ -93,7 +94,7 @@ class MainViewController: UIViewController {
         mainView.expensesScreenPublisher
             .sink { [weak self] _ in
                 guard let self else { return }
-                viewModel.openExpencesScreen()
+                self.viewModel.openExpencesScreen()
             }
             .store(in: &bag)
         }
@@ -120,7 +121,14 @@ extension MainViewController: UITableViewDelegate, SkeletonTableViewDataSource {
             else {
                 return UITableViewCell()
             }
-            cell.configureCell(with: lastExpences[indexPath.row])
+            let expence = lastExpences[indexPath.row]
+            cell.configureCell(with: expence)
+            
+            viewModel.getImageByURL(expence.category.icon) { image in
+                DispatchQueue.main.async {
+                    cell.configureCellIcon(with: image)
+                }
+            }
             return cell
         } else {
             guard

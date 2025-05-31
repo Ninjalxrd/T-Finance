@@ -50,7 +50,6 @@ final class MainExpenсesView: UIView {
     
     private(set) lazy var detailsButton: UIButton = {
         let button = DefaultButton(title: "Подробнее", action: detailsAction)
-        button.isSkeletonable = true
         button.heightAnchor.constraint(equalToConstant: CGFloat.buttonHeight).isActive = true
         return button
     }()

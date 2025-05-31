@@ -25,8 +25,13 @@ final class ExpencesCoordinator {
     
     func start() {
         let expencesService = diContainer.resolve(ExpencesServiceProtocol.self)
-        let expencesViewModel = ExpencesViewModel(coordinator: self, expencesService: expencesService)
+        let imageService = diContainer.resolve(ImageServiceProtocol.self)
+        let expencesViewModel = ExpencesViewModel(
+            coordinator: self,
+            expencesService: expencesService,
+            imageService: imageService
+        )
         let expencesContoller = ExpencesController(viewModel: expencesViewModel)
-        navigationController.pushViewController(expencesContoller, animated: true)
+        navigationController.pushViewController(expencesContoller, animated: false)
     }
 }

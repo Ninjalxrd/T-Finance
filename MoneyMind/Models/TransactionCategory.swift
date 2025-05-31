@@ -9,5 +9,5 @@ struct TransactionCategory: Codable {
     var id: Int
     var name: String
     var color: String
-    var icon: String
+    var icon: String?
 }

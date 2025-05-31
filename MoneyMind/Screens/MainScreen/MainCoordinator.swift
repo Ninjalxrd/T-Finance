@@ -26,10 +26,12 @@ final class MainCoordinator: Coordinator {
     func start() {
         let expencesService = diContainer.resolve(ExpencesServiceProtocol.self)
         let goalsManager = diContainer.resolve(GoalsManagerProtocol.self)
+        let imageService = diContainer.resolve(ImageServiceProtocol.self)
         let viewModel = MainViewModel(
             expencesService: expencesService,
             goalsManager: goalsManager,
-            coordinator: self
+            coordinator: self,
+            imageService: imageService
         )
         let controller = MainViewController(viewModel: viewModel)
         controller.tabBarItem = UITabBarItem(

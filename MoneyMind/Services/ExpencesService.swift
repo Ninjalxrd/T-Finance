@@ -32,15 +32,18 @@ final class ExpencesService: ExpencesServiceProtocol {
     
     private let baseURL: URL
     private let session: NetworkSessionProtocol
+    private let tokenManager: TokenManagerProtocol
     
     // MARK: - Initialization
     
     init(
         baseURL: URL = URL(string: "https://t-bank-finance.ru")!,
-        session: NetworkSessionProtocol
+        session: NetworkSessionProtocol,
+        tokenManager: TokenManagerProtocol
     ) {
         self.baseURL = baseURL
         self.session = session
+        self.tokenManager = tokenManager
     }
     
     // MARK: - Public Methods
@@ -66,10 +69,12 @@ final class ExpencesService: ExpencesServiceProtocol {
             parameters["categoryId"] = categoryId
         }
         
+        print(parameters)
         return performRequest(
             path: "/api/v1/transactions",
             method: .get,
-            parameters: parameters
+            parameters: parameters,
+            encoding: URLEncoding.queryString
         )
     }
     
@@ -150,25 +155,37 @@ final class ExpencesService: ExpencesServiceProtocol {
                 return
             }
             
-            self.session.request(
-                self.baseURL.appendingPathComponent(path),
-                method: method,
-                headers: nil,
-                parameters: parameters,
-                encoding: encoding
-            )
-            .validate()
-            .responseDecodable(of: T.self) { response in
-                switch response.result {
-                case .success(let value):
-                    promise(.success(value))
-                case .failure(let error):
-                    if
-                        let data = response.data,
-                        let apiError = try? JSONDecoder().decode(APIError.self, from: data) {
-                        promise(.failure(NetworkError.apiError(apiError)))
-                    } else {
-                        promise(.failure(error))
+            var headers: HTTPHeaders = [:]
+            Task {
+                if let token = await self.tokenManager.accessToken {
+                    headers.add(name: "Authorization", value: "Bearer \(token)")
+                }
+                
+                let decoder = JSONDecoder()
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                decoder.dateDecodingStrategy = .formatted(dateFormatter)
+                
+                self.session.request(
+                    self.baseURL.appendingPathComponent(path),
+                    method: method,
+                    headers: headers,
+                    parameters: parameters,
+                    encoding: encoding
+                )
+                .validate()
+                .responseDecodable(of: T.self, decoder: decoder) { response in
+                    switch response.result {
+                    case .success(let value):
+                        promise(.success(value))
+                    case .failure(let error):
+                        if
+                            let data = response.data,
+                            let apiError = try? JSONDecoder().decode(APIError.self, from: data) {
+                            promise(.failure(NetworkError.apiError(apiError)))
+                        } else {
+                            promise(.failure(error))
+                        }
                     }
                 }
             }

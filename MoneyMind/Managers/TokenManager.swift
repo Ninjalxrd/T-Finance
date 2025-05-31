@@ -195,23 +195,27 @@ enum TokenError: LocalizedError {
     }
 }
 
+final class CancellableWrapper: NSObject {
+    var cancellables = Set<AnyCancellable>()
+}
+
 // MARK: - Request Extension
 
 private extension Request {
     private static var cancellablesKey: UInt8 = 0
-    
+
+    var cancellableWrapper: CancellableWrapper {
+        if let wrapper = objc_getAssociatedObject(self, &Self.cancellablesKey) as? CancellableWrapper {
+            return wrapper
+        }
+        let wrapper = CancellableWrapper()
+        objc_setAssociatedObject(self, &Self.cancellablesKey, wrapper, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return wrapper
+    }
+
     var cancellables: Set<AnyCancellable> {
-        get {
-            if let cancellables = objc_getAssociatedObject(self, &Self.cancellablesKey) as? Set<AnyCancellable> {
-                return cancellables
-            }
-            let cancellables = Set<AnyCancellable>()
-            self.cancellables = cancellables
-            return cancellables
-        }
-        set {
-            objc_setAssociatedObject(self, &Self.cancellablesKey, newValue, .OBJC_ASSOCIATION_RETAIN)
-        }
+        get { cancellableWrapper.cancellables }
+        set { cancellableWrapper.cancellables = newValue }
     }
 }
 

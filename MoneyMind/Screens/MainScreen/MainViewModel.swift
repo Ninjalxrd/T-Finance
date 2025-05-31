@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import UIKit
 
 final class MainViewModel {
     // MARK: - Published Properties
@@ -22,13 +23,20 @@ final class MainViewModel {
     private var bag: Set<AnyCancellable> = []
     private let expencesService: ExpencesServiceProtocol
     private let goalsManager: GoalsManagerProtocol
+    private let imageService: ImageServiceProtocol
 
     // MARK: - Init
     
-    init(expencesService: ExpencesServiceProtocol, goalsManager: GoalsManagerProtocol, coordinator: MainCoordinator) {
+    init(
+        expencesService: ExpencesServiceProtocol,
+        goalsManager: GoalsManagerProtocol,
+        coordinator: MainCoordinator,
+        imageService: ImageServiceProtocol
+    ) {
         self.expencesService = expencesService
         self.goalsManager = goalsManager
         self.coordinator = coordinator
+        self.imageService = imageService
         getLastExpences()
         getLastGoals()
     }
@@ -76,6 +84,12 @@ final class MainViewModel {
                 }
             }
             .store(in: &bag)
+    }
+    
+    func getImageByURL(_ url: String?, completion: @escaping (UIImage?) -> Void) {
+        imageService.downloadImage(by: url) { image in
+            completion(image)
+        }
     }
     
     // MARK: - Public Methods

@@ -68,8 +68,8 @@ final class ConfirmationViewController: UIViewController {
             .store(in: &bag)
         
         viewModel.$errorMessage
-            .sink { [weak self] message in
-                guard let self = self, let message = message else { return }
+            .sink { [weak self] _ in
+                guard let self = self else { return }
                 shakeTextField(confirmationView.getCodeTextField())
                 confirmationView.cleanTextField()
             }

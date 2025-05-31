@@ -22,11 +22,14 @@ final class MainView: UIView {
         goalsScreenSubject.eraseToAnyPublisher()
     }
     
+    private var bag: Set<AnyCancellable> = []
+    
     // MARK: - Init
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        passthroughExpencesSubject()
     }
     
     required init?(coder: NSCoder) {
@@ -102,6 +105,15 @@ final class MainView: UIView {
     
     private let expencesView = MainExpenсesView()
     
+    // MARK: - Passthrough Subject
+    func passthroughExpencesSubject() {
+        expencesView
+            .detailsTappedPublisher
+            .sink { [weak self] _ in
+                self?.expensesScreenSubject.send()
+            }
+            .store(in: &bag)
+    }
     // MARK: - Goals View
     
     private let goalsView = MainGoalsView()

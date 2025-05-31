@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		E9092E5F2DDCB24A0056C9AE /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = E9092E5E2DDCB24A0056C9AE /* Swinject */; };
-		E92871002DDDC809004556F9 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = E92870FF2DDDC809004556F9 /* Alamofire */; };
 		E974DA872DC5EA1300D24F0E /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = E974DA862DC5EA1300D24F0E /* SkeletonView */; };
 		E97ECCF92DABA8A7004305D7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97ECCF82DABA8A7004305D7 /* SnapKit */; };
 		E97F2BC22DAC0BBC00CE1AA3 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = E97F2BC12DAC0BBC00CE1AA3 /* DGCharts */; };
@@ -646,14 +645,6 @@
 				minimumVersion = 2.9.1;
 			};
 		};
-		E92870FE2DDDC7FC004556F9 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.10.2;
-			};
-		};
 		E974DA852DC5EA0A00D24F0E /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Juanpe/SkeletonView";
@@ -701,11 +692,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E9092E5D2DDCB2410056C9AE /* XCRemoteSwiftPackageReference "Swinject" */;
 			productName = Swinject;
-		};
-		E92870FF2DDDC809004556F9 /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E92870FE2DDDC7FC004556F9 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
 		};
 		E974DA862DC5EA1300D24F0E /* SkeletonView */ = {
 			isa = XCSwiftPackageProductDependency;

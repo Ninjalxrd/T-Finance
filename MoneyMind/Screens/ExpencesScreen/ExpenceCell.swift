@@ -30,6 +30,7 @@ final class ExpenceCell: UITableViewCell {
     
     private lazy var shopLabel: UILabel = {
         let label = DefaultLabel(numberOfLines: 1, text: "")
+        label.font = Font.subtitle.font
         return label
     }()
     
@@ -78,10 +79,13 @@ final class ExpenceCell: UITableViewCell {
     }
     
     func configure(with expence: Expence) {
-//        iconImageView.image = expence.category.icon
         shopLabel.text = expence.name
         categoryLabel.text = expence.category.name
-        sumLabel.text = "-\(expence.amount) ₽"
+        sumLabel.text = "-\(Int(expence.amount.rounded())) ₽"
+    }
+    
+    func configureCellIcon(with image: UIImage?) {
+        iconImageView.image = image ?? UIImage(named: "expenceImage")
     }
 }
 
