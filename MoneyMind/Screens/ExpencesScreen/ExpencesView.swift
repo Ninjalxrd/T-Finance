@@ -48,6 +48,26 @@ final class ExpencesView: UIView {
         return segmentControl
     }()
     
+    private lazy var monthButton: UIButton = {
+        let button = UIButton(configuration: .plain())
+        button.setTitle(MonthYear.currentMonth().title, for: .normal)
+        button.tintColor = .text
+        button.titleLabel?.font = Font.button.font
+        button.backgroundColor = .background
+        button.layer.cornerRadius = Size.cornerRadius
+        button.showsMenuAsPrimaryAction = true
+        button.changesSelectionAsPrimaryAction = true
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.layer.shadowOpacity = 0.2
+        button.layer.shadowRadius = 4
+        button.layer.masksToBounds = false
+        button.heightAnchor.constraint(equalToConstant: Size.buttonHeight).isActive = true
+        button.widthAnchor.constraint(equalToConstant: CGFloat.buttonWidth).isActive = true
+        
+        return button
+    }()
+
     private lazy var totalExpensesLabel: UILabel = {
         let label = DefaultLabel(numberOfLines: 1, text: "")
         label.font = Font.title.font
@@ -97,6 +117,7 @@ final class ExpencesView: UIView {
     private func setupUI() {
         addSubview(titleLabel)
         addSubview(dateSegmentControl)
+        addSubview(monthButton)
         addSubview(totalExpensesLabel)
         addSubview(expensesChartView)
         addSubview(expencesTableView)
@@ -113,9 +134,14 @@ final class ExpencesView: UIView {
             make.trailing.equalToSuperview().offset(-Spacing.medium)
         }
         
-        totalExpensesLabel.snp.makeConstraints { make in
+        monthButton.snp.makeConstraints { make in
             make.top.equalTo(dateSegmentControl.snp.bottom).offset(Spacing.medium)
-            make.leading.trailing.equalToSuperview().inset(Spacing.medium)
+            make.leading.equalToSuperview().inset(Spacing.medium)
+        }
+        
+        totalExpensesLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(monthButton.snp.centerY)
+            make.trailing.equalToSuperview().inset(Spacing.medium)
         }
         
         expensesChartView.snp.makeConstraints { make in
@@ -157,4 +183,5 @@ final class ExpencesView: UIView {
 
 private extension CGFloat {
     static let chartViewHeight: CGFloat = 200
+    static let buttonWidth: CGFloat = 116
 }

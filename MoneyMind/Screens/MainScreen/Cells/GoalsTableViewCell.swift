@@ -68,6 +68,7 @@ class GoalsTableViewCell: UITableViewCell {
     // MARK: - Setup UI
     
     private func setupUI() {
+        backgroundColor = .clear
         selectionStyle = .none
         isSkeletonable = true
         contentView.isSkeletonable = true

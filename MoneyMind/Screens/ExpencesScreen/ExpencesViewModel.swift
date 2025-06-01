@@ -65,8 +65,6 @@ final class ExpencesViewModel {
         let thresholdIndex = expences.count - 5
         if currentIndex >= thresholdIndex && !isLoadingPage && !allDataLoaded {
             let nextPage = currentPage + 1
-            
-            let period = periodSubject.value
             guard let startDate = currentStartDate, let endDate = currentEndDate else {
                 return
             }
@@ -75,51 +73,50 @@ final class ExpencesViewModel {
         }
     }
 
-    
     // MARK: - Private Methods
-    
+
     private func setupPeriodHandling() {
         periodSubject.combineLatest(refreshSubject)
-            .map { period, _ in period }
-            .map { [weak self] period -> (Date, Date) in
-                let endDate = Date()
-                let startDate: Date
-                
-                switch period {
-                case .day:
-                    if let date = Calendar.current.date(byAdding: .day, value: -1, to: endDate) {
-                        startDate = date
-                    } else {
-                        startDate = endDate
-                    }
-                case .week:
-                    if let date = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: endDate) {
-                        startDate = date
-                    } else {
-                        startDate = endDate
-                    }
-                case .month:
-                    if let date = Calendar.current.date(byAdding: .month, value: -1, to: endDate) {
-                        startDate = date
-                    } else {
-                        startDate = endDate
-                    }
-                case .year:
-                    if let date = Calendar.current.date(byAdding: .year, value: -1, to: endDate) {
-                        startDate = date
-                    } else {
-                        startDate = endDate
-                    }
-                }
-                self?.currentStartDate = startDate
-                self?.currentEndDate = endDate
-                return (startDate, endDate)
-            }
-            .sink { [weak self] startDate, endDate in
-                self?.loadData(startDate: startDate, endDate: endDate)
-            }
-            .store(in: &bag)
-    }
+             .map { period, _ in period }
+             .map { [weak self] period -> (Date, Date) in
+                 let endDate = Date()
+                 let startDate: Date
+                 
+                 switch period {
+                 case .day:
+                     if let date = Calendar.current.date(byAdding: .day, value: -1, to: endDate) {
+                         startDate = date
+                     } else {
+                         startDate = endDate
+                     }
+                 case .week:
+                     if let date = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: endDate) {
+                         startDate = date
+                     } else {
+                         startDate = endDate
+                     }
+                 case .month:
+                     if let date = Calendar.current.date(byAdding: .month, value: -1, to: endDate) {
+                         startDate = date
+                     } else {
+                         startDate = endDate
+                     }
+                 case .year:
+                     if let date = Calendar.current.date(byAdding: .year, value: -1, to: endDate) {
+                         startDate = date
+                     } else {
+                         startDate = endDate
+                     }
+                 }
+                 self?.currentStartDate = startDate
+                 self?.currentEndDate = endDate
+                 return (startDate, endDate)
+             }
+             .sink { [weak self] startDate, endDate in
+                 self?.loadData(startDate: startDate, endDate: endDate)
+             }
+             .store(in: &bag)
+     }
     
     private func loadData(startDate: Date, endDate: Date) {
         currentPage = 1
@@ -196,9 +193,9 @@ final class ExpencesViewModel {
 
 enum TimePeriod: Int, CaseIterable {
     case day = 0
-    case week = 1
-    case month = 2
-    case year = 3
+    case week
+    case month
+    case year
     
     var title: String {
         switch self {
@@ -213,3 +210,40 @@ enum TimePeriod: Int, CaseIterable {
         }
     }
 }
+
+enum MonthYear: Int, CaseIterable {
+    case january = 1
+    case february
+    case march
+    case april
+    case may
+    case june
+    case july
+    case august
+    case september
+    case october
+    case november
+    case december
+
+    static private let formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.dateFormat = "LLLL"
+        return formatter
+    }()
+
+    var title: String {
+        var components = DateComponents()
+        components.month = self.rawValue
+        let date = Calendar.current.date(from: components) ?? Date()
+        return Self.formatter.string(from: date).capitalized
+    }
+}
+
+extension MonthYear {
+    static func currentMonth() -> MonthYear {
+        let currentMonthNumber = Calendar.current.component(.month, from: Date())
+        return MonthYear(rawValue: currentMonthNumber) ?? .january
+    }
+}
+

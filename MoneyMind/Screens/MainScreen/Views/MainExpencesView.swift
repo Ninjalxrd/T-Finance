@@ -41,6 +41,7 @@ final class MainExpenсesView: UIView {
     
     private(set) lazy var tableView: UITableView = {
         let tableView = UITableView()
+        tableView.backgroundColor = .clear
         tableView.separatorColor = .clear
         tableView.isSkeletonable = true
         tableView.skeletonCornerRadius = CGFloat.skeletonCornerRadius

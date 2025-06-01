@@ -34,11 +34,4 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let diContainer = AppDIContainer(assemblies: assemblies)
         return diContainer
     }
-
-    func sceneDidEnterBackground(_ scene: UIScene) {
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
-        if let appDomain = Bundle.main.bundleIdentifier {
-            UserDefaults.standard.removePersistentDomain(forName: appDomain)
-        }
-    }
 }
