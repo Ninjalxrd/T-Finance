@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import Combine
 
 final class AddTransactionController: UIViewController {
     private let viewModel: AddTransactionViewModel
-    private let addTransactionView: AddTransactionView = .init(frame: .zero)
+    private let addTransactionView = AddTransactionView()
+    private var bag: Set<AnyCancellable> = []
     
     init(viewModel: AddTransactionViewModel) {
         self.viewModel = viewModel
@@ -27,5 +29,15 @@ final class AddTransactionController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupCallbacks()
+    }
+    
+    private func setupCallbacks() {
+        addTransactionView
+            .categoryPublisher
+            .sink { [weak self] _ in
+                self?.viewModel.openCategoriesScreen()
+            }
+            .store(in: &bag)
     }
 }

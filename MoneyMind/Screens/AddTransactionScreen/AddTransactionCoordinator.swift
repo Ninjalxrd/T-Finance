@@ -10,12 +10,14 @@ final class AddTransactionCoordinator: Coordinator {
     // MARK: - Properties
     
     private let navigationController: UINavigationController
+    private let diContainer: AppDIContainer
     var childCoordinators: [Coordinator] = []
 
     // MARK: - Init
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
         self.navigationController = navigationController
+        self.diContainer = diContainer
     }
 
     // MARK: - Public Methods
@@ -29,5 +31,13 @@ final class AddTransactionCoordinator: Coordinator {
             selectedImage: UIImage(named: "add_selected")
         )
         navigationController.setViewControllers([controller], animated: false)
+    }
+    
+    func openCategoriesScreen() {
+        let categoriesCoordinator = CategoriesCoordinator(
+            navigationController: navigationController,
+            diContainer: diContainer
+        )
+        categoriesCoordinator.start()
     }
 }

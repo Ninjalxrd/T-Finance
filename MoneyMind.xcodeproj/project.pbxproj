@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E9092E5F2DDCB24A0056C9AE /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = E9092E5E2DDCB24A0056C9AE /* Swinject */; };
-		E974DA872DC5EA1300D24F0E /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = E974DA862DC5EA1300D24F0E /* SkeletonView */; };
-		E97ECCF92DABA8A7004305D7 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E97ECCF82DABA8A7004305D7 /* SnapKit */; };
-		E97F2BC22DAC0BBC00CE1AA3 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = E97F2BC12DAC0BBC00CE1AA3 /* DGCharts */; };
-		E98D3EC72DC2552400C6F657 /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = E98D3EC62DC2552400C6F657 /* PhoneNumberKit */; };
-		E9C0493E2DE763550033F1BA /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = E9C0493D2DE763550033F1BA /* Alamofire */; };
+		E989FD0A2DECA6D600880E16 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = E989FD092DECA6D600880E16 /* Alamofire */; };
+		E989FD0C2DECA6D900880E16 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = E989FD0B2DECA6D900880E16 /* Swinject */; };
+		E989FD0E2DECA6DC00880E16 /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = E989FD0D2DECA6DC00880E16 /* SkeletonView */; };
+		E989FD102DECA6DF00880E16 /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = E989FD0F2DECA6DF00880E16 /* PhoneNumberKit */; };
+		E989FD122DECA6E300880E16 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = E989FD112DECA6E300880E16 /* SnapKit */; };
+		E989FD142DECA6F000880E16 /* DGCharts in Frameworks */ = {isa = PBXBuildFile; productRef = E989FD132DECA6F000880E16 /* DGCharts */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,12 +82,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E974DA872DC5EA1300D24F0E /* SkeletonView in Frameworks */,
-				E9092E5F2DDCB24A0056C9AE /* Swinject in Frameworks */,
-				E98D3EC72DC2552400C6F657 /* PhoneNumberKit in Frameworks */,
-				E9C0493E2DE763550033F1BA /* Alamofire in Frameworks */,
-				E97F2BC22DAC0BBC00CE1AA3 /* DGCharts in Frameworks */,
-				E97ECCF92DABA8A7004305D7 /* SnapKit in Frameworks */,
+				E989FD0A2DECA6D600880E16 /* Alamofire in Frameworks */,
+				E989FD102DECA6DF00880E16 /* PhoneNumberKit in Frameworks */,
+				E989FD0E2DECA6DC00880E16 /* SkeletonView in Frameworks */,
+				E989FD0C2DECA6D900880E16 /* Swinject in Frameworks */,
+				E989FD142DECA6F000880E16 /* DGCharts in Frameworks */,
+				E989FD122DECA6E300880E16 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,12 +157,12 @@
 			);
 			name = MoneyMind;
 			packageProductDependencies = (
-				E97ECCF82DABA8A7004305D7 /* SnapKit */,
-				E97F2BC12DAC0BBC00CE1AA3 /* DGCharts */,
-				E98D3EC62DC2552400C6F657 /* PhoneNumberKit */,
-				E974DA862DC5EA1300D24F0E /* SkeletonView */,
-				E9092E5E2DDCB24A0056C9AE /* Swinject */,
-				E9C0493D2DE763550033F1BA /* Alamofire */,
+				E989FD092DECA6D600880E16 /* Alamofire */,
+				E989FD0B2DECA6D900880E16 /* Swinject */,
+				E989FD0D2DECA6DC00880E16 /* SkeletonView */,
+				E989FD0F2DECA6DF00880E16 /* PhoneNumberKit */,
+				E989FD112DECA6E300880E16 /* SnapKit */,
+				E989FD132DECA6F000880E16 /* DGCharts */,
 			);
 			productName = MoneyMind;
 			productReference = E94572EE2DAAA979003C6C76 /* MoneyMind.app */;
@@ -244,12 +244,12 @@
 			mainGroup = E94572E52DAAA979003C6C76;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				E97ECCF62DABA312004305D7 /* XCRemoteSwiftPackageReference "SnapKit" */,
-				E97F2BC02DAC0BAE00CE1AA3 /* XCRemoteSwiftPackageReference "Charts" */,
-				E98D3EC52DC254F600C6F657 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
-				E974DA852DC5EA0A00D24F0E /* XCRemoteSwiftPackageReference "SkeletonView" */,
-				E9092E5D2DDCB2410056C9AE /* XCRemoteSwiftPackageReference "Swinject" */,
-				E9C0493C2DE7634E0033F1BA /* XCRemoteSwiftPackageReference "Alamofire" */,
+				E989FD032DECA49900880E16 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				E989FD042DECA4B100880E16 /* XCRemoteSwiftPackageReference "Swinject" */,
+				E989FD052DECA4E500880E16 /* XCRemoteSwiftPackageReference "SkeletonView" */,
+				E989FD062DECA4ED00880E16 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
+				E989FD072DECA4F500880E16 /* XCRemoteSwiftPackageReference "Charts" */,
+				E989FD082DECA6C000880E16 /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E94572EF2DAAA979003C6C76 /* Products */;
@@ -637,47 +637,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E9092E5D2DDCB2410056C9AE /* XCRemoteSwiftPackageReference "Swinject" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Swinject/Swinject";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.9.1;
-			};
-		};
-		E974DA852DC5EA0A00D24F0E /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Juanpe/SkeletonView";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.31.0;
-			};
-		};
-		E97ECCF62DABA312004305D7 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SnapKit/SnapKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.7.1;
-			};
-		};
-		E97F2BC02DAC0BAE00CE1AA3 /* XCRemoteSwiftPackageReference "Charts" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ChartsOrg/Charts";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.1.0;
-			};
-		};
-		E98D3EC52DC254F600C6F657 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/marmelroy/PhoneNumberKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.2;
-			};
-		};
-		E9C0493C2DE7634E0033F1BA /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+		E989FD032DECA49900880E16 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
 			requirement = {
@@ -685,38 +645,78 @@
 				minimumVersion = 5.10.2;
 			};
 		};
+		E989FD042DECA4B100880E16 /* XCRemoteSwiftPackageReference "Swinject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/Swinject";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.1;
+			};
+		};
+		E989FD052DECA4E500880E16 /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Juanpe/SkeletonView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.31.0;
+			};
+		};
+		E989FD062DECA4ED00880E16 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/marmelroy/PhoneNumberKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.2;
+			};
+		};
+		E989FD072DECA4F500880E16 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ChartsOrg/Charts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
+		E989FD082DECA6C000880E16 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E9092E5E2DDCB24A0056C9AE /* Swinject */ = {
+		E989FD092DECA6D600880E16 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E9092E5D2DDCB2410056C9AE /* XCRemoteSwiftPackageReference "Swinject" */;
+			package = E989FD032DECA49900880E16 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		E989FD0B2DECA6D900880E16 /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E989FD042DECA4B100880E16 /* XCRemoteSwiftPackageReference "Swinject" */;
 			productName = Swinject;
 		};
-		E974DA862DC5EA1300D24F0E /* SkeletonView */ = {
+		E989FD0D2DECA6DC00880E16 /* SkeletonView */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E974DA852DC5EA0A00D24F0E /* XCRemoteSwiftPackageReference "SkeletonView" */;
+			package = E989FD052DECA4E500880E16 /* XCRemoteSwiftPackageReference "SkeletonView" */;
 			productName = SkeletonView;
 		};
-		E97ECCF82DABA8A7004305D7 /* SnapKit */ = {
+		E989FD0F2DECA6DF00880E16 /* PhoneNumberKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E97ECCF62DABA312004305D7 /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = SnapKit;
-		};
-		E97F2BC12DAC0BBC00CE1AA3 /* DGCharts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E97F2BC02DAC0BAE00CE1AA3 /* XCRemoteSwiftPackageReference "Charts" */;
-			productName = DGCharts;
-		};
-		E98D3EC62DC2552400C6F657 /* PhoneNumberKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E98D3EC52DC254F600C6F657 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
+			package = E989FD062DECA4ED00880E16 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
 			productName = PhoneNumberKit;
 		};
-		E9C0493D2DE763550033F1BA /* Alamofire */ = {
+		E989FD112DECA6E300880E16 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E9C0493C2DE7634E0033F1BA /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
+			package = E989FD082DECA6C000880E16 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		E989FD132DECA6F000880E16 /* DGCharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E989FD072DECA4F500880E16 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = DGCharts;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -35,7 +35,7 @@ final class TabBarCoordinator: NSObject, Coordinator {
         addChild(budgetCoordinator)
 
         let addNav = UINavigationController()
-        let addCoordinator = AddTransactionCoordinator(navigationController: addNav)
+        let addCoordinator = AddTransactionCoordinator(navigationController: addNav, diContainer: diContainer)
         addChild(addCoordinator)
 
         let goalsNav = UINavigationController()

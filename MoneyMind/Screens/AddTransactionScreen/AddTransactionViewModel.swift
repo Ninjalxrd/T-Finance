@@ -7,8 +7,15 @@
 
 final class AddTransactionViewModel {
     // MARK: - Properties
+    
     var coordinator: AddTransactionCoordinator?
 
     // MARK: - Init
+    
     init(coordinator: AddTransactionCoordinator) { self.coordinator = coordinator }
+    
+    // MARK: - Public Methods
+    func openCategoriesScreen() {
+        coordinator?.openCategoriesScreen()
+    }
 }
