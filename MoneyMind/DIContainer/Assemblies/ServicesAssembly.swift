@@ -54,7 +54,7 @@ final class ServicesAssembly: Assembly {
         // MARK: - Keychain Manager
         
         container.register(KeychainManagerProtocol.self) { _ in
-            print(KeychainManager().getAccessToken())
+            print(KeychainManager().getAccessToken() ?? "...")
             return KeychainManager()
         }
         .inObjectScope(.container)

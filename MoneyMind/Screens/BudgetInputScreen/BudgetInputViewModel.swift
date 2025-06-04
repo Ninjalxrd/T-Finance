@@ -16,11 +16,13 @@ final class BudgetInputViewModel {
     init(coordinator: BudgetInputCoordinator) { self.coordinator = coordinator }
 
     // MARK: Validation
+    
     var isInputValid: AnyPublisher<Bool, Never> {
         $incomeText.map { Int($0) ?? 0 >= 1000 }.eraseToAnyPublisher()
     }
 
     // MARK: Actions
+    
     func nextScreenButtonTapped(with budget: Int) {
         UserManager.shared.budget = budget
         UserManager.shared.hasIncome = true

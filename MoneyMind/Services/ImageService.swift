@@ -13,7 +13,6 @@ protocol ImageServiceProtocol {
 }
 
 final class ImageService: ImageServiceProtocol {
-    
     private let cache: NSCache<NSURL, NSData> = NSCache()
     
     private let imageSession: URLSession = {
@@ -35,7 +34,7 @@ final class ImageService: ImageServiceProtocol {
             return
         }
         
-        let task = imageSession.dataTask(with: url) { [weak self] data, response, error in
+        let task = imageSession.dataTask(with: url) { [weak self] data, _, error in
             guard let data = data, error == nil else {
                 completion(nil)
                 return

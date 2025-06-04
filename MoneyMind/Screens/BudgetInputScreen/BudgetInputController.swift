@@ -22,7 +22,8 @@ final class BudgetInputController: UIViewController {
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-    // MARK: Lifecycle
+    // MARK: - Lifecycle
+    
     override func loadView() { view = budgetInputView }
 
     override func viewDidLoad() {
@@ -31,7 +32,8 @@ final class BudgetInputController: UIViewController {
         setupCallback()
     }
 
-    // MARK: Binding
+    // MARK: - Binding
+    
     private func bindViewModel() {
         budgetInputView.budgetTextFieldPublisher
             .assign(to: \.incomeText, on: viewModel)
@@ -39,7 +41,9 @@ final class BudgetInputController: UIViewController {
 
         viewModel.isInputValid
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] in self?.budgetInputView.setNextScreenButtonEnabled($0) }
+            .sink { [weak self] in
+                self?.budgetInputView.setNextScreenButtonEnabled($0)
+            }
             .store(in: &bag)
     }
 

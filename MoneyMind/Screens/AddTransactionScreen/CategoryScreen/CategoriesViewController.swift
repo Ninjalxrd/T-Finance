@@ -42,17 +42,20 @@ final class CategoriesViewController: UIViewController {
         
     private func bindViewModel() {
         viewModel.$categories
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.categoriesView.reloadTableView()
             }
         
             .store(in: &bag)
+        
         viewModel.$filteredCategories
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.categoriesView.reloadTableView()
             }
             .store(in: &bag)
-    }
+        }
 }
 
 extension CategoriesViewController: UITableViewDataSource, UITableViewDelegate {
@@ -77,6 +80,12 @@ extension CategoriesViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return CGFloat.cellHeight
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let category = isFiltering ? viewModel.filteredCategories[indexPath.row] : viewModel.categories[indexPath.row]
+        viewModel.didSelectCategory(category)
     }
 }
     

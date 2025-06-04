@@ -11,6 +11,7 @@ import Combine
 
 final class BudgetInputView: UIView {
     // MARK: - Publishers
+    
     private let nextScreenSubject = PassthroughSubject<Void, Never>()
     var nextScreenPublisher: AnyPublisher<Void, Never> {
         nextScreenSubject.eraseToAnyPublisher()

@@ -6,14 +6,21 @@
 //
 
 import UIKit
+import Combine
 
 final class CategoriesCoordinator: Coordinator {
     let navigationController: UINavigationController
     let diContainer: AppDIContainer
-    
-    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
+    let categorySubject: CurrentValueSubject<TransactionCategory?, Never>
+
+    init(
+        navigationController: UINavigationController,
+        diContainer: AppDIContainer,
+        categorySubject: CurrentValueSubject<TransactionCategory?, Never>
+    ) {
         self.navigationController = navigationController
         self.diContainer = diContainer
+        self.categorySubject = categorySubject
     }
     
     func start() {
@@ -22,12 +29,17 @@ final class CategoriesCoordinator: Coordinator {
         let categoriesViewModel = CategoriesViewModel(
             coordinator: self,
             expencesService: expencesService,
-            imageService: imageService
+            imageService: imageService,
+            categorySubject: categorySubject
         )
         
         let categoriesViewController = CategoriesViewController(
             viewModel: categoriesViewModel
         )
         navigationController.present(categoriesViewController, animated: true)
+    }
+    
+    func dismissScreen() {
+        navigationController.dismiss(animated: true)
     }
 }

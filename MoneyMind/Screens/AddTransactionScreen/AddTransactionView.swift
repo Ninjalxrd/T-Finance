@@ -9,11 +9,33 @@ import UIKit
 import SnapKit
 import Combine
 
+private enum SelectedDate {
+    case yesterday, today, other
+}
+
 final class AddTransactionView: UIView {
-    // MARK: - Properties
+    // MARK: - Publishers
+    
+    private let addSubject = PassthroughSubject<Void, Never>()
+    var addPublisher: AnyPublisher<Void, Never> {
+        addSubject.eraseToAnyPublisher()
+    }
     private let categorySubject = PassthroughSubject<Void, Never>()
     var categoryPublisher: AnyPublisher<Void, Never> {
         categorySubject.eraseToAnyPublisher()
+    }
+    private let otherDaySubject = PassthroughSubject<Void, Never>()
+    var otherDayPublisher: AnyPublisher<Void, Never> {
+        otherDaySubject.eraseToAnyPublisher()
+    }
+    let daySubject = CurrentValueSubject<Date, Never>(Date())
+
+    // MARK: - Properties
+    
+    private var selectedDate: SelectedDate = .today {
+        didSet {
+            updateDateButtonsAppearance()
+        }
     }
     
     // MARK: - Init
@@ -43,12 +65,15 @@ final class AddTransactionView: UIView {
         return textField
     }()
     
+    // MARK: - Getter
+    func getAmountTextField() -> UITextField {
+        return amountTextField
+    }
+    
     private lazy var categoryButton: UIButton = {
         var configuration = UIButton.Configuration.plain()
-    
         configuration.title = "Категория"
         configuration.titleAlignment = .leading
-        
         let attributedString = NSAttributedString(
             string: "Категория",
             attributes: [
@@ -57,10 +82,8 @@ final class AddTransactionView: UIView {
             ]
         )
         configuration.attributedTitle = AttributedString(attributedString)
-
         configuration.image = UIImage(systemName: "chevron.down")?
             .withRenderingMode(.alwaysTemplate)
-        
         configuration.imagePlacement = .trailing
         configuration.contentInsets = NSDirectionalEdgeInsets(
             top: 0,
@@ -68,7 +91,6 @@ final class AddTransactionView: UIView {
             bottom: 0,
             trailing: Spacing.medium
         )
-        
         let button = UIButton(configuration: configuration, primaryAction: categoryButtonAction)
         button.contentHorizontalAlignment = .fill
         button.tintColor = .secondaryText
@@ -83,31 +105,49 @@ final class AddTransactionView: UIView {
     }
     
     private lazy var yesterdayButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Вчера", for: .normal)
-        button.setTitleColor(.text, for: .normal)
-        button.backgroundColor = .background
-        button.layer.cornerRadius = Size.cornerRadius
+        let button = UIButton(
+            configuration: dateButtonConfiguration(
+                title: "Вчера",
+                isSelected: selectedDate == .yesterday
+            ),
+            primaryAction: UIAction { [weak self] _ in
+                guard let self else { return }
+                guard
+                    let date = Calendar.current.date(byAdding: .day, value: -1, to: Date())
+                else { return }
+                self.daySubject.send(date)
+                self.selectedDate = .yesterday
+            }
+        )
         button.heightAnchor.constraint(equalToConstant: CGFloat.componentsHeight).isActive = true
         return button
     }()
     
     private lazy var todayButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Сегодня", for: .normal)
-        button.setTitleColor(.text, for: .normal)
-        button.backgroundColor = .background
-        button.layer.cornerRadius = Size.cornerRadius
+        let button = UIButton(
+            configuration: dateButtonConfiguration(
+                title: "Сегодня",
+                isSelected: selectedDate == .today)
+            , primaryAction: UIAction { [weak self] _ in
+                let date = Date()
+                self?.daySubject.send(date)
+                self?.selectedDate = .today
+            }
+        )
         button.heightAnchor.constraint(equalToConstant: CGFloat.componentsHeight).isActive = true
         return button
     }()
     
     private lazy var otherDayButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Другой день", for: .normal)
-        button.setTitleColor(.text, for: .normal)
-        button.backgroundColor = .background
-        button.layer.cornerRadius = Size.cornerRadius
+        let button = UIButton(
+            configuration: dateButtonConfiguration(
+                title: "Другой день",
+                isSelected: selectedDate == .other),
+            primaryAction: UIAction { [weak self] _ in
+                self?.selectedDate = .other
+                self?.otherDaySubject.send()
+            }
+        )
         button.heightAnchor.constraint(equalToConstant: CGFloat.componentsHeight).isActive = true
         return button
     }()
@@ -127,8 +167,85 @@ final class AddTransactionView: UIView {
         return button
     }()
     
-    private lazy var addTransactionAction = UIAction { _ in
-        print("add")
+    private lazy var addTransactionAction = UIAction { [weak self] _ in
+        self?.addSubject.send()
+    }
+    
+    private lazy var downSwipeGestureRecognizer: UISwipeGestureRecognizer = {
+        let swipeRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(downSwipeAction))
+        swipeRecognizer.direction = .down
+        swipeRecognizer.delegate = self
+        swipeRecognizer.cancelsTouchesInView = false
+        return swipeRecognizer
+    }()
+    
+    @objc func downSwipeAction() {
+        self.endEditing(true)
+    }
+    
+    private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tapAction))
+        tap.delegate = self
+        tap.cancelsTouchesInView = false
+        return tap
+    }()
+    
+    @objc func tapAction() {
+        self.endEditing(true)
+    }
+    
+    // MARK: - Private Methods
+    
+    private func dateButtonConfiguration(title: String, isSelected: Bool) -> UIButton.Configuration {
+        var config = UIButton.Configuration.filled()
+        config.title = title
+        config.baseForegroundColor = .text
+        config.baseBackgroundColor = .background
+        config.cornerStyle = .medium
+        config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+        
+        if isSelected {
+            config.background.strokeColor = .myBlue
+            config.background.strokeWidth = 2
+        } else {
+            config.background.strokeWidth = 0
+        }
+        
+        return config
+    }
+    
+    private func updateDateButtonsAppearance() {
+        yesterdayButton.configuration = dateButtonConfiguration(
+            title: "Вчера",
+            isSelected: selectedDate == .yesterday
+        )
+        todayButton.configuration = dateButtonConfiguration(
+            title: "Сегодня",
+            isSelected: selectedDate == .today
+        )
+        otherDayButton.configuration = dateButtonConfiguration(
+            title: "Другой день",
+            isSelected: selectedDate == .other
+        )
+    }
+    
+    // MARK: - Setter
+    
+    func setCategoryTitle(_ string: String?) {
+        guard let string else { return }
+        categoryButton.setTitle(string, for: .normal)
+        categoryButton.setTitleColor(.text, for: .normal)
+    }
+    
+    // MARK: - Public
+    
+    func setNextScreenButtonEnabled(_ isEnabled: Bool) {
+        addButton.isEnabled = isEnabled
+        addButton.alpha = isEnabled ? 1.0 : 0.5
+    }
+    
+    func setupTextFieldDelegate(_ delegate: UITextFieldDelegate) {
+        amountTextField.delegate = delegate
     }
     
     // MARK: - Setup UI
@@ -139,6 +256,9 @@ final class AddTransactionView: UIView {
         addSubview(categoryButton)
         addSubview(dateStackView)
         addSubview(addButton)
+        addGestureRecognizer(tapGestureRecognizer)
+        addGestureRecognizer(downSwipeGestureRecognizer)
+        updateDateButtonsAppearance()
         setupConstraints()
         setupShadows()
     }
@@ -167,7 +287,7 @@ final class AddTransactionView: UIView {
         }
         
         addButton.snp.makeConstraints { make in
-            make.bottom.equalTo(safeAreaLayoutGuide.snp.bottom).offset(-Spacing.medium)
+            make.bottom.equalTo(keyboardLayoutGuide.snp.top).offset(-Spacing.medium)
             make.leading.equalToSuperview().offset(Spacing.medium)
             make.trailing.equalToSuperview().offset(-Spacing.medium)
         }
@@ -181,6 +301,21 @@ final class AddTransactionView: UIView {
             $0.layer.shadowRadius = Size.cornerRadius / 2
             $0.layer.masksToBounds = false
         }
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+
+extension AddTransactionView:
+    UIGestureRecognizerDelegate {
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldReceive touch: UITouch
+    ) -> Bool {
+        if let view = touch.view, view is UIButton {
+            return false
+        }
+        return true
     }
 }
 

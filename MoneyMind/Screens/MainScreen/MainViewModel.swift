@@ -63,7 +63,7 @@ final class MainViewModel {
             },
             receiveValue: { [weak self] expences in
                 guard let self else { return }
-                self.lastExpences = expences
+                self.lastExpences = expences.transactions
                 self.expencesState = .content(self.lastExpences)
             }
         )

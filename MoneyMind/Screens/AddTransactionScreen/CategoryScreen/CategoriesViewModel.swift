@@ -19,6 +19,7 @@ final class CategoriesViewModel {
     private let coordinator: CategoriesCoordinator?
     private let expencesService: ExpencesServiceProtocol
     private let imageService: ImageServiceProtocol
+    private let categorySubject: CurrentValueSubject<TransactionCategory?, Never>
     private var bag: Set<AnyCancellable> = []
     
     // MARK: - Init
@@ -26,11 +27,13 @@ final class CategoriesViewModel {
     init(
         coordinator: CategoriesCoordinator?,
         expencesService: ExpencesServiceProtocol,
-        imageService: ImageServiceProtocol
+        imageService: ImageServiceProtocol,
+        categorySubject: CurrentValueSubject<TransactionCategory?, Never>
     ) {
         self.coordinator = coordinator
         self.expencesService = expencesService
         self.imageService = imageService
+        self.categorySubject = categorySubject
         fetchCategories()
     }
     
@@ -56,5 +59,10 @@ final class CategoriesViewModel {
         imageService.downloadImage(by: url) { image in
             completion(image)
         }
+    }
+    
+    func didSelectCategory(_ category: TransactionCategory) {
+        categorySubject.send(category)
+        coordinator?.dismissScreen()
     }
 }

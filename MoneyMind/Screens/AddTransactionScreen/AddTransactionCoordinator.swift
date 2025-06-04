@@ -5,6 +5,7 @@
 //  Created by Павел on 26.04.2025.
 //
 import UIKit
+import Combine
 
 final class AddTransactionCoordinator: Coordinator {
     // MARK: - Properties
@@ -23,7 +24,11 @@ final class AddTransactionCoordinator: Coordinator {
     // MARK: - Public Methods
     
     func start() {
-        let viewModel = AddTransactionViewModel(coordinator: self)
+        let expenceService = diContainer.resolve(ExpencesServiceProtocol.self)
+        let viewModel = AddTransactionViewModel(
+            coordinator: self,
+            expenceService: expenceService
+        )
         let controller = AddTransactionController(viewModel: viewModel)
         controller.tabBarItem = UITabBarItem(
             title: "Добавить",
@@ -33,11 +38,22 @@ final class AddTransactionCoordinator: Coordinator {
         navigationController.setViewControllers([controller], animated: false)
     }
     
-    func openCategoriesScreen() {
+    func openCategoriesScreen(_ categorySubject: CurrentValueSubject<TransactionCategory?, Never>) {
         let categoriesCoordinator = CategoriesCoordinator(
             navigationController: navigationController,
-            diContainer: diContainer
+            diContainer: diContainer,
+            categorySubject: categorySubject
         )
         categoriesCoordinator.start()
+    }
+    
+    func presentDatePicker(dateSubject: CurrentValueSubject<Date, Never>) {
+        let dateVC = DatePickerViewController(dateSubject: dateSubject)
+        dateVC.modalPresentationStyle = .formSheet
+        navigationController.present(dateVC, animated: true)
+    }
+    
+    func dismissScreen() {
+        navigationController.dismiss(animated: true)
     }
 }

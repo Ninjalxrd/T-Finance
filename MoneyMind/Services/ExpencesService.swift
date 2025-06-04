@@ -16,7 +16,7 @@ protocol ExpencesServiceProtocol {
         categoryId: Int?,
         page: Int,
         pageSize: Int
-    ) -> AnyPublisher<[Expence], Error>
+    ) -> AnyPublisher<Transactions, Error>
     func fetchExpensesByCategory(
         startDate: Date,
         endDate: Date,
@@ -25,6 +25,13 @@ protocol ExpencesServiceProtocol {
     ) -> AnyPublisher<SumByCategoryOfPeriodWrapper, Error>
     func fetchCategories() -> AnyPublisher<[TransactionCategory], Error>
     func deleteTransaction(id: Int) -> AnyPublisher<Void, Error>
+    func addTransaction(
+        name: String,
+        date: Date,
+        categoryId: Int,
+        amount: Double,
+        description: String
+    ) -> AnyPublisher<Void, Error>
 }
 
 final class ExpencesService: ExpencesServiceProtocol {
@@ -54,7 +61,7 @@ final class ExpencesService: ExpencesServiceProtocol {
         categoryId: Int?,
         page: Int,
         pageSize: Int
-    ) -> AnyPublisher<[Expence], Error> {
+    ) -> AnyPublisher<Transactions, Error> {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         
@@ -69,7 +76,6 @@ final class ExpencesService: ExpencesServiceProtocol {
             parameters["categoryId"] = categoryId
         }
         
-        print(parameters)
         return performRequest(
             path: "/api/v1/transactions",
             method: .get,
@@ -141,6 +147,65 @@ final class ExpencesService: ExpencesServiceProtocol {
         .eraseToAnyPublisher()
     }
     
+    func addTransaction(
+        name: String,
+        date: Date,
+        categoryId: Int,
+        amount: Double,
+        description: String = ""
+    ) -> AnyPublisher<Void, Error> {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
+        let payload: [String: Any] = [
+            "name": name,
+            "date": dateFormatter.string(from: date),
+            "categoryId": categoryId,
+            "amount": amount,
+            "description": description
+        ]
+        print("Payload: \(payload)")
+
+        return Future<Void, Error> { [weak self] promise in
+            guard let self else {
+                promise(.failure(NetworkError.invalidResponse))
+                return
+            }
+
+            Task {
+                var headers: HTTPHeaders = ["Content-Type": "application/json"]
+                if let token = await self.tokenManager.accessToken {
+                    headers.add(name: "Authorization", value: "Bearer \(token)")
+                }
+
+                self.session.request(
+                    self.baseURL.appendingPathComponent("/api/v1/transactions"),
+                    method: .post,
+                    headers: headers,
+                    parameters: payload,
+                    encoding: JSONEncoding.default
+                )
+                .validate()
+                .response { response in
+                    switch response.result {
+                    case .success:
+                        if
+                            let statusCode = response.response?.statusCode,
+                            (200...204).contains(statusCode) {
+                            promise(.success(()))
+                        } else {
+                            promise(.failure(NetworkError.httpError(statusCode: response.response?.statusCode ?? 0)))
+                        }
+                    case .failure(let error):
+                        promise(.failure(error))
+                    }
+                }
+            }
+        }
+        .receive(on: DispatchQueue.main)
+        .eraseToAnyPublisher()
+    }
+
     // MARK: - Private Methods
     
     private func performRequest<T: Decodable>(
@@ -236,4 +301,11 @@ struct SumByCategoryOfPeriod: Codable {
     let category: TransactionCategory
     let sum: Double
     let percentageOfAllTransactions: Double
+}
+
+// MARK: - TransactionsWrapper
+
+struct Transactions: Codable {
+    let transactions: [Expence]
+    let totalAmount: Double
 }

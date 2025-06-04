@@ -76,47 +76,48 @@ final class ExpencesViewModel {
     // MARK: - Private Methods
 
     private func setupPeriodHandling() {
-        periodSubject.combineLatest(refreshSubject)
-             .map { period, _ in period }
-             .map { [weak self] period -> (Date, Date) in
-                 let endDate = Date()
-                 let startDate: Date
-                 
-                 switch period {
-                 case .day:
-                     if let date = Calendar.current.date(byAdding: .day, value: -1, to: endDate) {
-                         startDate = date
-                     } else {
-                         startDate = endDate
-                     }
-                 case .week:
-                     if let date = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: endDate) {
-                         startDate = date
-                     } else {
-                         startDate = endDate
-                     }
-                 case .month:
-                     if let date = Calendar.current.date(byAdding: .month, value: -1, to: endDate) {
-                         startDate = date
-                     } else {
-                         startDate = endDate
-                     }
-                 case .year:
-                     if let date = Calendar.current.date(byAdding: .year, value: -1, to: endDate) {
-                         startDate = date
-                     } else {
-                         startDate = endDate
-                     }
-                 }
-                 self?.currentStartDate = startDate
-                 self?.currentEndDate = endDate
-                 return (startDate, endDate)
-             }
-             .sink { [weak self] startDate, endDate in
-                 self?.loadData(startDate: startDate, endDate: endDate)
-             }
-             .store(in: &bag)
-     }
+        periodSubject
+            .combineLatest(refreshSubject)
+            .map { period, _ in period }
+            .map { [weak self] period -> (Date, Date) in
+                let endDate = Date()
+                let startDate: Date
+                
+                switch period {
+                case .day:
+                    if let date = Calendar.current.date(byAdding: .day, value: -1, to: endDate) {
+                        startDate = date
+                    } else {
+                        startDate = endDate
+                    }
+                case .week:
+                    if let date = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: endDate) {
+                        startDate = date
+                    } else {
+                        startDate = endDate
+                    }
+                case .month:
+                    if let date = Calendar.current.date(byAdding: .month, value: -1, to: endDate) {
+                        startDate = date
+                    } else {
+                        startDate = endDate
+                    }
+                case .year:
+                    if let date = Calendar.current.date(byAdding: .year, value: -1, to: endDate) {
+                        startDate = date
+                    } else {
+                        startDate = endDate
+                    }
+                }
+                self?.currentStartDate = startDate
+                self?.currentEndDate = endDate
+                return (startDate, endDate)
+            }
+            .sink { [weak self] startDate, endDate in
+                self?.loadData(startDate: startDate, endDate: endDate)
+            }
+            .store(in: &bag)
+    }
     
     private func loadData(startDate: Date, endDate: Date) {
         currentPage = 1
@@ -147,17 +148,16 @@ final class ExpencesViewModel {
             }
         } receiveValue: { [weak self] expences in
             guard let self else { return }
-            if expences.isEmpty {
+            if expences.transactions.isEmpty {
                 self.allDataLoaded = true
             } else {
                 if page == 1 {
-                    self.expences = expences
+                    self.expences = expences.transactions
                 } else {
-                    self.expences.append(contentsOf: expences)
+                    self.expences.append(contentsOf: expences.transactions)
                 }
                 self.currentPage = page
             }
-            self.totalExpenses = self.expences.reduce(0) { $0 + $1.amount }
         }
         .store(in: &bag)
     }
@@ -185,6 +185,7 @@ final class ExpencesViewModel {
                     isPicked: false
                 )
             }
+            self?.totalExpenses = wrapper.sumOfAllTransactions
             self?.expensesCategories = categories
         }
         .store(in: &bag)
@@ -246,4 +247,3 @@ extension MonthYear {
         return MonthYear(rawValue: currentMonthNumber) ?? .january
     }
 }
-

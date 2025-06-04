@@ -20,6 +20,7 @@ final class CategoriesView: UIView {
     }
     
     // MARK: - UI Elements
+    
     private lazy var searchBar: UISearchBar = {
         let search = UISearchBar()
         search.placeholder = "Поиск"
@@ -90,7 +91,7 @@ final class CategoriesView: UIView {
     func setupSearchBarDependencies(_ delegate: UISearchBarDelegate) {
         searchBar.delegate = delegate
     }
-    
+
     func reloadTableView() {
         DispatchQueue.main.async {
             self.categoriesTableView.reloadData()
