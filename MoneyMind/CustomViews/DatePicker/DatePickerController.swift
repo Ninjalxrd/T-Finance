@@ -70,5 +70,4 @@ final class DatePickerViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(Spacing.medium)
         }
     }
-
 }

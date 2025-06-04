@@ -62,13 +62,20 @@ final class AddTransactionViewModel {
         )
         .receive(on: DispatchQueue.main)
         .sink { [weak self] completion in
+            guard let self else { return }
             if case .failure(let error) = completion {
                 print("Error post new transaction:", error.localizedDescription)
                 return
             }
-            
-            self?.coordinator?.dismissScreen()
-        } receiveValue: { _ in }
+            self.coordinator?.dismissScreen()
+        } receiveValue: { _ in
+        }
         .store(in: &bag)
+    }
+    
+    func reset() {
+        amount = ""
+        categorySubject.send(nil)
+        dateSubject.send(Date())
     }
 }

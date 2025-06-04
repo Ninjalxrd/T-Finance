@@ -14,6 +14,7 @@ final class TabBarCoordinator: NSObject, Coordinator {
     let budget = UserManager.shared.budget
     private var childCoordinators: [Coordinator] = []
     private let diContainer: AppDIContainer
+    private var addCoordinator: AddTransactionCoordinator?
 
     // MARK: - Init
     
@@ -35,7 +36,12 @@ final class TabBarCoordinator: NSObject, Coordinator {
         addChild(budgetCoordinator)
 
         let addNav = UINavigationController()
-        let addCoordinator = AddTransactionCoordinator(navigationController: addNav, diContainer: diContainer)
+        let addCoordinator = AddTransactionCoordinator(
+            navigationController: addNav,
+            diContainer: diContainer,
+            tabBarController: tabBarController
+        )
+        self.addCoordinator = addCoordinator
         addChild(addCoordinator)
 
         let goalsNav = UINavigationController()
@@ -52,11 +58,22 @@ final class TabBarCoordinator: NSObject, Coordinator {
         goalsCoordinator.start()
         moreCoordinator.start()
 
+        tabBarController.delegate = self
         tabBarController.viewControllers = [mainNav, budgetNav, addNav, goalsNav, moreNav]
     }
     // MARK: - Private Methods
 
     private func addChild(_ coordinator: Coordinator) {
         childCoordinators.append(coordinator)
+    }
+}
+
+extension TabBarCoordinator: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        guard let index = tabBarController.viewControllers?.firstIndex(of: viewController) else { return }
+
+        if index == 2 {
+            addCoordinator?.resetView()
+        }
     }
 }

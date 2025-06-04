@@ -66,8 +66,15 @@ final class AddTransactionView: UIView {
     }()
     
     // MARK: - Getter
+    
     func getAmountTextField() -> UITextField {
         return amountTextField
+    }
+    
+    // MARK: - Setter
+    
+    func setAmountText(_ text: String) {
+        amountTextField.text = text
     }
     
     private lazy var categoryButton: UIButton = {
@@ -232,9 +239,13 @@ final class AddTransactionView: UIView {
     // MARK: - Setter
     
     func setCategoryTitle(_ string: String?) {
-        guard let string else { return }
-        categoryButton.setTitle(string, for: .normal)
-        categoryButton.setTitleColor(.text, for: .normal)
+        let title = string ?? "Категория"
+        categoryButton.setTitle(title, for: .normal)
+        if string != nil {
+            categoryButton.setTitleColor(.text, for: .normal)
+        } else {
+            categoryButton.setTitleColor(.secondaryText, for: .normal)
+        }
     }
     
     // MARK: - Public

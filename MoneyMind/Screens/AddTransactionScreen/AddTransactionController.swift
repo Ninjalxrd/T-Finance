@@ -89,6 +89,12 @@ final class AddTransactionController: UIViewController {
                 self?.addTransactionView.setNextScreenButtonEnabled(bool)
             }
             .store(in: &bag)
+        viewModel.$amount
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] amount in
+                self?.addTransactionView.setAmountText(amount)
+            }
+            .store(in: &bag)
     }
 }
 
