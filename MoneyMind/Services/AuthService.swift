@@ -15,17 +15,30 @@ struct AuthResponse: Decodable {
     let tokenType: String
 }
 
-final class AuthService {
+protocol AuthServiceProtocol {
+    func sendSMS(phoneNumber: String) -> AnyPublisher<Void, Error>
+    func confirmSMS(phoneNumber: String, code: String) -> AnyPublisher<AuthResponse, Error>
+}
+
+final class AuthService: AuthServiceProtocol {
+    private let session: NetworkSessionProtocol
+    private let tokenManager: TokenManagerProtocol
     private let baseURL = "https://t-bank-finance.ru/api/v1/auth"
+    
+    init(session: NetworkSessionProtocol, tokenManager: TokenManagerProtocol) {
+        self.session = session
+        self.tokenManager = tokenManager
+    }
     
     func sendSMS(phoneNumber: String) -> AnyPublisher<Void, Error> {
         let formattedNumber = formatPhoneNumber(phoneNumber)
         let parameters = ["phoneNumber": formattedNumber]
-        return AF.request(
+        return session.request(
             "\(baseURL)/send-sms",
             method: .post,
+            headers: nil,
             parameters: parameters,
-            encoder: JSONParameterEncoder.default
+            encoding: JSONEncoding.default
         )
         .validate()
         .publishData()
@@ -40,11 +53,12 @@ final class AuthService {
         let formattedNumber = formatPhoneNumber(phoneNumber)
         let parameters = ["phoneNumber": formattedNumber, "code": code]
         print("Phone: '\(phoneNumber)', Code: '\(code)'")
-        return AF.request(
+        return session.request(
             "\(baseURL)/confirm-sms",
             method: .post,
+            headers: nil,
             parameters: parameters,
-            encoder: JSONParameterEncoder.default
+            encoding: JSONEncoding.default
         )
         .validate()
         .publishDecodable(type: AuthResponse.self)

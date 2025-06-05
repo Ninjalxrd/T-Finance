@@ -25,7 +25,7 @@ final class EnterNumberCoordinator: Coordinator {
     // MARK: - Public Methods
     
     func start() {
-        let enterNumberViewModel = EnterNumberViewModel(coordinator: self)
+        let enterNumberViewModel = EnterNumberViewModel(coordinator: self, diContainer: diContainer)
         let enterNumberController = EnterNumberController(viewModel: enterNumberViewModel)
         navigationController.setViewControllers([enterNumberController], animated: true)
     }

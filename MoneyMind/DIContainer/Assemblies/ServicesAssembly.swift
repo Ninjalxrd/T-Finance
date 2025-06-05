@@ -107,9 +107,25 @@ final class ServicesAssembly: Assembly {
         .inObjectScope(.container)
         
         // MARK: - Image Service
+        
         container.register(ImageServiceProtocol.self) { _ in
             ImageService()
         }
         .inObjectScope(.container)
+        
+        // MARK: - Auth Service
+        
+        container.register(AuthServiceProtocol.self) { _ in
+            guard let tokenManager = container.resolve(TokenManagerProtocol.self) else {
+                fatalError("TokenManagerProtocol not resolved")
+            }
+            guard let session = container.resolve(NetworkSessionProtocol.self) else {
+                fatalError("Error when resolve KeychainManager")
+            }
+            return AuthService(
+                session: session,
+                tokenManager: tokenManager
+            )
+        }
     }
 }

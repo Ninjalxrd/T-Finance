@@ -25,8 +25,6 @@ final class ConfirmationViewModel {
     private var remainingSeconds: Int
     private var timer: AnyCancellable?
     private var bag: Set<AnyCancellable> = []
-    
-    private let authService = AuthService()
     private let phoneNumber: String
     // MARK: Init
     
@@ -73,6 +71,7 @@ final class ConfirmationViewModel {
     
     func confirmCode(_ code: String) {
         let keychainManager = diContainer.resolve(KeychainManagerProtocol.self)
+        let authService = diContainer.resolve(AuthServiceProtocol.self)
         authService
             .confirmSMS(phoneNumber: phoneNumber, code: code)
             .receive(on: DispatchQueue.main)
