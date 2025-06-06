@@ -164,8 +164,7 @@ final class ExpencesService: ExpencesServiceProtocol {
             "amount": amount,
             "description": description
         ]
-        print("Payload: \(payload)")
-
+        
         return Future<Void, Error> { [weak self] promise in
             guard let self else {
                 promise(.failure(NetworkError.invalidResponse))

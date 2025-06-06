@@ -11,6 +11,8 @@ import Combine
 final class DistributionViewModel {
     // MARK: - Properties
     weak var coordinator: DistributionCoordinator?
+    let expenceService: ExpencesServiceProtocol
+    let budgetService: BudgetServiceProtocol
     var totalBudget: Int
     
     // MARK: - Published Properties
@@ -18,71 +20,47 @@ final class DistributionViewModel {
     @Published var pickedCategories: [Category] = []
     @Published var availableCategories: [Category] = []
     @Published var remainingPercent: Int = 100
+    private var bag: Set<AnyCancellable> = []
 
     // MARK: - Init
     
-    init(totalBudget: Int, coordinator: DistributionCoordinator) {
+    init(
+        totalBudget: Int,
+        coordinator: DistributionCoordinator,
+        expenceService: ExpencesServiceProtocol,
+        budgetService: BudgetServiceProtocol
+    ) {
         self.coordinator = coordinator
         self.totalBudget = totalBudget
-        loadMockCategories()
+        self.expenceService = expenceService
+        self.budgetService = budgetService
+        loadCategories()
     }
     
     // MARK: - Private Methods
     
-    private func loadMockCategories() {
-        let all = [
-            Category(
-                id: 1,
-                name: "Еда",
-                backgroundColor: "#FFDD2D",
-                percent: 0,
-                money: 0,
-                isPicked: false
-            ),
-            Category(
-                id: 2,
-                name: "Транспорт",
-                backgroundColor: "#FF983D",
-                percent: 0,
-                money: 0,
-                isPicked: false
-            ),
-            Category(
-                id: 3,
-                name: "Развлечения",
-                backgroundColor: "#3DBBFF",
-                percent: 0,
-                money: 0,
-                isPicked: false
-            ),
-            Category(
-                id: 4,
-                name: "Одежда",
-                backgroundColor: "#ff75f7",
-                percent: 0,
-                money: 0,
-                isPicked: false
-            ),
-            Category(
-                id: 5,
-                name: "Авиабилеты",
-                backgroundColor: "#75eaff",
-                percent: 0,
-                money: 0,
-                isPicked: false
-            ),
-            Category(
-                id: 6,
-                name: "Переводы",
-                backgroundColor: "#98de16",
-                percent: 0,
-                money: 0,
-                isPicked: false
-            )
-        ]
-        
-        pickedCategories = all.filter { $0.isPicked }
-        availableCategories = all.filter { !$0.isPicked }
+    private func loadCategories() {
+        expenceService.fetchCategories()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                if case .failure(let error) = completion {
+                    print("error with fetching categories on distribution screen - \(error.localizedDescription)")
+                }
+            } receiveValue: { [weak self] categories in
+                let all: [Category] = categories.map {
+                    return Category(
+                        id: $0.id,
+                        name: $0.name,
+                        backgroundColor: $0.color,
+                        percent: 0,
+                        money: 0,
+                        isPicked: false
+                    )
+                }
+                self?.pickedCategories = all.filter { $0.isPicked }
+                self?.availableCategories = all.filter { !$0.isPicked }
+            }
+            .store(in: &bag)
     }
     
     // MARK: - Public Methods
@@ -124,6 +102,30 @@ final class DistributionViewModel {
     
     func openMainScreen() {
         UserManager.shared.categories = pickedCategories
+        postCategories(pickedCategories)
         coordinator?.openMainScreen()
+    }
+    
+    private func postCategories(_ categories: [Category]) {
+        if remainingPercent != 0 {
+            coordinator?.showWarningAlert()
+        }
+        let categories = categories.map { category in
+            BudgetDistributionPayload(
+                categoryId: category.id,
+                percent: category.percent,
+                notificationLimit: category.notificationLimit
+            )
+        }
+        
+        budgetService.postBudgetDistribution(distributions: categories)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                if case .failure(let error) = completion {
+                    print("error with fetching categories on distribution screen - \(error.localizedDescription)")
+                }
+            } receiveValue: { _ in
+            }
+            .store(in: &bag)
     }
 }

@@ -38,9 +38,14 @@ final class DistributionCoordinator: Coordinator {
             assertionFailure("Budget must be set for start Distribution screen")
             return
         }
+        let expenceService = diContainer.resolve(ExpencesServiceProtocol.self)
+        let budgetService = diContainer.resolve(BudgetServiceProtocol.self)
         let distributionViewModel = DistributionViewModel(
             totalBudget: budget,
-            coordinator: self)
+            coordinator: self,
+            expenceService: expenceService,
+            budgetService: budgetService
+        )
         let distributionViewController = DistributionViewController(
             distributionViewModel: distributionViewModel)
         distributionViewController.tabBarItem = UITabBarItem(
@@ -69,6 +74,19 @@ final class DistributionCoordinator: Coordinator {
     func showErrorAlert() {
         let alert = UIAlertController(title: "Ошибка", message: "Вы распределили все проценты", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ок", style: .default))
+        navigationController.present(alert, animated: true)
+    }
+    
+    func showWarningAlert() {
+        let alert = UIAlertController(
+            title: "Обратите внимание!",
+            message: "Вы распределили не все проценты!\nОставшаяся часть будет перенесена в категорию \"Другое\"",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Хорошо", style: .default, handler: { [weak self] _ in
+            self?.openMainScreen()
+        }))
+        alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
         navigationController.present(alert, animated: true)
     }
     

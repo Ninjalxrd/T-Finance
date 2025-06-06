@@ -124,6 +124,7 @@ final class TokenManager: TokenManagerProtocol, RequestInterceptor {
                             accessToken: tokenResponse.accessToken,
                             refreshToken: tokenResponse.refreshToken
                         )
+                        print("token is refreshed")
                         promise(.success(tokenResponse.accessToken))
                         
                     case .failure(let error):

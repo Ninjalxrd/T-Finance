@@ -14,4 +14,5 @@ struct Category: Codable {
     var percent: Int
     var money: Int
     var isPicked: Bool
+    var notificationLimit: Int = 90
 }

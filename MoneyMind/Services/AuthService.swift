@@ -52,7 +52,6 @@ final class AuthService: AuthServiceProtocol {
     func confirmSMS(phoneNumber: String, code: String) -> AnyPublisher<AuthResponse, Error> {
         let formattedNumber = formatPhoneNumber(phoneNumber)
         let parameters = ["phoneNumber": formattedNumber, "code": code]
-        print("Phone: '\(phoneNumber)', Code: '\(code)'")
         return session.request(
             "\(baseURL)/confirm-sms",
             method: .post,

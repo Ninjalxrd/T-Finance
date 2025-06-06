@@ -19,6 +19,8 @@ protocol NetworkSessionProtocol {
         parameters: Parameters?,
         encoding: (any ParameterEncoding)?
     ) -> DataRequest
+    
+    func request(_ urlRequest: URLRequest) -> DataRequest
 }
 
 // MARK: - Session Adapter
@@ -44,6 +46,10 @@ final class NetworkServiceAdapter: NetworkSessionProtocol {
             encoding: encoding ?? URLEncoding.default,
             headers: headers
         )
+    }
+    
+    func request(_ urlRequest: URLRequest) -> DataRequest {
+        session.request(urlRequest)
     }
 }
 
@@ -106,6 +112,20 @@ final class ServicesAssembly: Assembly {
         }
         .inObjectScope(.container)
         
+        // MARK: - Budget Service
+
+        container.register(BudgetServiceProtocol.self) { _ in
+            guard let session = container.resolve(NetworkSessionProtocol.self) else {
+                fatalError("Error when resolve KeychainManager")
+            }
+            guard let tokenManager = container.resolve(TokenManagerProtocol.self) else {
+                fatalError("TokenManagerProtocol not resolved")
+            }
+            return BudgetService(
+                session: session,
+                tokenManager: tokenManager
+            )
+        }
         // MARK: - Image Service
         
         container.register(ImageServiceProtocol.self) { _ in
