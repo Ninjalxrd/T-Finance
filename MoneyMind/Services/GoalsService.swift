@@ -9,7 +9,26 @@ import Foundation
 import Combine
 import Alamofire
 
-final class GoalsService {
+protocol GoalsServiceProtocol {
+    func postGoal(
+    name: String,
+    term: Date,
+    amount: Double,
+    description: String
+    ) -> AnyPublisher<Void, Error>
+    func patchGoal(
+        id: Int,
+        name: String,
+        term: Date,
+        amount: Double,
+        description: String
+    ) -> AnyPublisher<Void, Error>
+    func getGoalById(id: Int) -> AnyPublisher<Goal, Error>
+    func fetchGoals(
+    ) -> AnyPublisher<[Goal], Error>
+    func deleteGoal(id: Int) -> AnyPublisher<Void, Error>
+}
+final class GoalsService: GoalsServiceProtocol {
     // MARK: - Properties
     
     private let baseURL: URL
@@ -232,7 +251,6 @@ final class GoalsService {
         .eraseToAnyPublisher()
     }
 
-    
     // MARK: - Private Methods
     
     private func performRequest<T: Decodable>(

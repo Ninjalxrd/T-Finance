@@ -36,8 +36,18 @@ final class GoalsView: UIView {
     }()
     
     private lazy var goalsCollectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = Spacing.small
+        layout.itemSize = CGSize(
+            width: UIScreen.main.bounds.width - 2 * Spacing.medium,
+            height: CGFloat.cellHeight
+        )
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(GoalCell.self, forCellWithReuseIdentifier: GoalCell.identifier)
+        collectionView.layer.cornerRadius = Size.cornerRadius
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.backgroundColor = .background
         return collectionView
     }()
     
@@ -59,6 +69,10 @@ final class GoalsView: UIView {
     ) {
         goalsCollectionView.delegate = delegate
         goalsCollectionView.dataSource = dataSource
+    }
+    
+    func reloadCollectionView() {
+        goalsCollectionView.reloadData()
     }
     
     // MARK: - Setup UI
@@ -91,4 +105,5 @@ final class GoalsView: UIView {
 
 private extension CGFloat {
     static let labelHeight: CGFloat = 56
+    static let cellHeight: CGFloat = 150
 }

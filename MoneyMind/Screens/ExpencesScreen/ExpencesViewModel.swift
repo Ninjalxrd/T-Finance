@@ -22,14 +22,14 @@ final class ExpencesViewModel {
     private var allDataLoaded = false
     private var currentStartDate: Date?
     private var currentEndDate: Date?
-    let refreshSubject = PassthroughSubject<Void, Never>()
-    let periodSubject = CurrentValueSubject<TimePeriod, Never>(.month)
     
     // MARK: - Published Properties
     
     @Published var expences: [Expence] = []
     @Published var totalExpenses: Double = 0
     @Published var expensesCategories: [Category] = []
+    let refreshSubject = PassthroughSubject<Void, Never>()
+    let periodSubject = CurrentValueSubject<TimePeriod, Never>(.month)
     
     init(
         coordinator: ExpencesCoordinator,

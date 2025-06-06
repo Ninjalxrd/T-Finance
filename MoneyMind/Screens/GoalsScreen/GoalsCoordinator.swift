@@ -11,18 +11,21 @@ final class GoalsCoordinator: Coordinator {
     // MARK: - Properties
     
     private let navigationController: UINavigationController
+    private let diContainer: AppDIContainer
     var childCoordinators: [Coordinator] = []
 
     // MARK: - Init
     
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
         self.navigationController = navigationController
+        self.diContainer = diContainer
     }
 
     // MARK: - Public Methods
     
     func start() {
-        let viewModel = GoalsViewModel(coordinator: self)
+        let goalsService = diContainer.resolve(GoalsServiceProtocol.self)
+        let viewModel = GoalsViewModel(coordinator: self, goalsService: goalsService)
         let controller = GoalsController(viewModel: viewModel)
         controller.tabBarItem = UITabBarItem(
             title: "Цели",

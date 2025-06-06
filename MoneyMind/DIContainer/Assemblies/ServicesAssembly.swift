@@ -27,11 +27,9 @@ protocol NetworkSessionProtocol {
 
 final class NetworkServiceAdapter: NetworkSessionProtocol {
     private let session: Session
-    
     init(session: Session) {
         self.session = session
     }
-
     func request(
         _ url: URLConvertible,
         method: HTTPMethod,
@@ -47,7 +45,6 @@ final class NetworkServiceAdapter: NetworkSessionProtocol {
             headers: headers
         )
     }
-    
     func request(_ urlRequest: URLRequest) -> DataRequest {
         session.request(urlRequest)
     }
@@ -57,13 +54,29 @@ final class NetworkServiceAdapter: NetworkSessionProtocol {
 
 final class ServicesAssembly: Assembly {
     func assemble(container: Container) {
-        // MARK: - Keychain Manager
+        registerSession(container: container)
+        registerAuthService(container: container)
+        registerGoalsService(container: container)
+        registerImageService(container: container)
+        registerTokenManager(container: container)
+        registerBudgetService(container: container)
+        registerExpencesService(container: container)
+        registerKeychainManager(container: container)
+    }
+    
+    // MARK: - Keychain Manager
+
+    private func registerKeychainManager(container: Container) {
         container.register(KeychainManagerProtocol.self) { _ in
             print(KeychainManager().getAccessToken() ?? "...")
             return KeychainManager()
         }
         .inObjectScope(.container)
-        // MARK: - Token Manager
+    }
+    
+    // MARK: - Token Manager
+
+    private func registerTokenManager(container: Container) {
         container.register(TokenManagerProtocol.self) { resolver in
             guard let keychainManager = resolver.resolve(KeychainManagerProtocol.self) else {
                 fatalError("Error when resolve KeychainManager")
@@ -75,7 +88,11 @@ final class ServicesAssembly: Assembly {
             )
         }
         .inObjectScope(.container)
-        // MARK: - Session
+    }
+    
+    // MARK: - Session
+
+    private func registerSession(container: Container) {
         container.register(NetworkSessionProtocol.self) { _ in
             let configuration = URLSessionConfiguration.af.default
             guard let tokenManager = container.resolve(TokenManagerProtocol.self) else {
@@ -87,7 +104,11 @@ final class ServicesAssembly: Assembly {
             return NetworkServiceAdapter(session: session)
         }
         .inObjectScope(.container)
-        // MARK: - Expences Service
+    }
+    
+    // MARK: - Expences Service
+
+    private func registerExpencesService(container: Container) {
         container.register(ExpencesServiceProtocol.self) { _ in
             let baseURL = URL(string: "https://t-bank-finance.ru")!
             guard let session = container.resolve(NetworkSessionProtocol.self) else {
@@ -103,7 +124,11 @@ final class ServicesAssembly: Assembly {
             )
         }
         .inObjectScope(.container)
-        // MARK: - Budget Service
+    }
+    
+    // MARK: - Budget Service
+
+    private func registerBudgetService(container: Container) {
         container.register(BudgetServiceProtocol.self) { _ in
             guard let session = container.resolve(NetworkSessionProtocol.self) else {
                 fatalError("Error when resolve KeychainManager")
@@ -115,13 +140,20 @@ final class ServicesAssembly: Assembly {
                 session: session,
                 tokenManager: tokenManager
             )
-        }
-        // MARK: - Image Service
+        }.inObjectScope(.container)
+    }
+    
+    // MARK: - Image Service
+
+    private func registerImageService(container: Container) {
         container.register(ImageServiceProtocol.self) { _ in
             ImageService()
         }
         .inObjectScope(.container)
-        // MARK: - Auth Service
+    }
+    
+    // MARK: - Auth Service
+    private func registerAuthService(container: Container) {
         container.register(AuthServiceProtocol.self) { _ in
             guard let tokenManager = container.resolve(TokenManagerProtocol.self) else {
                 fatalError("TokenManagerProtocol not resolved")
@@ -134,5 +166,24 @@ final class ServicesAssembly: Assembly {
                 tokenManager: tokenManager
             )
         }
+        .inObjectScope(.container)
     }
+    
+    // MARK: - Goals Service
+    private func registerGoalsService(container: Container) {
+        container.register(GoalsServiceProtocol.self) { _ in
+            guard let tokenManager = container.resolve(TokenManagerProtocol.self) else {
+                fatalError("TokenManagerProtocol not resolved")
+            }
+            guard let session = container.resolve(NetworkSessionProtocol.self) else {
+                fatalError("Error when resolve KeychainManager")
+            }
+            return GoalsService(
+                session: session,
+                tokenManager: tokenManager
+            )
+        }
+        .inObjectScope(.container)
+    }
+
 }

@@ -10,7 +10,7 @@ import Foundation
 struct Goal: Codable {
     let id: Int
     let name: String
-    let term: Date
+    let term: String
     let amount: Double
     let accumulatedAmount: Double
     let description: String

@@ -28,11 +28,17 @@ final class TabBarCoordinator: NSObject, Coordinator {
     
     func start() {
         let mainNav = UINavigationController()
-        let mainCoordinator = MainCoordinator(navigationController: mainNav, diContainer: diContainer)
+        let mainCoordinator = MainCoordinator(
+            navigationController: mainNav,
+            diContainer: diContainer
+        )
         addChild(mainCoordinator)
 
         let budgetNav = UINavigationController()
-        let budgetCoordinator = DistributionCoordinator(navigationController: budgetNav, diContainer: diContainer)
+        let budgetCoordinator = DistributionCoordinator(
+            navigationController: budgetNav,
+            diContainer: diContainer
+        )
         addChild(budgetCoordinator)
 
         let addNav = UINavigationController()
@@ -45,11 +51,16 @@ final class TabBarCoordinator: NSObject, Coordinator {
         addChild(addCoordinator)
 
         let goalsNav = UINavigationController()
-        let goalsCoordinator = GoalsCoordinator(navigationController: goalsNav)
+        let goalsCoordinator = GoalsCoordinator(
+            navigationController: goalsNav,
+            diContainer: diContainer
+        )
         addChild(goalsCoordinator)
 
         let moreNav = UINavigationController()
-        let moreCoordinator = MoreCoordinator(navigationController: moreNav)
+        let moreCoordinator = MoreCoordinator(
+            navigationController: moreNav
+        )
         addChild(moreCoordinator)
 
         mainCoordinator.start()
