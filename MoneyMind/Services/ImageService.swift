@@ -14,7 +14,6 @@ protocol ImageServiceProtocol {
 
 final class ImageService: ImageServiceProtocol {
     private let cache: NSCache<NSURL, NSData> = NSCache()
-    
     private let imageSession: URLSession = {
         let session = URLSession(configuration: .default)
         return session
@@ -24,25 +23,35 @@ final class ImageService: ImageServiceProtocol {
         guard let stringURL = stringURL else {
             return completion(nil)
         }
-        
-        guard let url = URL(string: stringURL) else {
+
+        let completedURLString: String
+        if stringURL.starts(with: "http") {
+            completedURLString = stringURL
+        } else {
+            completedURLString = "https://\(stringURL)"
+        }
+
+        guard let url = URL(string: completedURLString) else {
+            print("downloadImage: Invalid URL : \(completedURLString)")
             return completion(nil)
         }
-        
+
         if let imageData = cache.object(forKey: url as NSURL) {
             completion(UIImage(data: imageData as Data))
             return
         }
-        
+
         let task = imageSession.dataTask(with: url) { [weak self] data, _, error in
             guard let data = data, error == nil else {
+                print("downloadImage: Network error for URL: \(url)")
                 completion(nil)
                 return
             }
-            
+
             self?.cache.setObject(data as NSData, forKey: url as NSURL)
             completion(UIImage(data: data))
         }
         task.resume()
     }
+
 }

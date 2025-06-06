@@ -122,7 +122,7 @@ final class DistributionViewModel {
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 if case .failure(let error) = completion {
-                    print("error with fetching categories on distribution screen - \(error.localizedDescription)")
+                    print("error with posting categories on distribution screen - \(error.localizedDescription)")
                 }
             } receiveValue: { _ in
             }

@@ -10,4 +10,11 @@ struct TransactionCategory: Codable {
     var name: String
     var color: String
     var icon: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case color
+        case icon = "iconPath"
+    }
 }
