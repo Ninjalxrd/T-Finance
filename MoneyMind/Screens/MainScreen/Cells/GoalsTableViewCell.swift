@@ -94,8 +94,8 @@ class GoalsTableViewCell: UITableViewCell {
     func configureCell(with goal: Goal) {
         goalName.text = goal.name
         goalSumLabel.text =
-        "\(String(format: "%.0f", goal.currentAmount))₽ из \(String(format: "%.0f", goal.targetAmount))₽"
-        configureProgressBar(current: goal.currentAmount, total: goal.targetAmount)
+        "\(String(format: "%.0f", goal.accumulatedAmount))₽ из \(String(format: "%.0f", goal.amount))₽"
+        configureProgressBar(current: goal.accumulatedAmount, total: goal.amount)
     }
     
     func configureProgressBar(current: Double, total: Double) {

@@ -1,17 +1,15 @@
 //
-//  Goal.swift
+//  GoalPayload.swift
 //  MoneyMind
 //
-//  Created by Павел on 16.05.2025.
+//  Created by Павел on 06.06.2025.
 //
 
 import Foundation
 
-struct Goal: Codable {
-    let id: Int
+struct GoalPayload {
     let name: String
     let term: Date
     let amount: Double
-    let accumulatedAmount: Double
     let description: String
 }

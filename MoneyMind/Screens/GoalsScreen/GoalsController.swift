@@ -9,6 +9,7 @@ import UIKit
 
 final class GoalsController: UIViewController {
     private let viewModel: GoalsViewModel
+    private let goalsView = GoalsView()
     
     init(viewModel: GoalsViewModel) {
         self.viewModel = viewModel
@@ -17,6 +18,10 @@ final class GoalsController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func loadView() {
+        view = goalsView
     }
     
     override func viewDidLoad() {
