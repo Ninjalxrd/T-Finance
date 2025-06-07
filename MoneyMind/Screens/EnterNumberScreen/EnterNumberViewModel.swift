@@ -13,14 +13,14 @@ final class EnterNumberViewModel {
     
     @Published var incomeText: String = ""
     private weak var coordinator: EnterNumberCoordinator?
-    private let diContainer: AppDIContainer
+    private let authService: AuthServiceProtocol
     private var bag: Set<AnyCancellable> = []
     
     // MARK: - Initialization
     
-    init(coordinator: EnterNumberCoordinator, diContainer: AppDIContainer) {
+    init(coordinator: EnterNumberCoordinator, authService: AuthServiceProtocol) {
         self.coordinator = coordinator
-        self.diContainer = diContainer
+        self.authService = authService
     }
     
     // MARK: - Validation Publishers
@@ -42,15 +42,14 @@ final class EnterNumberViewModel {
     // MARK: - Public Methods
     
     func openConfirmationScreen(with number: String) {
-        let authService = diContainer.resolve(AuthServiceProtocol.self)
+        coordinator?.openConfirmationScreen(with: number)
         authService.sendSMS(phoneNumber: number)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {
                     print("Failed to send SMS:", error.localizedDescription)
                     return
                 }
-                self?.coordinator?.openConfirmationScreen(with: number)
             }, receiveValue: { _ in })
             .store(in: &bag)
     }

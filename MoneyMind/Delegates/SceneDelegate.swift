@@ -21,6 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
         let diContainer = registerAppDIContainer()
+        UserManager.shared.clearUserData()
         let appCoordinator = AppCoordinator(window: window, diContainer: diContainer)
         self.appCoordinator = appCoordinator
         appCoordinator.start()

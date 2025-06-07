@@ -25,7 +25,8 @@ final class EnterNumberCoordinator: Coordinator {
     // MARK: - Public Methods
     
     func start() {
-        let enterNumberViewModel = EnterNumberViewModel(coordinator: self, diContainer: diContainer)
+        let authService = diContainer.resolve(AuthServiceProtocol.self)
+        let enterNumberViewModel = EnterNumberViewModel(coordinator: self, authService: authService)
         let enterNumberController = EnterNumberController(viewModel: enterNumberViewModel)
         navigationController.setViewControllers([enterNumberController], animated: true)
     }

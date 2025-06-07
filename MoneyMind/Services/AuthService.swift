@@ -13,6 +13,7 @@ struct AuthResponse: Decodable {
     let accessToken: String
     let refreshToken: String
     let tokenType: String
+    let message: String?
 }
 
 protocol AuthServiceProtocol {
@@ -59,10 +60,22 @@ final class AuthService: AuthServiceProtocol {
             parameters: parameters,
             encoding: JSONEncoding.default
         )
-        .validate()
-        .publishDecodable(type: AuthResponse.self)
-        .value()
-        .mapError { $0 as Error }
+        .publishData()
+        .tryMap { res -> Data in
+            switch res.result {
+            case .success(let data):
+                return data
+            case .failure(let err):
+                throw err
+            }
+        }
+        .decode(type: AuthResponse.self, decoder: JSONDecoder())
+        .tryMap { resp in
+            if resp.accessToken == nil {
+                throw APIError(message: resp.message ?? "Неверный код", code: nil, details: nil)
+            }
+            return resp
+        }
         .eraseToAnyPublisher()
     }
 }

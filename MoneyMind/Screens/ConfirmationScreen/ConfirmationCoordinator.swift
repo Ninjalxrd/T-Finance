@@ -34,10 +34,15 @@ final class ConfirmationCoordinator: Coordinator {
             assertionFailure("Number must be set for start Confirmation screen")
             return
         }
+        let keychainManager = diContainer.resolve(KeychainManagerProtocol.self)
+        let authService = diContainer.resolve(AuthServiceProtocol.self)
+        
         let confirmationViewModel = ConfirmationViewModel(
             coordinator: self,
             phoneNumber: number,
-            diContainer: diContainer
+            diContainer: diContainer,
+            keychainManager: keychainManager,
+            authService: authService
         )
         let confirmationViewController = ConfirmationViewController(viewModel: confirmationViewModel, number: number)
         navigationController.setViewControllers([confirmationViewController], animated: true)

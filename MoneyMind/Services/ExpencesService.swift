@@ -283,7 +283,7 @@ enum NetworkError: LocalizedError {
 
 // MARK: - API Error
 
-struct APIError: Codable {
+struct APIError: Codable, Error {
     let message: String
     let code: String?
     let details: [String: String]?
