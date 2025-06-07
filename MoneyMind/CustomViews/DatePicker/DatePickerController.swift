@@ -9,12 +9,20 @@ import UIKit
 import SnapKit
 import Combine
 
+enum DatePickerMode {
+    case transaction
+    case goal
+}
+
 final class DatePickerViewController: UIViewController {
     // MARK: - Properties
+    
+    private let mode: DatePickerMode
     private let dateSubject: CurrentValueSubject<Date, Never>
 
     // MARK: Init
-    init(dateSubject: CurrentValueSubject<Date, Never>) {
+    init(mode: DatePickerMode, dateSubject: CurrentValueSubject<Date, Never>) {
+        self.mode = mode
         self.dateSubject = dateSubject
         super.init(nibName: nil, bundle: nil)
     }
@@ -25,6 +33,7 @@ final class DatePickerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupMaxDate()
         setupUI()
     }
     
@@ -32,11 +41,21 @@ final class DatePickerViewController: UIViewController {
     
     private lazy var datePicker: UIDatePicker = {
         let picker = UIDatePicker()
-        picker.datePickerMode = .dateAndTime
-        picker.maximumDate = Date()
         picker.preferredDatePickerStyle = .inline
         return picker
     }()
+    
+    private func setupMaxDate() {
+        switch mode {
+        case .transaction:
+            datePicker.maximumDate = Date()
+            datePicker.datePickerMode = .dateAndTime
+        case .goal:
+            datePicker.maximumDate = .distantFuture
+            datePicker.minimumDate = Date()
+            datePicker.datePickerMode = .date
+        }
+    }
     
     private lazy var doneButton: UIButton = {
         let button = DefaultButton(title: "Готово", action: doneAction)

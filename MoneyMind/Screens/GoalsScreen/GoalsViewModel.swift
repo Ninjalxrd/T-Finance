@@ -15,6 +15,7 @@ final class GoalsViewModel {
     private var coordinator: GoalsCoordinator?
     private let goalsService: GoalsServiceProtocol
     private var bag: Set<AnyCancellable> = []
+    let didAddGoal = PassthroughSubject<Void, Never>()
     @Published var goals: [Goal] = []
 
     // MARK: - Init
@@ -23,6 +24,15 @@ final class GoalsViewModel {
         self.coordinator = coordinator
         self.goalsService = goalsService
         getGoals()
+        onAddGoal()
+    }
+    
+    private func onAddGoal() {
+        didAddGoal
+            .sink { [weak self] in
+                self?.getGoals()
+            }
+            .store(in: &bag)
     }
     
     private func getGoals() {
@@ -37,28 +47,6 @@ final class GoalsViewModel {
                 self.goals = fetchingGoals
             }
             .store(in: &bag)
-    }
-    
-    func postGoal(
-        name: String,
-        term: Date,
-        amount: Double,
-        description: String
-    ) {
-        goalsService.postGoal(
-            name: name,
-            term: term,
-            amount: amount,
-            description: description
-        )
-        .receive(on: DispatchQueue.main)
-        .sink { completion in
-            if case .failure(let error) = completion {
-                print("Error fetching goals:", error.localizedDescription)
-            }
-        } receiveValue: { _ in
-        }
-        .store(in: &bag)
     }
     
     func patchGoal(
@@ -97,5 +85,9 @@ final class GoalsViewModel {
         } receiveValue: { _ in
         }
         .store(in: &bag)
+    }
+    
+    func openAddGoalScreen() {
+        coordinator?.openNewGoalScreen(didAddGoal)
     }
 }

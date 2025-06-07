@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 final class GoalsCoordinator: Coordinator {
     // MARK: - Properties
@@ -13,14 +14,14 @@ final class GoalsCoordinator: Coordinator {
     private let navigationController: UINavigationController
     private let diContainer: AppDIContainer
     var childCoordinators: [Coordinator] = []
-
+    
     // MARK: - Init
     
     init(navigationController: UINavigationController, diContainer: AppDIContainer) {
         self.navigationController = navigationController
         self.diContainer = diContainer
     }
-
+    
     // MARK: - Public Methods
     
     func start() {
@@ -33,5 +34,13 @@ final class GoalsCoordinator: Coordinator {
             selectedImage: UIImage(named: "goals_selected")
         )
         navigationController.setViewControllers([controller], animated: false)
+    }
+    
+    func openNewGoalScreen(_ didAddGoal: PassthroughSubject<Void, Never>) {
+        let addGoalCoordinator = AddGoalCoordinator(
+            navigationController: navigationController,
+            diContainer: diContainer
+        )
+        addGoalCoordinator.start(mode: .create, didAddGoal: didAddGoal)
     }
 }

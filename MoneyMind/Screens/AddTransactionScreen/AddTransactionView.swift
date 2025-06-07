@@ -175,6 +175,7 @@ final class AddTransactionView: UIView {
     }()
     
     private lazy var addTransactionAction = UIAction { [weak self] _ in
+        self?.endEditing(true)
         self?.addSubject.send()
     }
     
@@ -244,7 +245,7 @@ final class AddTransactionView: UIView {
         if string != nil {
             categoryButton.setTitleColor(.text, for: .normal)
         } else {
-            categoryButton.setTitleColor(.secondaryText, for: .normal)
+            categoryButton.setTitleColor(.placeholderText, for: .normal)
         }
     }
     

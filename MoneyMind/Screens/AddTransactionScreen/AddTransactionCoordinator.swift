@@ -58,7 +58,7 @@ final class AddTransactionCoordinator: Coordinator {
     }
     
     func presentDatePicker(dateSubject: CurrentValueSubject<Date, Never>) {
-        let dateVC = DatePickerViewController(dateSubject: dateSubject)
+        let dateVC = DatePickerViewController(mode: .transaction, dateSubject: dateSubject)
         dateVC.modalPresentationStyle = .formSheet
         navigationController.present(dateVC, animated: true)
     }

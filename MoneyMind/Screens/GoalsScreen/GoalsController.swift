@@ -29,12 +29,21 @@ final class GoalsController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupDependencies()
+        setupCallbacks()
         bindViewModel()
     }
     
+    private func setupCallbacks() {
+        goalsView.addGoalPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.viewModel.openAddGoalScreen()
+            }
+            .store(in: &bag)
+    }
+    
     private func bindViewModel() {
-        viewModel
-            .$goals
+        viewModel.$goals
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.goalsView.reloadCollectionView()

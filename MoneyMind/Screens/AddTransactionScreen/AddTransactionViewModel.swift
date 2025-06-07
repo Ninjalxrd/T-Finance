@@ -10,8 +10,9 @@ import Foundation
 
 final class AddTransactionViewModel {
     // MARK: - Properties
-    var coordinator: AddTransactionCoordinator?
-    var expenceService: ExpencesServiceProtocol
+    
+    private var coordinator: AddTransactionCoordinator?
+    private var expenceService: ExpencesServiceProtocol
 
     // MARK: - Published Properties
     

@@ -20,6 +20,7 @@ final class GoalsView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        backgroundColor = .background
         setupUI()
     }
     
@@ -58,7 +59,7 @@ final class GoalsView: UIView {
     }()
     
     private lazy var addGoalAction = UIAction { [weak self] _ in
-        self?.addGoalSubject.send(())
+        self?.addGoalSubject.send()
     }
     
     // MARK: - Public Methods
@@ -86,7 +87,7 @@ final class GoalsView: UIView {
     
     private func setupConstraints() {
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(Spacing.medium)
+            make.top.equalTo(safeAreaLayoutGuide.snp.top)
             make.leading.equalToSuperview().offset(Spacing.medium)
         }
         
