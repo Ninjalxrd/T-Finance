@@ -185,5 +185,4 @@ final class ServicesAssembly: Assembly {
         }
         .inObjectScope(.container)
     }
-
 }

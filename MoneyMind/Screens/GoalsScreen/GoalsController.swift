@@ -77,4 +77,8 @@ extension GoalsController: UICollectionViewDelegate, UICollectionViewDataSource 
         cell.configureCell(with: viewModel.goals[indexPath.row])
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewModel.openDetailGoalScreen(goal: viewModel.goals[indexPath.row])
+    }
 }

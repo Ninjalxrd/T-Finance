@@ -43,4 +43,12 @@ final class GoalsCoordinator: Coordinator {
         )
         addGoalCoordinator.start(mode: .create, didAddGoal: didAddGoal)
     }
+    
+    func openDetailGoalScreen(goal: Goal) {
+        let detailGoalScreen = DetailGoalCoordinator(
+            navigationController: navigationController,
+            diContainer: diContainer
+        )
+        detailGoalScreen.start(goal: goal)
+    }
 }

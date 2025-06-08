@@ -90,4 +90,8 @@ final class GoalsViewModel {
     func openAddGoalScreen() {
         coordinator?.openNewGoalScreen(didAddGoal)
     }
+    
+    func openDetailGoalScreen(goal: Goal) {
+        coordinator?.openDetailGoalScreen(goal: goal)
+    }
 }
