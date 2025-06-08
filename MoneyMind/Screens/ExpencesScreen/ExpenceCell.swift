@@ -29,20 +29,20 @@ final class ExpenceCell: UITableViewCell {
     }()
     
     private lazy var shopLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.font = Font.subtitle.font
         return label
     }()
     
     private lazy var categoryLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.font = Font.subtitle.font
         label.textColor = .gray
         return label
     }()
     
     private lazy var sumLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.textAlignment = .right
         label.font = Font.subtitle.font
         return label

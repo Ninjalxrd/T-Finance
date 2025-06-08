@@ -40,7 +40,7 @@ class DetailGoalView: UIView {
     }()
         
     private lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "Placeholder")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "Placeholder")
         return label
     }()
     
@@ -49,68 +49,43 @@ class DetailGoalView: UIView {
     }()
     
     private lazy var goalLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Цель"
+        let label = DefaultLabel(numberOfLines: 1, text: "Цель")
         label.font = Font.smallTitle.font
-        label.textColor = .text
-        label.textAlignment = .left
-        label.numberOfLines = 1
         return label
     }()
     
     private lazy var amountLabel: UILabel = {
-        let label = UILabel()
-        label.font = Font.subtitle.font
-        label.textColor = .text
+        let label = DefaultLabel(numberOfLines: 1, text: "")
         label.textAlignment = .right
-        label.numberOfLines = 1
         return label
     }()
     
     private lazy var accumulatedLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Накоплено"
+        let label = DefaultLabel(numberOfLines: 1, text: "Накоплено")
         label.font = Font.smallTitle.font
-        label.textColor = .text
-        label.textAlignment = .left
-        label.numberOfLines = 1
         return label
     }()
     
     private lazy var accumulatedAmountLabel: UILabel = {
-        let label = UILabel()
-        label.font = Font.subtitle.font
-        label.textColor = .text
+        let label = DefaultLabel(numberOfLines: 1, text: "")
         label.textAlignment = .right
-        label.numberOfLines = 1
         return label
     }()
     
     private lazy var dateLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Срок"
+        let label = DefaultLabel(numberOfLines: 1, text: "Срок")
         label.font = Font.smallTitle.font
-        label.textColor = .text
-        label.textAlignment = .left
-        label.numberOfLines = 1
         return label
     }()
     
     private lazy var deadlineLabel: UILabel = {
-        let label = UILabel()
-        label.font = Font.subtitle.font
-        label.textColor = .text
+        let label = DefaultLabel(numberOfLines: 1, text: "")
         label.textAlignment = .right
-        label.numberOfLines = 1
         return label
     }()
     
     private lazy var progressView: UIProgressView = {
-        let progress = UIProgressView(progressViewStyle: .default)
-        progress.progress = 0
-        progress.trackTintColor = .lightGray
-        progress.progressTintColor = UIColor.appBlue
-        progress.heightAnchor.constraint(equalToConstant: CGFloat.progressBarHeight).isActive = true
+        let progress = DefaultProgressView(progressViewStyle: .default)
         return progress
     }()
     
@@ -119,21 +94,13 @@ class DetailGoalView: UIView {
     }()
     
     private lazy var descriptionTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Описание"
+        let label = DefaultLabel(numberOfLines: 1, text: "Описание")
         label.font = Font.smallTitle.font
-        label.textColor = .text
-        label.textAlignment = .left
-        label.numberOfLines = 1
         return label
     }()
     
     private lazy var descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = Font.subtitle.font
-        label.textColor = .text
-        label.textAlignment = .left
-        label.numberOfLines = 0
+        let label = DefaultLabel(numberOfLines: 0, text: "")
         return label
     }()
     
@@ -142,22 +109,16 @@ class DetailGoalView: UIView {
     }()
     
     private lazy var recomendationsTitleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Рекомендации"
+        let label = DefaultLabel(numberOfLines: 1, text: "Рекомендации")
         label.font = Font.smallTitle.font
-        label.textColor = .text
-        label.textAlignment = .left
-        label.numberOfLines = 1
         return label
     }()
     
     private lazy var recomendationsLabel: UILabel = {
-        let label = UILabel()
-        label.text = "• Откладывать 30% от дохода\n• Устроиться в Т-Банк"
-        label.font = Font.subtitle.font
-        label.textColor = .text
-        label.textAlignment = .left
-        label.numberOfLines = 0
+        let label = DefaultLabel(
+            numberOfLines: 0,
+            text: "• Откладывать 30% от дохода\n• Устроиться в Т-Банк"
+        )
         return label
     }()
     
@@ -273,7 +234,6 @@ class DetailGoalView: UIView {
         progressView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(Spacing.medium)
             make.bottom.equalToSuperview().offset(-Spacing.medium)
-            make.height.equalTo(CGFloat.progressBarHeight)
         }
     }
     
@@ -336,6 +296,5 @@ class DetailGoalView: UIView {
 }
 
 private extension CGFloat {
-    static let progressBarHeight: CGFloat = 8
     static let cardHeight: CGFloat = 180
 }

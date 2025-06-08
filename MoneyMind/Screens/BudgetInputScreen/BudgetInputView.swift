@@ -31,7 +31,7 @@ final class BudgetInputView: UIView {
     // MARK: - UI Components
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 2, text: "Введите сумму\nвашего дохода")
+        let label = DefaultTitleLabel(numberOfLines: 2, text: "Введите сумму\nвашего дохода")
         return label
     }()
     

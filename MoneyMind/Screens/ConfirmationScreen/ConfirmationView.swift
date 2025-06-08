@@ -30,7 +30,7 @@ final class ConfirmationView: UIView {
     // MARK: - UI Components
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "Подтверждение")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "Подтверждение")
         return label
     }()
     

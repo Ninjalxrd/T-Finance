@@ -35,7 +35,7 @@ final class DistributionView: UIView {
     // MARK: - UI Components
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 2, text: "Распределите\nбюджет")
+        let label = DefaultTitleLabel(numberOfLines: 2, text: "Распределите\nбюджет")
         return label
     }()
     

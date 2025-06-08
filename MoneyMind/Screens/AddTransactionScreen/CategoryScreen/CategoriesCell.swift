@@ -26,7 +26,7 @@ final class CategoriesCell: UITableViewCell {
     }()
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "Placeholder")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "Placeholder")
         label.font = Font.subtitle.font
         label.heightAnchor.constraint(equalToConstant: CGFloat.titleLabelHeight).isActive = true
         return label

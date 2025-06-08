@@ -65,7 +65,7 @@ final class MainView: UIView {
     }()
     
     private lazy var availableBudgetLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.skeletonCornerRadius = CGFloat.skeletonCornerRadius
         label.heightAnchor.constraint(equalToConstant: CGFloat.availableBudgetLabel).isActive = true
         return label

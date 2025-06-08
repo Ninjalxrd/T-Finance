@@ -54,7 +54,7 @@ class AddGoalView: UIView {
     // MARK: - UI Elements
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 2, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 2, text: "")
         return label
     }()
     

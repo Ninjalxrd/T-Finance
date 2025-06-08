@@ -34,14 +34,14 @@ class ExpencesTableViewCell: UITableViewCell {
     }()
     
     private lazy var expencePlaceLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.text = "Default Skeleton Placeholder"
         label.font = Font.subtitle.font
         return label
     }()
     
     private lazy var expenceCategoryLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.font = Font.bigBody.font
         label.text = "Default Skeleton Placeholder"
         label.textColor = .secondaryText
@@ -49,7 +49,7 @@ class ExpencesTableViewCell: UITableViewCell {
     }()
     
     private lazy var expenceSumLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.font = Font.subtitle.font
         label.text = "Placeholder"
         return label

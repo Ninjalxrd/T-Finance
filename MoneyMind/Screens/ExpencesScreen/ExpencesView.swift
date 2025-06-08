@@ -36,7 +36,7 @@ final class ExpencesView: UIView {
     // MARK: - UI Elements
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "Расходы")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "Расходы")
         return label
     }()
     
@@ -69,7 +69,7 @@ final class ExpencesView: UIView {
     }()
 
     private lazy var totalExpensesLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.font = Font.title.font
         label.textAlignment = .center
         return label

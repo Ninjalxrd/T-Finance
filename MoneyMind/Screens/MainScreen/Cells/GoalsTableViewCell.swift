@@ -25,7 +25,7 @@ class GoalsTableViewCell: UITableViewCell {
     // MARK: - Private UI Elements
     
     private lazy var goalName: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.text = "Default Skeleton Placeholder"
         label.font = Font.subtitle.font
 
@@ -33,7 +33,7 @@ class GoalsTableViewCell: UITableViewCell {
     }()
     
     private lazy var goalSumLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.text = "Placeholder"
         label.font = Font.subtitle.font
 
@@ -57,11 +57,7 @@ class GoalsTableViewCell: UITableViewCell {
     }()
     
     private lazy var progressView: UIProgressView = {
-        let progress = UIProgressView(progressViewStyle: .default)
-        progress.progress = 0
-        progress.trackTintColor = .lightGray
-        progress.progressTintColor = UIColor.appBlue
-        progress.heightAnchor.constraint(equalToConstant: CGFloat.progressBarHeight).isActive = true
+        let progress = DefaultProgressView(progressViewStyle: .default)
         return progress
     }()
     

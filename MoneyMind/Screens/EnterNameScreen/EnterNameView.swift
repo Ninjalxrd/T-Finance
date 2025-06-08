@@ -34,7 +34,7 @@ final class EnterNameView: UIView {
     // MARK: - UI Components
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "Введите ваше имя")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "Введите ваше имя")
         return label
     }()
     

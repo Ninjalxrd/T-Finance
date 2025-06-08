@@ -32,7 +32,7 @@ final class MainExpenсesView: UIView {
     // MARK: - UI Elements
     
     private(set) lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "Последние")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "Последние")
         label.font = Font.smallViewTitle.font
         label.skeletonCornerRadius = CGFloat.skeletonCornerRadius
         label.heightAnchor.constraint(equalToConstant: CGFloat.expenceTitleLabel).isActive = true

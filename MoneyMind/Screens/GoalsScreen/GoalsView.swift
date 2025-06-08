@@ -31,7 +31,7 @@ final class GoalsView: UIView {
     // MARK: - UI Elements
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "Цели")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "Цели")
         label.heightAnchor.constraint(equalToConstant: CGFloat.labelHeight).isActive = true
         return label
     }()

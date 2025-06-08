@@ -55,7 +55,7 @@ final class ProcentDetailsView: UIView {
     }()
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 2, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 2, text: "")
         label.font = Font.smallTitle.font
         return label
     }()

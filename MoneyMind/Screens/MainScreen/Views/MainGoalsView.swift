@@ -31,7 +31,7 @@ final class MainGoalsView: UIView {
     // MARK: - UI
 
     private lazy var goalsTitleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "Цели")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "Цели")
         label.font = Font.smallViewTitle.font
         label.skeletonCornerRadius = CGFloat.skeletonCornerRadius
         label.heightAnchor.constraint(equalToConstant: CGFloat.expenceTitleLabel).isActive = true
