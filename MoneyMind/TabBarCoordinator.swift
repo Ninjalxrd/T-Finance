@@ -22,13 +22,15 @@ final class TabBarCoordinator: NSObject, Coordinator {
     let budget = UserManager.shared.budget
     private var childCoordinators: [Coordinator] = []
     private let diContainer: AppDIContainer
+    private unowned let window: UIWindow
     private var addCoordinator: AddTransactionCoordinator?
 
     // MARK: - Init
     
-    init(diContainer: AppDIContainer) {
+    init(diContainer: AppDIContainer, window: UIWindow) {
         self.diContainer = diContainer
         self.tabBarController = UITabBarController()
+        self.window = window
         super.init()
     }
 
@@ -46,7 +48,8 @@ final class TabBarCoordinator: NSObject, Coordinator {
         let budgetNav = UINavigationController()
         let budgetCoordinator = DistributionCoordinator(
             navigationController: budgetNav,
-            diContainer: diContainer
+            diContainer: diContainer,
+            window: window
         )
         addChild(budgetCoordinator)
 
@@ -92,7 +95,7 @@ extension TabBarCoordinator: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         guard let index = tabBarController.viewControllers?.firstIndex(of: viewController) else { return }
 
-        if index == 2 {
+        if index == TabIndex.add.rawValue {
             addCoordinator?.resetView()
         }
     }

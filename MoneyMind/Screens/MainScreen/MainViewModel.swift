@@ -16,6 +16,7 @@ final class MainViewModel {
     @Published private(set) var lastExpences: [Expence] = []
     @Published private(set) var goalsState: GoalsViewState = .loading
     @Published private(set) var lastGoals: [Goal] = []
+    @Published private(set) var balance: Int = 0
 
     // MARK: - Properties
     
@@ -39,6 +40,7 @@ final class MainViewModel {
         self.imageService = imageService
         getLastExpences()
         getLastGoals()
+        getBalance()
     }
     
     // MARK: - Public Methods
@@ -96,6 +98,20 @@ final class MainViewModel {
         imageService.downloadImage(by: url) { image in
             completion(image)
         }
+    }
+    
+    func getBalance() {
+        expencesService.fetchBudgetBalance()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                if case .failure(let error) = completion {
+                    print("error with fetch budget balance \(error)")
+                }
+            } receiveValue: { balance in
+                print(balance)
+                self.balance = Int(balance.balance)
+            }
+            .store(in: &bag)
     }
     
     // MARK: - Public Methods

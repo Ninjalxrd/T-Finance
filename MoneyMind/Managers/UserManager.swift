@@ -20,15 +20,16 @@ final class UserManager {
     private let hasIncomeKey = "hasIncome"
     private let budgetKey = "userBudget"
     private let categoriesKey = "categories"
+    private let selectedTheme = "selectedTheme"
     
     // MARK: - Get/Set Properties
     
     var theme: Theme {
         get {
-            Theme(rawValue: UserDefaults.standard.integer(forKey: "selectedTheme")) ?? .dark
+            Theme(rawValue: UserDefaults.standard.integer(forKey: selectedTheme)) ?? .dark
         }
         set {
-            UserDefaults.standard.set(newValue.rawValue, forKey: "selectedTheme")
+            UserDefaults.standard.set(newValue.rawValue, forKey: selectedTheme)
         }
     }
     
@@ -81,5 +82,6 @@ final class UserManager {
     func clearUserData() {
         userDefaults.removeObject(forKey: isRegisteredKey)
         userDefaults.removeObject(forKey: hasIncomeKey)
+        userDefaults.removeObject(forKey: selectedTheme)
     }
 }

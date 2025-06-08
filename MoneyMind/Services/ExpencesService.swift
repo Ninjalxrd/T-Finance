@@ -32,6 +32,7 @@ protocol ExpencesServiceProtocol {
         amount: Double,
         description: String
     ) -> AnyPublisher<Void, Error>
+    func fetchBudgetBalance() -> AnyPublisher<BudgetBalance, Error>
 }
 
 final class ExpencesService: ExpencesServiceProtocol {
@@ -110,6 +111,13 @@ final class ExpencesService: ExpencesServiceProtocol {
     func fetchCategories() -> AnyPublisher<[TransactionCategory], Error> {
         return performRequest(
             path: "/api/v1/categories",
+            method: .get
+        )
+    }
+    
+    func fetchBudgetBalance() -> AnyPublisher<BudgetBalance, Error> {
+        performRequest(
+            path: "/api/v1/budget/balance",
             method: .get
         )
     }
@@ -289,6 +297,10 @@ struct APIError: Codable, Error {
     let details: [String: String]?
 }
 
+struct BudgetBalance: Decodable {
+    let balance: Double
+}
+
 // MARK: - SumByCategoryOfPeriodWrapper
 
 struct SumByCategoryOfPeriodWrapper: Codable {
@@ -308,3 +320,4 @@ struct Transactions: Codable {
     let transactions: [Expence]
     let totalAmount: Double
 }
+

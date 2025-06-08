@@ -12,14 +12,16 @@ final class EnterNumberCoordinator: Coordinator {
     
     private(set) var navigationController: UINavigationController
     private var confirmationCoordinator: ConfirmationCoordinator?
+    private unowned let window: UIWindow
     private let diContainer: AppDIContainer
     var childCoordinators: [Coordinator] = []
 
     // MARK: - Initialization
     
-    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
+    init(navigationController: UINavigationController, diContainer: AppDIContainer, window: UIWindow) {
         self.navigationController = navigationController
         self.diContainer = diContainer
+        self.window = window
     }
     
     // MARK: - Public Methods
@@ -36,7 +38,8 @@ final class EnterNumberCoordinator: Coordinator {
     func openConfirmationScreen(with number: String) {
         confirmationCoordinator = ConfirmationCoordinator(
             navigationController: navigationController,
-            diContainer: diContainer
+            diContainer: diContainer,
+            window: window
         )
         confirmationCoordinator?.start(with: number)
     }

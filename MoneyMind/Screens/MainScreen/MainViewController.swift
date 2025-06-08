@@ -88,6 +88,14 @@ class MainViewController: UIViewController {
                 }
             }
             .store(in: &bag)
+        
+        viewModel.$balance
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.mainView.setupBudget(with: self.viewModel.balance)
+            }
+            .store(in: &bag)
     }
     
     private func setupCallbacks() {
