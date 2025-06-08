@@ -68,7 +68,10 @@ extension MoreViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ThemeCell.identifier, for: indexPath) as? ThemeCell else {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: ThemeCell.identifier,
+            for: indexPath) as? ThemeCell
+        else {
             return UITableViewCell()
         }
         setupSubscriptions(for: cell)

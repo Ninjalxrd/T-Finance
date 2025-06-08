@@ -20,6 +20,7 @@ enum Font {
     var font: UIFont {
         switch self {
         case .title:
+            UIFont(name: "TinkoffSans-Bold", size: 36) ??
             UIFont.systemFont(ofSize: 36, weight: .bold)
         case .smallViewTitle:
             UIFont.systemFont(ofSize: 24, weight: .bold)

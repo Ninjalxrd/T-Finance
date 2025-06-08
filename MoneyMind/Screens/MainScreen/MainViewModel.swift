@@ -107,11 +107,20 @@ final class MainViewModel {
                 if case .failure(let error) = completion {
                     print("error with fetch budget balance \(error)")
                 }
-            } receiveValue: { balance in
-                print(balance)
-                self.balance = Int(balance.balance)
+            } receiveValue: { [weak self] balance in
+                self?.balance = Int(balance.balance)
+                self?.tryToSendNotfication(
+                    currentBalance: balance.balance,
+                    totalBalance: Double(UserManager.shared.budget)
+                )
             }
             .store(in: &bag)
+    }
+    
+    private func tryToSendNotfication(currentBalance: Double, totalBalance: Double) {
+        if currentBalance / totalBalance >= 0.9 {
+            NotificationManager.sendBudgetLimitNotification()
+        }
     }
     
     // MARK: - Public Methods

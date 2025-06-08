@@ -320,4 +320,3 @@ struct Transactions: Codable {
     let transactions: [Expence]
     let totalAmount: Double
 }
-

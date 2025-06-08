@@ -53,5 +53,4 @@ final class ImageService: ImageServiceProtocol {
         }
         task.resume()
     }
-
 }
