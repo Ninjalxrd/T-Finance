@@ -7,6 +7,14 @@
 
 import UIKit
 
+enum TabIndex: Int {
+    case main   = 0
+    case budget = 1
+    case add    = 2
+    case goals  = 3
+    case more   = 4
+}
+
 final class TabBarCoordinator: NSObject, Coordinator {
     // MARK: - Properties
     
@@ -30,7 +38,8 @@ final class TabBarCoordinator: NSObject, Coordinator {
         let mainNav = UINavigationController()
         let mainCoordinator = MainCoordinator(
             navigationController: mainNav,
-            diContainer: diContainer
+            diContainer: diContainer,
+            tabBarCoordinator: self
         )
         addChild(mainCoordinator)
 
@@ -86,5 +95,11 @@ extension TabBarCoordinator: UITabBarControllerDelegate {
         if index == 2 {
             addCoordinator?.resetView()
         }
+    }
+}
+
+extension TabBarCoordinator {
+    func switchTab(to tab: TabIndex) {
+        tabBarController.selectedIndex = tab.rawValue
     }
 }

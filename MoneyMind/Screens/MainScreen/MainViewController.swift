@@ -97,7 +97,14 @@ class MainViewController: UIViewController {
                 self.viewModel.openExpencesScreen()
             }
             .store(in: &bag)
-        }
+        
+        mainView.goalsScreenPublisher
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.viewModel.openGoalsScreen()
+            }
+            .store(in: &bag)
+    }
 }
 
 // MARK: - Extensions

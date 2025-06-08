@@ -18,12 +18,16 @@ final class AddGoalController: UIViewController {
     private var bag: Set<AnyCancellable> = []
     private let addGoalView: AddGoalView
     private let viewModel: AddGoalViewModel
+    private let goal: Goal?
+    private let mode: GoalViewMode
     
     // MARK: - Lifecycle
     
-    init(mode: GoalViewMode, viewModel: AddGoalViewModel) {
+    init(mode: GoalViewMode, viewModel: AddGoalViewModel, goal: Goal?) {
         self.addGoalView = AddGoalView(mode: mode)
+        self.mode = mode
         self.viewModel = viewModel
+        self.goal = goal
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -39,6 +43,9 @@ final class AddGoalController: UIViewController {
         super.viewDidLoad()
         setupCallbacks()
         bindViewModel()
+        if mode == .edit {
+            setupEditUI()
+        }
     }
     
     private func setupCallbacks() {
@@ -55,6 +62,25 @@ final class AddGoalController: UIViewController {
                 self?.viewModel.saveGoal()
             }
             .store(in: &bag)
+    }
+    
+    private func setupEditUI() {
+        guard let goal else { return }
+        addGoalView.setupEditView(goal: goal)
+        viewModel.nameText = goal.name
+        viewModel.descriptionText = goal.description
+        viewModel.amountText = Int(goal.amount).description
+        viewModel.dateWasPicked = true
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "ru_RU")
+
+        if let parsedDate = formatter.date(from: goal.term) {
+            viewModel.date = parsedDate
+            viewModel.dateSubject.send(parsedDate)
+        } else {
+            print("fail to parse date from string: \(goal.term)")
+        }
     }
     
     private func bindViewModel() {

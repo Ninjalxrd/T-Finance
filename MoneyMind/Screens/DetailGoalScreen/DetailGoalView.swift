@@ -123,14 +123,15 @@ class DetailGoalView: UIView {
     }()
     
     private lazy var editGoalButton: UIButton = {
-        let button = DefaultButton(title: "Редактировать", action: addGoalAction)
+        let button = DefaultButton(title: "Редактировать", action: editGoalAction)
         button.heightAnchor.constraint(equalToConstant: Size.buttonHeight).isActive = true
         return button
     }()
     
-    private lazy var addGoalAction = UIAction { [weak self] _ in
+    private lazy var editGoalAction = UIAction { [weak self] _ in
         self?.editGoalSubject.send()
     }
+    
     private func createBackView() -> UIView {
         let view = UIView()
         view.backgroundColor = .background
@@ -167,25 +168,24 @@ class DetailGoalView: UIView {
     
     private func setupConstraints() {
         scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalTo(self.safeAreaLayoutGuide)
         }
         
         containerView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
-            make.width.equalToSuperview()
+            make.width.equalTo(scrollView.snp.width)
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(Spacing.medium)
+            make.top.equalToSuperview().offset(Spacing.medium)
             make.leading.equalToSuperview().offset(Spacing.medium)
             make.trailing.equalToSuperview().offset(-Spacing.medium)
         }
-        
         editGoalButton.snp.makeConstraints { make in
+            make.top.equalTo(recomendationsView.snp.bottom).offset(Spacing.medium)
             make.leading.trailing.equalToSuperview().inset(Spacing.medium)
-            make.bottom.equalTo(safeAreaLayoutGuide.snp.bottom).offset(-Spacing.medium)
+            make.bottom.equalToSuperview().offset(-Spacing.large)
         }
-        
         setupInfoView()
         setupDescriptionView()
         setupRecomendationView()
@@ -259,7 +259,6 @@ class DetailGoalView: UIView {
             make.top.equalTo(descriptionView.snp.bottom).offset(Spacing.medium)
             make.leading.trailing.equalToSuperview().inset(Spacing.medium)
             make.height.equalTo(CGFloat.cardHeight)
-            make.bottom.equalToSuperview().offset(-Spacing.large)
         }
         
         recomendationsTitleLabel.snp.makeConstraints { make in

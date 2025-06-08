@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Combine
 
 final class DetailGoalCoordinator {
     // MARK: - Properties
@@ -21,15 +22,30 @@ final class DetailGoalCoordinator {
         self.diContainer = diContainer
     }
     
-    func start(goal: Goal) {
+    func start(goal: Goal, didAddGoal: PassthroughSubject<Void, Never>) {
         let goalsService = diContainer.resolve(GoalsServiceProtocol.self)
         let detailViewModel = DetailViewModel(
             goal: goal,
             coordinator: self,
-            goalsService: goalsService
+            goalsService: goalsService,
+            didAddGoal: didAddGoal
         )
         let detailGoalController = DetailGoalController(detailViewModel: detailViewModel)
         navigationController.pushViewController(detailGoalController, animated: true)
-        
+    }
+    
+    func openEditScreen(
+        didAddGoal: PassthroughSubject<Void, Never>,
+        goal: Goal
+    ) {
+        let editGoalCoordinator = AddGoalCoordinator(
+            navigationController: navigationController,
+            diContainer: diContainer
+        )
+        editGoalCoordinator.start(
+            mode: .edit,
+            didAddGoal: didAddGoal,
+            goal: goal
+        )
     }
 }

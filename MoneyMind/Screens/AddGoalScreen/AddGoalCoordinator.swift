@@ -17,14 +17,24 @@ final class AddGoalCoordinator {
         self.diContainer = diContainer
     }
     
-    func start(mode: GoalViewMode, didAddGoal: PassthroughSubject<Void, Never>) {
+    func start(
+        mode: GoalViewMode,
+        didAddGoal: PassthroughSubject<Void, Never>,
+        goal: Goal?
+    ) {
         let goalsService = diContainer.resolve(GoalsServiceProtocol.self)
         let viewModel = AddGoalViewModel(
             coordinator: self,
             goalsService: goalsService,
-            goalSubject: didAddGoal
+            goalSubject: didAddGoal,
+            mode: mode,
+            goal: goal
         )
-        let viewController = AddGoalController(mode: mode, viewModel: viewModel)
+        let viewController = AddGoalController(
+            mode: mode,
+            viewModel: viewModel,
+            goal: goal
+        )
         navigationController.pushViewController(viewController, animated: true)
     }
     
@@ -36,5 +46,9 @@ final class AddGoalCoordinator {
     
     func dismissScreen() {
         navigationController.popViewController(animated: true)
+    }
+    
+    func goToGoalsScreen() {
+        navigationController.popToRootViewController(animated: true)
     }
 }

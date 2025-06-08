@@ -140,7 +140,8 @@ final class ServicesAssembly: Assembly {
                 session: session,
                 tokenManager: tokenManager
             )
-        }.inObjectScope(.container)
+        }
+        .inObjectScope(.container)
     }
     
     // MARK: - Image Service

@@ -193,6 +193,12 @@ class AddGoalView: UIView {
             titleLabel.text = "Редактирование\nцели"
         }
     }
+    
+    func setupEditView(goal: Goal) {
+        nameTextField.text = goal.name
+        descriptionTextField.text = goal.description
+        amountTextField.text = Int(goal.amount).description
+    }
 }
 
 extension AddGoalView: UITextFieldDelegate {

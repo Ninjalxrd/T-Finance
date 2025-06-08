@@ -28,7 +28,6 @@ class GoalsTableViewCell: UITableViewCell {
         let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.text = "Default Skeleton Placeholder"
         label.font = Font.subtitle.font
-
         return label
     }()
     

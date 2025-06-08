@@ -30,6 +30,7 @@ final class MainView: UIView {
         super.init(frame: frame)
         setupUI()
         passthroughExpencesSubject()
+        passthroughGoalsSubject()
     }
     
     required init?(coder: NSCoder) {
@@ -111,6 +112,15 @@ final class MainView: UIView {
             .detailsTappedPublisher
             .sink { [weak self] _ in
                 self?.expensesScreenSubject.send()
+            }
+            .store(in: &bag)
+    }
+    
+    func passthroughGoalsSubject() {
+        goalsView
+            .detailsPublisher
+            .sink { [weak self] _ in
+                self?.goalsScreenSubject.send()
             }
             .store(in: &bag)
     }

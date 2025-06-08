@@ -14,42 +14,24 @@ final class DetailViewModel {
     private var coordinator: DetailGoalCoordinator?
     private var bag: Set<AnyCancellable> = []
     private let goalsService: GoalsServiceProtocol
+    let didAddGoal: PassthroughSubject<Void, Never>
     let goal: Goal
-    let dateSubject = CurrentValueSubject<Date, Never>(Date())
-    var date: Date?
-    
-    // MARK: - Published Properties
-
-    @Published var nameText: String = ""
-    @Published var descriptionText: String = ""
-    @Published var amountText: String = ""
-    @Published var dateWasPicked: Bool = false
-
-    var isFormValid: AnyPublisher<Bool, Never> {
-        Publishers.CombineLatest4(
-            $nameText,
-            $amountText,
-            $descriptionText,
-            $dateWasPicked
-            )
-        .map { name, amount, description, datePicked in
-            let isNameValid = !name.isEmpty
-            let isAmountValid = Double(amount) != nil && !amount.isEmpty
-            let isDescriptionValid = !description.isEmpty
-            return isNameValid && isAmountValid && isDescriptionValid && datePicked
-        }
-        .eraseToAnyPublisher()
-    }
 
     // MARK: - Init
     
     init(
         goal: Goal,
         coordinator: DetailGoalCoordinator?,
-        goalsService: GoalsServiceProtocol
+        goalsService: GoalsServiceProtocol,
+        didAddGoal: PassthroughSubject<Void, Never>
     ) {
         self.goal = goal
         self.coordinator = coordinator
         self.goalsService = goalsService
+        self.didAddGoal = didAddGoal
+    }
+    
+    func openEditScreen() {
+        coordinator?.openEditScreen(didAddGoal: didAddGoal, goal: goal)
     }
 }

@@ -22,19 +22,19 @@ final class MainViewModel {
     var coordinator: MainCoordinator?
     private var bag: Set<AnyCancellable> = []
     private let expencesService: ExpencesServiceProtocol
-    private let goalsManager: GoalsManagerProtocol
+    private let goalsService: GoalsServiceProtocol
     private let imageService: ImageServiceProtocol
 
     // MARK: - Init
     
     init(
         expencesService: ExpencesServiceProtocol,
-        goalsManager: GoalsManagerProtocol,
+        goalsService: GoalsServiceProtocol,
         coordinator: MainCoordinator,
         imageService: ImageServiceProtocol
     ) {
         self.expencesService = expencesService
-        self.goalsManager = goalsManager
+        self.goalsService = goalsService
         self.coordinator = coordinator
         self.imageService = imageService
         getLastExpences()
@@ -63,6 +63,9 @@ final class MainViewModel {
             },
             receiveValue: { [weak self] expences in
                 guard let self else { return }
+                if expences.transactions.isEmpty {
+                    self.expencesState = .loading
+                }
                 self.lastExpences = expences.transactions
                 self.expencesState = .content(self.lastExpences)
             }
@@ -71,10 +74,13 @@ final class MainViewModel {
     }
     
     func getLastGoals() {
-        goalsManager.fetchFromServer()
-        goalsManager.allGoalsPublisher
+        goalsService.fetchGoals()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] goals in
+            .sink { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.expencesState = .error(error.localizedDescription)
+                }
+            } receiveValue: { [weak self] goals in
                 guard let self else { return }
                 if goals.isEmpty {
                     self.goalsState = .loading
@@ -84,7 +90,7 @@ final class MainViewModel {
                 }
             }
             .store(in: &bag)
-    }
+            }
     
     func getImageByURL(_ url: String?, completion: @escaping (UIImage?) -> Void) {
         imageService.downloadImage(by: url) { image in
@@ -96,5 +102,9 @@ final class MainViewModel {
     
     func openExpencesScreen() {
         coordinator?.openExpencesScreen()
+    }
+    
+    func openGoalsScreen() {
+        coordinator?.openGoalsScreen()
     }
 }

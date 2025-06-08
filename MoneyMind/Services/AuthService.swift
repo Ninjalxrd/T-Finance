@@ -70,12 +70,6 @@ final class AuthService: AuthServiceProtocol {
             }
         }
         .decode(type: AuthResponse.self, decoder: JSONDecoder())
-        .tryMap { resp in
-            if resp.accessToken == nil {
-                throw APIError(message: resp.message ?? "Неверный код", code: nil, details: nil)
-            }
-            return resp
-        }
         .eraseToAnyPublisher()
     }
 }

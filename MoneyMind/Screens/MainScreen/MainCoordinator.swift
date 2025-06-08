@@ -13,23 +13,29 @@ final class MainCoordinator: Coordinator {
     
     private let navigationController: UINavigationController
     private let diContainer: AppDIContainer
-    
+    private weak var tabBarCoordinator: TabBarCoordinator?
+
     // MARK: - Init
     
-    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
+    init(
+        navigationController: UINavigationController,
+        diContainer: AppDIContainer,
+        tabBarCoordinator: TabBarCoordinator
+    ) {
         self.navigationController = navigationController
         self.diContainer = diContainer
+        self.tabBarCoordinator = tabBarCoordinator
     }
 
     // MARK: - Public
     
     func start() {
         let expencesService = diContainer.resolve(ExpencesServiceProtocol.self)
-        let goalsManager = diContainer.resolve(GoalsManagerProtocol.self)
+        let goalsService = diContainer.resolve(GoalsServiceProtocol.self)
         let imageService = diContainer.resolve(ImageServiceProtocol.self)
         let viewModel = MainViewModel(
             expencesService: expencesService,
-            goalsManager: goalsManager,
+            goalsService: goalsService,
             coordinator: self,
             imageService: imageService
         )
@@ -48,5 +54,9 @@ final class MainCoordinator: Coordinator {
             diContainer: diContainer
         )
         expencesCoordinator.start()
+    }
+    
+    func openGoalsScreen() {
+        tabBarCoordinator?.switchTab(to: .goals)
     }
 }

@@ -19,6 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
+        window.overrideUserInterfaceStyle = UserManager.shared.theme.getUserInterfaceStyle()
         self.window = window
         let diContainer = registerAppDIContainer()
         let appCoordinator = AppCoordinator(window: window, diContainer: diContainer)
@@ -28,7 +29,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func registerAppDIContainer() -> AppDIContainer {
         let assemblies: [Assembly] = [
-            MainAssembly(),
             ServicesAssembly()
         ]
         let diContainer = AppDIContainer(assemblies: assemblies)

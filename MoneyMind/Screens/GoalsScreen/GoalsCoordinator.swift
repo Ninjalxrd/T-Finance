@@ -17,7 +17,10 @@ final class GoalsCoordinator: Coordinator {
     
     // MARK: - Init
     
-    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
+    init(
+        navigationController: UINavigationController,
+        diContainer: AppDIContainer
+    ) {
         self.navigationController = navigationController
         self.diContainer = diContainer
     }
@@ -41,14 +44,18 @@ final class GoalsCoordinator: Coordinator {
             navigationController: navigationController,
             diContainer: diContainer
         )
-        addGoalCoordinator.start(mode: .create, didAddGoal: didAddGoal)
+        addGoalCoordinator.start(
+            mode: .create,
+            didAddGoal: didAddGoal,
+            goal: nil
+        )
     }
     
-    func openDetailGoalScreen(goal: Goal) {
+    func openDetailGoalScreen(goal: Goal, _ didAddGoal: PassthroughSubject<Void, Never>) {
         let detailGoalScreen = DetailGoalCoordinator(
             navigationController: navigationController,
             diContainer: diContainer
         )
-        detailGoalScreen.start(goal: goal)
+        detailGoalScreen.start(goal: goal, didAddGoal: didAddGoal)
     }
 }

@@ -83,9 +83,11 @@ final class DistributionCoordinator: Coordinator {
             message: "Вы распределили не все проценты!\nОставшаяся часть будет перенесена в категорию \"Другое\"",
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "Хорошо", style: .default, handler: { [weak self] _ in
+        alert.addAction(UIAlertAction(
+            title: "Хорошо",
+            style: .default) { [weak self] _ in
             self?.openMainScreen()
-        }))
+        })
         alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
         navigationController.present(alert, animated: true)
     }

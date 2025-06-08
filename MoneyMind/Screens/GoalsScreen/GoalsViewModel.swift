@@ -49,30 +49,6 @@ final class GoalsViewModel {
             .store(in: &bag)
     }
     
-    func patchGoal(
-        id: Int,
-        name: String,
-        term: Date,
-        amount: Double,
-        description: String
-    ) {
-        goalsService.patchGoal(
-            id: id,
-            name: name,
-            term: term,
-            amount: amount,
-            description: description
-        )
-        .receive(on: DispatchQueue.main)
-        .sink { completion in
-            if case .failure(let error) = completion {
-                print("Error fetching goals:", error.localizedDescription)
-            }
-        } receiveValue: { _ in
-        }
-        .store(in: &bag)
-    }
-    
     func deleteGoal(id: Int) {
         goalsService.deleteGoal(
             id: id
@@ -92,6 +68,6 @@ final class GoalsViewModel {
     }
     
     func openDetailGoalScreen(goal: Goal) {
-        coordinator?.openDetailGoalScreen(goal: goal)
+        coordinator?.openDetailGoalScreen(goal: goal, didAddGoal)
     }
 }

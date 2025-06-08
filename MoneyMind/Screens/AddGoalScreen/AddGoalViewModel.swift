@@ -14,6 +14,8 @@ final class AddGoalViewModel {
     private var coordinator: AddGoalCoordinator?
     private var bag: Set<AnyCancellable> = []
     private let goalsService: GoalsServiceProtocol
+    private let mode: GoalViewMode
+    private let goal: Goal?
     let dateSubject = CurrentValueSubject<Date, Never>(Date())
     let goalSubject: PassthroughSubject<Void, Never>
     var date: Date?
@@ -46,11 +48,15 @@ final class AddGoalViewModel {
     init(
         coordinator: AddGoalCoordinator?,
         goalsService: GoalsServiceProtocol,
-        goalSubject: PassthroughSubject<Void, Never>
+        goalSubject: PassthroughSubject<Void, Never>,
+        mode: GoalViewMode,
+        goal: Goal?
     ) {
         self.coordinator = coordinator
         self.goalsService = goalsService
         self.goalSubject = goalSubject
+        self.mode = mode
+        self.goal = goal
         setupDependency()
     }
     
@@ -69,16 +75,33 @@ final class AddGoalViewModel {
     }
     
     func saveGoal() {
-        guard
-            let date,
-            let amount = Double(amountText)
-        else { return }
-        postGoal(
-            name: nameText,
-            term: date,
-            amount: amount,
-            description: descriptionText
-        )
+        if mode == .create {
+            guard
+                let date,
+                let amount = Double(amountText)
+            else { return }
+            postGoal(
+                name: nameText,
+                term: date,
+                amount: amount,
+                description: descriptionText
+            )
+        } else if mode == .edit {
+            guard
+                let date,
+                let amount = Double(amountText),
+                let goal
+            else { return }
+            patchGoal(
+                id: goal.id,
+                name: nameText,
+                term: date,
+                amount: amount,
+                description: descriptionText
+            )
+        } else {
+            return
+        }
     }
     
     func postGoal(
@@ -100,6 +123,33 @@ final class AddGoalViewModel {
             } else {
                 self?.goalSubject.send()
                 self?.coordinator?.dismissScreen()
+            }
+        } receiveValue: { _ in
+        }
+        .store(in: &bag)
+    }
+    
+    func patchGoal(
+        id: Int,
+        name: String,
+        term: Date,
+        amount: Double,
+        description: String
+    ) {
+        goalsService.patchGoal(
+            id: id,
+            name: name,
+            term: term,
+            amount: amount,
+            description: description
+        )
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] completion in
+            if case .failure(let error) = completion {
+                print("Error patch goals:", error.localizedDescription)
+            } else {
+                self?.goalSubject.send()
+                self?.coordinator?.goToGoalsScreen()
             }
         } receiveValue: { _ in
         }

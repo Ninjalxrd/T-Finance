@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import Combine
 
 class DetailGoalController: UIViewController {
     private let detailGoalView = DetailGoalView()
     private let detailViewModel: DetailViewModel
+    private var bag: Set<AnyCancellable> = []
     
     // MARK: - Lifecycle
     
@@ -29,6 +31,7 @@ class DetailGoalController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
+        setupCallbacks()
     }
     
     private func configureView() {
@@ -37,5 +40,14 @@ class DetailGoalController: UIViewController {
             current: detailViewModel.goal.accumulatedAmount,
             total: detailViewModel.goal.amount
         )
+    }
+    
+    private func setupCallbacks() {
+        detailGoalView.editPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.detailViewModel.openEditScreen()
+            }
+            .store(in: &bag)
     }
 }
