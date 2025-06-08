@@ -179,6 +179,7 @@ final class ExpencesView: UIView {
     func endRefreshing() {
         refreshControl.endRefreshing()
     }
+
 }
 
 private extension CGFloat {
