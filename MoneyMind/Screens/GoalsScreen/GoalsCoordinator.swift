@@ -8,7 +8,13 @@
 import UIKit
 import Combine
 
-final class GoalsCoordinator: Coordinator {
+protocol GoalsCoordinatorProtocol {
+    func start()
+    func openNewGoalScreen(_ didAddGoal: PassthroughSubject<Void, Never>)
+    func openDetailGoalScreen(goal: Goal, _ didAddGoal: PassthroughSubject<Void, Never>)
+}
+
+final class GoalsCoordinator: Coordinator, GoalsCoordinatorProtocol {
     // MARK: - Properties
     
     private let navigationController: UINavigationController

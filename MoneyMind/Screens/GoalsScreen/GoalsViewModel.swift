@@ -12,7 +12,7 @@ import UIKit
 final class GoalsViewModel {
     // MARK: - Properties
     
-    private var coordinator: GoalsCoordinator?
+    private var coordinator: GoalsCoordinatorProtocol?
     private let goalsService: GoalsServiceProtocol
     private var bag: Set<AnyCancellable> = []
     let didAddGoal = PassthroughSubject<Void, Never>()
@@ -20,7 +20,7 @@ final class GoalsViewModel {
 
     // MARK: - Init
     
-    init(coordinator: GoalsCoordinator, goalsService: GoalsServiceProtocol) {
+    init(coordinator: GoalsCoordinatorProtocol, goalsService: GoalsServiceProtocol) {
         self.coordinator = coordinator
         self.goalsService = goalsService
         getGoals()

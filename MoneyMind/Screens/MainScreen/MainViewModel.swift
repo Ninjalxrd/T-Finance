@@ -20,7 +20,7 @@ final class MainViewModel {
 
     // MARK: - Properties
     
-    var coordinator: MainCoordinator?
+    var coordinator: MainCoordinatorProtocol?
     private var bag: Set<AnyCancellable> = []
     private let expencesService: ExpencesServiceProtocol
     private let goalsService: GoalsServiceProtocol
@@ -31,7 +31,7 @@ final class MainViewModel {
     init(
         expencesService: ExpencesServiceProtocol,
         goalsService: GoalsServiceProtocol,
-        coordinator: MainCoordinator,
+        coordinator: MainCoordinatorProtocol,
         imageService: ImageServiceProtocol
     ) {
         self.expencesService = expencesService

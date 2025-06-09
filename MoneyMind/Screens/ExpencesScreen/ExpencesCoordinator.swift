@@ -8,7 +8,10 @@
 import UIKit
 import Swinject
 
-final class ExpencesCoordinator {
+protocol ExpencesCoordinatorProtocol {
+    func start()
+}
+final class ExpencesCoordinator: ExpencesCoordinatorProtocol {
     // MARK: - Properties
     
     private(set) var navigationController: UINavigationController

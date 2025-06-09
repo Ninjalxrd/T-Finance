@@ -8,7 +8,13 @@
 import UIKit
 import Swinject
 
-final class MainCoordinator: Coordinator {
+protocol MainCoordinatorProtocol {
+    func start()
+    func openExpencesScreen()
+    func openGoalsScreen()
+}
+
+final class MainCoordinator: Coordinator, MainCoordinatorProtocol {
     // MARK: - Properties
     
     private let navigationController: UINavigationController

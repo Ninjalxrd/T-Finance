@@ -12,7 +12,7 @@ import UIKit
 final class ExpencesViewModel {
     // MARK: - Properties
     
-    let coordinator: ExpencesCoordinator
+    let coordinator: ExpencesCoordinatorProtocol
     private let expencesService: ExpencesServiceProtocol
     private let imageService: ImageServiceProtocol
     private var bag: Set<AnyCancellable> = []
@@ -32,7 +32,7 @@ final class ExpencesViewModel {
     let periodSubject = CurrentValueSubject<TimePeriod, Never>(.month)
     
     init(
-        coordinator: ExpencesCoordinator,
+        coordinator: ExpencesCoordinatorProtocol,
         expencesService: ExpencesServiceProtocol,
         imageService: ImageServiceProtocol
     ) {

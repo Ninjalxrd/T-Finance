@@ -8,7 +8,13 @@
 import UIKit
 import Combine
 
-final class AddGoalCoordinator {
+protocol AddGoalCoordinatorProtocol {
+    func presentDatePicker(dateSubject: CurrentValueSubject<Date, Never>)
+    func dismissScreen()
+    func goToGoalsScreen()
+}
+
+final class AddGoalCoordinator: AddGoalCoordinatorProtocol {
     private let navigationController: UINavigationController
     private let diContainer: AppDIContainer
     

@@ -11,7 +11,7 @@ import Combine
 final class AddGoalViewModel {
     // MARK: - Properties
     
-    private var coordinator: AddGoalCoordinator?
+    private var coordinator: AddGoalCoordinatorProtocol?
     private var bag: Set<AnyCancellable> = []
     private let goalsService: GoalsServiceProtocol
     private let mode: GoalViewMode
@@ -46,7 +46,7 @@ final class AddGoalViewModel {
     // MARK: - Init
     
     init(
-        coordinator: AddGoalCoordinator?,
+        coordinator: AddGoalCoordinatorProtocol?,
         goalsService: GoalsServiceProtocol,
         goalSubject: PassthroughSubject<Void, Never>,
         mode: GoalViewMode,

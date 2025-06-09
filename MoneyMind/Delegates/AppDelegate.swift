@@ -62,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func requestNotificationAuthorization() {
         UNUserNotificationCenter.current().requestAuthorization(
             options: [.alert, .sound, .badge]
-        ) { granted, error in
+        ) { _, error in
             if let error = error {
                 print("Notification permission error: \(error)")
             }
