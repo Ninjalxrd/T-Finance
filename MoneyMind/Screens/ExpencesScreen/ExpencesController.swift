@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import SkeletonView
 
 final class ExpencesController: UIViewController {
     private let viewModel: ExpencesViewModel
@@ -45,11 +46,18 @@ final class ExpencesController: UIViewController {
             }
             .store(in: &bag)
         
+        expencesView.showTableViewSkeleton()
         viewModel.$expences
+            .dropFirst()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.expencesView.reloadExpencesTableView()
+            .sink { [weak self] expences in
+                if expences.isEmpty {
+                    self?.expencesView.showTableViewSkeleton()
+                } else {
+                    self?.expencesView.hideTableViewSkeleton()
+                }
                 self?.expencesView.endRefreshing()
+                self?.expencesView.reloadExpencesTableView()
             }
             .store(in: &bag)
         
@@ -72,7 +80,7 @@ final class ExpencesController: UIViewController {
 }
 // MARK: - UITableViewDelegate, UITableViewDataSource
 
-extension ExpencesController: UITableViewDelegate, UITableViewDataSource {
+extension ExpencesController: UITableViewDelegate, SkeletonTableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.expences.count
     }
@@ -101,5 +109,19 @@ extension ExpencesController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         viewModel.loadNextPageIfNeeded(currentIndex: indexPath.row)
+    }
+    
+    func collectionSkeletonView(
+        _ skeletonView: UITableView,
+        numberOfRowsInSection section: Int
+    ) -> Int {
+        return 6
+    }
+
+    func collectionSkeletonView(
+        _ skeletonView: UITableView,
+        cellIdentifierForRowAt indexPath: IndexPath
+    ) -> ReusableCellIdentifier {
+        return ExpenceCell.identifier
     }
 }

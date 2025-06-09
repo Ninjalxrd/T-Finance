@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import SkeletonView
 
 final class GoalsController: UIViewController {
     private let viewModel: GoalsViewModel
@@ -43,9 +44,15 @@ final class GoalsController: UIViewController {
     }
     
     private func bindViewModel() {
+        goalsView.showCollectionSkeletonAnimations()
         viewModel.$goals
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
+            .sink { [weak self] goals in
+                if goals.isEmpty {
+                    self?.goalsView.showCollectionSkeletonAnimations()
+                } else {
+                    self?.goalsView.hideCollectionSkeletonAnimations()
+                }
                 self?.goalsView.reloadCollectionView()
             }
             .store(in: &bag)
@@ -56,7 +63,7 @@ final class GoalsController: UIViewController {
     }
 }
 
-extension GoalsController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension GoalsController: UICollectionViewDelegate, SkeletonCollectionViewDataSource {
     func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
@@ -81,4 +88,14 @@ extension GoalsController: UICollectionViewDelegate, UICollectionViewDataSource 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewModel.openDetailGoalScreen(goal: viewModel.goals[indexPath.row])
     }
-}
+    
+    func collectionSkeletonView(
+        _ skeletonView: UICollectionView,
+        cellIdentifierForItemAt indexPath: IndexPath
+    ) -> SkeletonView.ReusableCellIdentifier {
+        return GoalCell.identifier
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 6
+    }}

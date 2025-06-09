@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 class GoalCell: UICollectionViewCell {
     // MARK: - Init
@@ -24,33 +25,40 @@ class GoalCell: UICollectionViewCell {
     private lazy var backView: UIView = {
         let view = UIView()
         view.backgroundColor = .background
+        view.isSkeletonable = true
         return view
     }()
     
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.font = Font.smallTitle.font
+        label.text = "PlaceholderPlaceholder"
         label.textColor = .text
         label.numberOfLines = 1
         label.textAlignment = .left
+        label.isSkeletonable = true
         return label
     }()
     
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = Font.subtitle.font
+        label.text = "PlaceholderPlaceholder"
         label.textColor = .secondaryText
         label.numberOfLines = 1
         label.textAlignment = .left
+        label.isSkeletonable = true
         return label
     }()
     
     private lazy var accumulatedAmountLabel: UILabel = {
         let label = UILabel()
         label.font = Font.subtitle.font
+        label.text = "Placeholder"
         label.textColor = .text
         label.textAlignment = .left
         label.numberOfLines = 1
+        label.isSkeletonable = true
         return label
     }()
 
@@ -61,15 +69,18 @@ class GoalCell: UICollectionViewCell {
         label.text = "Из"
         label.numberOfLines = 1
         label.textAlignment = .left
+        label.isSkeletonable = true
         return label
     }()
     
     private lazy var amountLabel: UILabel = {
         let label = UILabel()
         label.font = Font.subtitle.font
+        label.text = "Placeholder"
         label.textColor = .text
         label.numberOfLines = 1
         label.textAlignment = .left
+        label.isSkeletonable = true
         return label
     }()
     
@@ -79,12 +90,15 @@ class GoalCell: UICollectionViewCell {
         stack.spacing = Spacing.smallest
         stack.distribution = .equalSpacing
         stack.alignment = .leading
+        stack.isSkeletonable = true
         return stack
     }()
     
     // MARK: - Setup UI
     
     private func setupUI() {
+        isSkeletonable = true
+        contentView.isSkeletonable = true
         contentView.clipsToBounds = false
         clipsToBounds = false
         backgroundColor = .clear

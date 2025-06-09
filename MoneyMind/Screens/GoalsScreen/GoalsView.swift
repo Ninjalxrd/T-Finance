@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import SkeletonView
 
 final class GoalsView: UIView {
     // MARK: - Properties
@@ -49,8 +50,18 @@ final class GoalsView: UIView {
         collectionView.layer.cornerRadius = Size.cornerRadius
         collectionView.showsVerticalScrollIndicator = false
         collectionView.backgroundColor = .background
+        collectionView.isSkeletonable = true
         return collectionView
     }()
+    
+    func showCollectionSkeletonAnimations() {
+        goalsCollectionView.showAnimatedGradientSkeleton()
+    }
+    
+    func hideCollectionSkeletonAnimations() {
+        goalsCollectionView.stopSkeletonAnimation()
+        goalsCollectionView.hideSkeleton(reloadDataAfter: true)
+    }
     
     private lazy var addGoalButton: UIButton = {
         let button = DefaultButton(title: "Добавить", action: addGoalAction)
@@ -79,6 +90,7 @@ final class GoalsView: UIView {
     // MARK: - Setup UI
     
     private func setupUI() {
+        isSkeletonable = true
         addSubview(titleLabel)
         addSubview(goalsCollectionView)
         addSubview(addGoalButton)

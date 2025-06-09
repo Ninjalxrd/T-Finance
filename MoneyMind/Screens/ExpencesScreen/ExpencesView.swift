@@ -88,6 +88,15 @@ final class ExpencesView: UIView {
         return tableView
     }()
     
+    func showTableViewSkeleton() {
+        expencesTableView.showAnimatedGradientSkeleton()
+    }
+    
+    func hideTableViewSkeleton() {
+        expencesTableView.stopSkeletonAnimation()
+        expencesTableView.hideSkeleton(reloadDataAfter: true)
+    }
+    
     private lazy var refreshControl: UIRefreshControl = {
         let refresh = UIRefreshControl()
         return refresh
@@ -115,6 +124,8 @@ final class ExpencesView: UIView {
     }
     
     private func setupUI() {
+        isSkeletonable = true
+        expencesTableView.isSkeletonable = true
         addSubview(titleLabel)
         addSubview(dateSegmentControl)
         addSubview(monthButton)

@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import SkeletonView
 
 final class ExpenceCell: UITableViewCell {
     // MARK: - Init
@@ -25,25 +26,29 @@ final class ExpenceCell: UITableViewCell {
     private lazy var iconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.isSkeletonable = true
         return imageView
     }()
     
     private lazy var shopLabel: UILabel = {
-        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "placeholder placeholder")
         label.font = Font.subtitle.font
+        label.isSkeletonable = true
         return label
     }()
     
     private lazy var categoryLabel: UILabel = {
-        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "placeholder placeholder")
         label.font = Font.subtitle.font
+        label.isSkeletonable = true
         label.textColor = .gray
         return label
     }()
     
     private lazy var sumLabel: UILabel = {
-        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "place")
         label.textAlignment = .right
+        label.isSkeletonable = true
         label.font = Font.subtitle.font
         return label
     }()
@@ -52,10 +57,13 @@ final class ExpenceCell: UITableViewCell {
         let stackView = UIStackView(arrangedSubviews: [shopLabel, categoryLabel])
         stackView.axis = .vertical
         stackView.spacing = 2
+        stackView.isSkeletonable = true
         return stackView
     }()
 
     private func setupUI() {
+        contentView.isSkeletonable = true
+        isSkeletonable = true
         contentView.addSubview(iconImageView)
         contentView.addSubview(textStackView)
         contentView.addSubview(sumLabel)
