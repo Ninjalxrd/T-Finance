@@ -7,8 +7,17 @@
 
 final class MoreViewModel {
     // MARK: - Properties
+    
     var coordinator: MoreCoordinator?
 
     // MARK: - Init
-    init(coordinator: MoreCoordinator) { self.coordinator = coordinator }
+    
+    init(coordinator: MoreCoordinator) {
+        self.coordinator = coordinator
+    }
+    
+    func openLanguageScreen() {
+        coordinator?.openLanguageScreen()
+    }
+    
 }

@@ -88,7 +88,6 @@ final class ConfirmationViewModel {
                 if case let .failure(error) = completion {
                     let message = self?.errorMessage(for: error) ?? "Неизвестная ошибка"
                     self?.errorMessage = message
-                    print(message)
                 }
             } receiveValue: { [weak self] response in
                 guard let self else { return }

@@ -36,6 +36,7 @@ final class EnterNumberController: UIViewController {
         setupCallbacks()
         bindViewModel()
         addObserver()
+        setupNavigationBar()
     }
     
     deinit {
@@ -50,6 +51,10 @@ final class EnterNumberController: UIViewController {
                 self.viewModel.openConfirmationScreen(with: enterNumberView.getNumber())
             }
             .store(in: &bag)
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     // MARK: - Keyboard Handling

@@ -139,14 +139,8 @@ final class ExpencesView: UIView {
             make.trailing.equalToSuperview().offset(-Spacing.medium)
         }
         
-        dateSegmentControl.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(Spacing.medium)
-            make.leading.equalToSuperview().offset(Spacing.medium)
-            make.trailing.equalToSuperview().offset(-Spacing.medium)
-        }
-        
         monthButton.snp.makeConstraints { make in
-            make.top.equalTo(dateSegmentControl.snp.bottom).offset(Spacing.medium)
+            make.top.equalTo(titleLabel.snp.bottom).offset(Spacing.medium)
             make.leading.equalToSuperview().inset(Spacing.medium)
         }
         
@@ -161,8 +155,14 @@ final class ExpencesView: UIView {
             make.height.equalTo(CGFloat.chartViewHeight)
         }
         
-        expencesTableView.snp.makeConstraints { make in
+        dateSegmentControl.snp.makeConstraints { make in
             make.top.equalTo(expensesChartView.snp.bottom).offset(Spacing.medium)
+            make.leading.equalToSuperview().offset(Spacing.medium)
+            make.trailing.equalToSuperview().offset(-Spacing.medium)
+        }
+        
+        expencesTableView.snp.makeConstraints { make in
+            make.top.equalTo(dateSegmentControl.snp.bottom).offset(Spacing.medium)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(safeAreaLayoutGuide.snp.bottom)
         }

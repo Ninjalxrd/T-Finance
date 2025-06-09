@@ -31,6 +31,7 @@ final class AddTransactionController: UIViewController {
         super.viewDidLoad()
         setupCallbacks()
         bindViewModel()
+        setupNavigationBar()
     }
     
     private func setupCallbacks() {
@@ -74,6 +75,10 @@ final class AddTransactionController: UIViewController {
             .store(in: &bag)
 
         addTransactionView.setupTextFieldDelegate(self)
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     private func bindViewModel() {

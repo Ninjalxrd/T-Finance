@@ -43,6 +43,7 @@ final class AddGoalController: UIViewController {
         super.viewDidLoad()
         setupCallbacks()
         bindViewModel()
+        setupNavigationBar()
         if mode == .edit {
             setupEditUI()
         }
@@ -62,6 +63,10 @@ final class AddGoalController: UIViewController {
                 self?.viewModel.saveGoal()
             }
             .store(in: &bag)
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     private func setupEditUI() {

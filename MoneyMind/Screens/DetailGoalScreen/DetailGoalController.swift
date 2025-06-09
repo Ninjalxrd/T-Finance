@@ -32,8 +32,9 @@ class DetailGoalController: UIViewController {
         super.viewDidLoad()
         configureView()
         setupCallbacks()
+        setupNavigationBar()
     }
-    
+
     private func configureView() {
         detailGoalView.configureView(with: detailViewModel.goal)
         detailGoalView.configureProgressBar(
@@ -49,5 +50,9 @@ class DetailGoalController: UIViewController {
                 self?.detailViewModel.openEditScreen()
             }
             .store(in: &bag)
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 }

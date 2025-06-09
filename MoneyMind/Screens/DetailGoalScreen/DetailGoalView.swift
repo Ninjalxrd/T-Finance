@@ -140,6 +140,7 @@ class DetailGoalView: UIView {
     }
     
     private func setupUI() {
+        backgroundColor = .background
         addSubview(scrollView)
         scrollView.addSubview(containerView)
         
@@ -174,6 +175,7 @@ class DetailGoalView: UIView {
         containerView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.width.equalTo(scrollView.snp.width)
+            make.bottom.equalToSuperview()
         }
         
         titleLabel.snp.makeConstraints { make in

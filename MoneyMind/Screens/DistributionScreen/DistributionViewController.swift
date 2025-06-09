@@ -45,6 +45,7 @@ class DistributionViewController: UIViewController {
         addCollectionViewDependencies()
         setupCallbacks()
         bindViewModel()
+        setupNavigationBar()
     }
 
     // MARK: Setup Methods
@@ -91,6 +92,10 @@ class DistributionViewController: UIViewController {
                 self?.distributionViewModel.openMainScreen()
             }
             .store(in: &bag)
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 }
 

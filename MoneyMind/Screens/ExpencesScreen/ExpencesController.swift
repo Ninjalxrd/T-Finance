@@ -32,6 +32,7 @@ final class ExpencesController: UIViewController {
         setupCallbacks()
         bindViewModel()
         setupTableView()
+        setupNavigationBar()
     }
     
     private func setupTableView() {
@@ -76,6 +77,10 @@ final class ExpencesController: UIViewController {
         expencesView.periodPublisher
             .subscribe(viewModel.periodSubject)
             .store(in: &bag)
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 }
 // MARK: - UITableViewDelegate, UITableViewDataSource

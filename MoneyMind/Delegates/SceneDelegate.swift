@@ -21,7 +21,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         window.overrideUserInterfaceStyle = UserManager.shared.theme.getUserInterfaceStyle()
         self.window = window
-        
         let diContainer = registerAppDIContainer()
         let appCoordinator = AppCoordinator(window: window, diContainer: diContainer)
         self.appCoordinator = appCoordinator

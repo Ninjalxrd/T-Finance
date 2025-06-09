@@ -39,6 +39,7 @@ class MainViewController: UIViewController {
         setupChart()
         setupView()
         setupCallbacks()
+        setupNavigationBar()
     }
     
     // MARK: - Private Methods
@@ -112,6 +113,10 @@ class MainViewController: UIViewController {
                 self.viewModel.openGoalsScreen()
             }
             .store(in: &bag)
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 }
 

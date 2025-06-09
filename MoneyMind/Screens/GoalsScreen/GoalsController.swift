@@ -32,6 +32,7 @@ final class GoalsController: UIViewController {
         setupDependencies()
         setupCallbacks()
         bindViewModel()
+        setupNavigationBar()
     }
     
     private func setupCallbacks() {
@@ -60,6 +61,10 @@ final class GoalsController: UIViewController {
     
     private func setupDependencies() {
         goalsView.setCollectionViewDependencies(self, self)
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 }
 

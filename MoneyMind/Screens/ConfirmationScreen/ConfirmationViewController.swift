@@ -39,6 +39,7 @@ final class ConfirmationViewController: UIViewController {
         bindViewModel()
         setupCallbacks()
         setupDelegates()
+        setupNavigationBar()
     }
     
     private func setupDelegates() {
@@ -72,7 +73,6 @@ final class ConfirmationViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] message in
                 guard let self = self else { return }
-                print(123)
                 shakeTextField(confirmationView.getCodeTextField())
                 confirmationView.showErrorMessage(message)
                 confirmationView.cleanTextField()
@@ -87,6 +87,10 @@ final class ConfirmationViewController: UIViewController {
                 self?.onStartTimer()
             }
             .store(in: &bag)
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     private func onStartTimer() {

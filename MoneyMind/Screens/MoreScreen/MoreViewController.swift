@@ -28,11 +28,22 @@ final class MoreViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigationBar()
         setupDependencies()
+        setupCallbacks()
     }
     
     func setupDependencies() {
         moreView.setupSettingsTableViewDataSource(self)
+    }
+    
+    private func setupCallbacks() {
+        moreView.languageSelectionSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.viewModel.openLanguageScreen()
+            }
+            .store(in: &bag)
     }
     
     private func setupSubscriptions(for cell: ThemeCell) {
@@ -60,21 +71,42 @@ final class MoreViewController: UIViewController {
             }
             .store(in: &bag)
     }
+    
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
 }
 
 extension MoreViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        1
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: ThemeCell.identifier,
-            for: indexPath) as? ThemeCell
-        else {
+        switch indexPath.section {
+        case 0:
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: ThemeCell.identifier,
+                for: indexPath) as? ThemeCell
+            else {
+                return UITableViewCell()
+            }
+            setupSubscriptions(for: cell)
+            return cell
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "LanguageCell", for: indexPath)
+            var config = UIListContentConfiguration.valueCell()
+            config.text = "Сменить язык"
+            config.secondaryText = "Русский"
+            cell.contentConfiguration = config
+            cell.accessoryType = .disclosureIndicator
+            return cell
+        default:
             return UITableViewCell()
         }
-        setupSubscriptions(for: cell)
-        return cell
     }
 }

@@ -65,8 +65,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ) { granted, error in
             if let error = error {
                 print("Notification permission error: \(error)")
-            } else {
-                print("Notification permission granted: \(granted)")
             }
         }
         UNUserNotificationCenter.current().delegate = self

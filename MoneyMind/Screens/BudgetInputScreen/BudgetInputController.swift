@@ -30,6 +30,7 @@ final class BudgetInputController: UIViewController {
         super.viewDidLoad()
         bindViewModel()
         setupCallback()
+        setupNavigationBar()
     }
 
     // MARK: - Binding
@@ -59,5 +60,9 @@ final class BudgetInputController: UIViewController {
                 self.viewModel.nextScreenButtonTapped(with: budget)
             }
             .store(in: &bag)
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 }

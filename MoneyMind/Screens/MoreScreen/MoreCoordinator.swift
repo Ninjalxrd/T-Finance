@@ -31,4 +31,9 @@ final class MoreCoordinator: Coordinator {
         )
         navigationController.setViewControllers([controller], animated: false)
     }
+    
+    func openLanguageScreen() {
+        let languageCoordinator = LanguageCoordinator(navigationController: navigationController)
+        languageCoordinator.start()
+    }
 }

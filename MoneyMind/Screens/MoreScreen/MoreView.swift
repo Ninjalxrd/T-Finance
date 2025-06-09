@@ -12,6 +12,7 @@ import Combine
 final class MoreView: UIView {
     // MARK: - Publishers
     let themeSelectionSubject = PassthroughSubject<Void, Never>()
+    let languageSelectionSubject = PassthroughSubject<Void, Never>()
     
     // MARK: - Init
     override init(frame: CGRect) {
@@ -30,8 +31,10 @@ final class MoreView: UIView {
         tableView.delegate = self
         tableView.separatorColor = .clear
         tableView.backgroundColor = .clear
-        tableView.allowsSelection = false
+        tableView.allowsSelection = true
+        tableView.isScrollEnabled = false
         tableView.register(ThemeCell.self, forCellReuseIdentifier: ThemeCell.identifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "LanguageCell")
         return tableView
     }()
     
@@ -59,32 +62,59 @@ final class MoreView: UIView {
 
 extension MoreView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return CGFloat.settingsTableViewHeight
+        switch indexPath.section {
+        case 0:
+            return CGFloat.themeTableViewHeight
+        case 1:
+            return CGFloat.languageTableViewHeight
+        default:
+            return CGFloat.themeTableViewHeight
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard section == 0 else { return nil }
+        switch section {
+        case 0:
+            let headerView = UIView()
+            headerView.backgroundColor = .clear
+            let titleLabel = DefaultTitleLabel(numberOfLines: 1, text: "Тема оформления")
+            headerView.addSubview(titleLabel)
 
-        let headerView = UIView()
-        headerView.backgroundColor = .clear
-
-        let titleLabel = DefaultTitleLabel(numberOfLines: 1, text: "Тема оформления")
-        headerView.addSubview(titleLabel)
-
-        titleLabel.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(Spacing.medium)
-            make.top.bottom.equalToSuperview().inset(Spacing.medium)
+            titleLabel.snp.makeConstraints { make in
+                make.leading.trailing.equalToSuperview().inset(Spacing.small)
+                make.top.bottom.equalToSuperview().inset(Spacing.small)
+            }
+            return headerView
+        case 1:
+            let headerView = UIView()
+            headerView.backgroundColor = .clear
+            let titleLabel = DefaultTitleLabel(numberOfLines: 1, text: "Язык")
+            headerView.addSubview(titleLabel)
+            titleLabel.snp.makeConstraints { make in
+                make.leading.trailing.equalToSuperview().inset(Spacing.small)
+                make.top.bottom.equalToSuperview().inset(Spacing.small)
+            }
+            return headerView
+        default:
+            return UIView()
         }
-
-        return headerView
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section == 0 ? CGFloat.settingsHeightForHeader : 0
+        return section == 0 || section == 1 ? CGFloat.settingsHeightForHeader : 0
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        if indexPath.section == 1 {
+            languageSelectionSubject.send()
+        }
     }
 }
 
 private extension CGFloat {
-    static let settingsTableViewHeight: CGFloat = 120
-    static let settingsHeightForHeader: CGFloat = 120
+    static let themeTableViewHeight: CGFloat = 120
+    static let languageTableViewHeight: CGFloat = 50
+    static let settingsHeightForHeader: CGFloat = 80
 }
