@@ -68,7 +68,6 @@ final class ServicesAssembly: Assembly {
 
     private func registerKeychainManager(container: Container) {
         container.register(KeychainManagerProtocol.self) { _ in
-            print(KeychainManager().getAccessToken() ?? "...")
             return KeychainManager()
         }
         .inObjectScope(.container)

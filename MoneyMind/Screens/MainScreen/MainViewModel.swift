@@ -92,7 +92,7 @@ final class MainViewModel {
                 }
             }
             .store(in: &bag)
-            }
+    }
     
     func getImageByURL(_ url: String?, completion: @escaping (UIImage?) -> Void) {
         imageService.downloadImage(by: url) { image in

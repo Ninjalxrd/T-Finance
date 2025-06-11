@@ -35,11 +35,17 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        bindViewModel()
         setupChart()
         setupView()
         setupCallbacks()
         setupNavigationBar()
+        bindViewModel()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        viewModel.getLastGoals()
+        viewModel.getLastExpences()
+        bindViewModel()
     }
     
     // MARK: - Private Methods
