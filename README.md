@@ -11,6 +11,17 @@ MoneyMind is a modern iOS application designed to help users manage their person
 - Modern and intuitive user interface
 - Secure data storage
 
+ ## Screencast
+
+ ### Authorization process 
+Uploading IMG_5254.MP4…
+
+ ### Setup budget distribution 
+Uploading IMG_52542.MP4…
+
+
+
+
 ## 🛠 Technical Stack
 
 - **Language**: Swift
