@@ -1,93 +1,170 @@
-# MoneyMind
+# MoneyMind - iOS Finance Management App
 
+MoneyMind is a modern iOS application designed to help users manage their personal finances effectively. The app provides a comprehensive set of tools for tracking expenses, managing budgets, and gaining insights into spending patterns.
 
+## 🚀 Features
 
-## Getting started
+- Personal finance tracking and management
+- Budget planning and monitoring
+- Expense categorization
+- Financial analytics and insights
+- Modern and intuitive user interface
+- Secure data storage
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## 🛠 Technical Stack
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- **Language**: Swift
+- **Minimum iOS Version**: iOS 15.6+
+- **Architecture**: MVVM + Coordinator Pattern
+- **Key Components**:
+  - UIKit
+  - Combine framework for reactive programming
+  - Core Data for local data persistence
+  - Dependency Injection for better testability
+  - SwiftLint for code style enforcement
 
-## Add your files
+## 📚 Used Libraries
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+### Core Libraries
+- **Alamofire** - Elegant HTTP Networking in Swift
+  - Used for all network requests and API communication
+  - Provides robust error handling and request/response serialization
+
+- **Swinject** - Dependency injection framework
+  - Manages dependencies between components
+  - Provides clean architecture and testability
+  - Used in DIContainer for service registration and resolution
+
+- **Combine** - Apple's framework for reactive programming
+  - Used for data binding and reactive UI updates
+  - Handles asynchronous events and data streams
+  - Manages state updates across the app
+
+### UI Libraries
+- **SnapKit** - DSL for Auto Layout
+  - Used for programmatic UI layout
+  - Provides clean and readable constraint syntax
+  - Makes complex layouts easier to maintain
+
+- **SkeletonView** - Elegant loading animation
+  - Used for loading states in lists and cells
+  - Provides smooth loading animations
+  - Improves user experience during data fetching
+
+### Utilities
+- **PhoneNumberKit** - Phone number formatting and validation
+  - Used in phone number input screens
+  - Provides proper formatting and validation
+  - Supports international phone number formats
+
+### Apple Frameworks
+- **UIKit** - Core UI framework
+  - Used for building the user interface
+  - Provides fundamental UI components
+    
+- **UserNotifications** - Push notifications framework
+  - Handles local and remote notifications
+  - Manages notification permissions and delivery
+
+### Development Tools
+- **SwiftLint** - Code style enforcement
+  - Ensures consistent code style
+  - Configuration in `.swiftlint.yml`
+
+## 🔐 Backend Integration & Authentication
+
+### API Integration
+The app communicates with a RESTful backend API (`https://t-bank-finance.ru`) using the following services:
+
+- **AuthService**: Handles user authentication
+  - SMS-based authentication flow
+  - Phone number verification
+  - JWT token management
+
+- **ExpencesService**: Manages financial transactions
+  - Fetch expenses with filtering and pagination
+  - Add/delete transactions
+  - Category management
+  - Budget balance tracking
+
+- **GoalsService**: Handles financial goals
+  - Create and manage savings goals
+  - Track goal progress
+  - Goal distribution management
+
+- **BudgetService**: Manages budget planning
+  - Set monthly budgets
+  - Configure budget distributions
+  - Track budget limits and notifications
+
+### JWT Authentication
+The app implements a secure JWT-based authentication system:
+
+1. **Token Management**
+   - Secure storage of access and refresh tokens in Keychain
+   - Automatic token refresh mechanism
+   - Token expiration handling
+
+2. **Security Features**
+   - Tokens are stored securely using KeychainManager
+   - Automatic token refresh on 401 responses
+   - Secure token transmission using Bearer authentication
+   - Token invalidation on logout
+
+3. **Authentication Flow**
+   - Initial authentication via SMS verification
+   - JWT token pair (access + refresh) management
+   - Automatic token refresh when access token expires
+   - Secure session management
+
+4. **Error Handling**
+   - Proper handling of authentication errors
+   - Automatic logout on refresh token expiration
+   - Network error handling with retry mechanism
+
+### Network Layer
+The app uses a robust network layer built with:
+
+- **Alamofire** for HTTP networking
+- **Combine** for reactive programming
+- Custom request/response interceptors
+- Automatic retry mechanism for failed requests
+- Proper error handling and response validation
+
+## 📱 Project Structure
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/t-finance-itis/ios/moneymind.git
-git branch -M main
-git push -uf origin main
+MoneyMind/
+├── AppCoordinator.swift      # Main application coordinator
+├── TabBarCoordinator.swift   # Tab bar navigation coordinator
+├── Screens/                  # Main app screens
+├── Models/                   # Data models
+├── Services/                 # Business logic and services
+├── Managers/                 # App managers and utilities
+├── CustomViews/             # Reusable UI components
+├── Resources/               # Assets and resources
+├── Helpers/                 # Utility functions
+└── DIContainer/             # Dependency injection setup
 ```
 
-## Integrate with your tools
+## 🏗 Architecture
 
-- [ ] [Set up project integrations](https://gitlab.com/t-finance-itis/ios/moneymind/-/settings/integrations)
+The app follows modern iOS development practices with a combination of MVVM and Coordinator patterns:
 
-## Collaborate with your team
+- **MVVM (Model-View-ViewModel)**: Separates business logic from UI
+- **Coordinator Pattern**: Handles navigation flow
+- **Dependency Injection**: For better testability and modularity
+- **Combine**: For reactive programming and data binding
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+## 📝 Code Style
 
-## Test and Deploy
+The project uses SwiftLint for code style enforcement. Configuration can be found in `.swiftlint.yml`.
 
-Use the built-in continuous integration in GitLab.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## 📄 License
 
-***
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-# Editing this README
+## 👥 Authors
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+- Sushkov Pavel - Initial work
