@@ -22,11 +22,15 @@ final class MainView: UIView {
         goalsScreenSubject.eraseToAnyPublisher()
     }
     
+    private var bag: Set<AnyCancellable> = []
+    
     // MARK: - Init
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        passthroughExpencesSubject()
+        passthroughGoalsSubject()
     }
     
     required init?(coder: NSCoder) {
@@ -62,7 +66,7 @@ final class MainView: UIView {
     }()
     
     private lazy var availableBudgetLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.skeletonCornerRadius = CGFloat.skeletonCornerRadius
         label.heightAnchor.constraint(equalToConstant: CGFloat.availableBudgetLabel).isActive = true
         return label
@@ -102,6 +106,24 @@ final class MainView: UIView {
     
     private let expencesView = MainExpenсesView()
     
+    // MARK: - Passthrough Subject
+    func passthroughExpencesSubject() {
+        expencesView
+            .detailsTappedPublisher
+            .sink { [weak self] _ in
+                self?.expensesScreenSubject.send()
+            }
+            .store(in: &bag)
+    }
+    
+    func passthroughGoalsSubject() {
+        goalsView
+            .detailsPublisher
+            .sink { [weak self] _ in
+                self?.goalsScreenSubject.send()
+            }
+            .store(in: &bag)
+    }
     // MARK: - Goals View
     
     private let goalsView = MainGoalsView()

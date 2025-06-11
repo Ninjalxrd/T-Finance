@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import SkeletonView
 
 // MARK: - Enum
 
@@ -44,8 +45,9 @@ class DistributionViewController: UIViewController {
         addCollectionViewDependencies()
         setupCallbacks()
         bindViewModel()
+        setupNavigationBar()
     }
-    
+
     // MARK: Setup Methods
     
     private func addCollectionViewDependencies() {
@@ -54,19 +56,31 @@ class DistributionViewController: UIViewController {
     }
     
     private func bindViewModel() {
+        distributionView.showCollectionSkeletonAnimations()
         distributionViewModel.$pickedCategories
             .receive(on: DispatchQueue.main)
             .sink { [weak self] picked in
-                self?.distributionView.collectionViewReloadData()
+                if picked.isEmpty {
+                    self?.distributionView.showCollectionSkeletonAnimations()
+                } else {
+                    self?.distributionView.hideSkeletonAnimations()
+                }
                 self?.distributionView.updateChart(with: picked)
                 self?.distributionView.setNextScreenButtonEnabled(!picked.isEmpty)
+                self?.distributionView.reloadData()
             }
             .store(in: &bag)
         
+        distributionView.showCollectionSkeletonAnimations()
         distributionViewModel.$availableCategories
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.distributionView.collectionViewReloadData()
+            .sink { [weak self] categories in
+                if categories.isEmpty {
+                    self?.distributionView.showCollectionSkeletonAnimations()
+                } else {
+                    self?.distributionView.hideSkeletonAnimations()
+                    self?.distributionView.reloadData()
+                }
             }
             .store(in: &bag)
     }
@@ -78,6 +92,10 @@ class DistributionViewController: UIViewController {
                 self?.distributionViewModel.openMainScreen()
             }
             .store(in: &bag)
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 }
 
@@ -99,7 +117,7 @@ extension DistributionViewController: UICollectionViewDelegate {
     }
 }
 
-extension DistributionViewController: UICollectionViewDataSource {
+extension DistributionViewController: SkeletonCollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionType = Sections.allCases[section]
         switch sectionType {
@@ -137,5 +155,16 @@ extension DistributionViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return Sections.allCases.count
+    }
+    
+    func collectionSkeletonView(
+        _ skeletonView: UICollectionView,
+        cellIdentifierForItemAt indexPath: IndexPath
+    ) -> SkeletonView.ReusableCellIdentifier {
+        return DistributionCollectionViewCell.identifier
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 12
     }
 }

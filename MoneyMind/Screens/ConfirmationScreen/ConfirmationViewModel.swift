@@ -20,19 +20,30 @@ final class ConfirmationViewModel {
     // MARK: - Properties
     
     private weak var coordinator: ConfirmationCoordinator?
+    private let diContainer: AppDIContainer
+    private let keychainManager: KeychainManagerProtocol
+    private let authService: AuthServiceProtocol
     private let defaultWaitingValue: Int = 5
     private var remainingSeconds: Int
     private var timer: AnyCancellable?
     private var bag: Set<AnyCancellable> = []
-    
-    private let authService = AuthService()
     private let phoneNumber: String
+    
     // MARK: Init
     
-    init(coordinator: ConfirmationCoordinator, phoneNumber: String) {
+    init(
+        coordinator: ConfirmationCoordinator,
+        phoneNumber: String,
+        diContainer: AppDIContainer,
+        keychainManager: KeychainManagerProtocol,
+        authService: AuthServiceProtocol
+    ) {
         self.coordinator = coordinator
         self.remainingSeconds = defaultWaitingValue
         self.phoneNumber = phoneNumber
+        self.diContainer = diContainer
+        self.keychainManager = keychainManager
+        self.authService = authService
     }
     
     // MARK: - Methods
@@ -75,25 +86,22 @@ final class ConfirmationViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 if case let .failure(error) = completion {
-                    print("Error: \(error)")
                     let message = self?.errorMessage(for: error) ?? "Неизвестная ошибка"
                     self?.errorMessage = message
                 }
             } receiveValue: { [weak self] response in
+                guard let self else { return }
                 print("Received response: \(response)")
                 UserManager.shared.isRegistered = true
-                KeychainManager.shared.saveAccessToken(response.accessToken)
-                KeychainManager.shared.saveRefreshToken(response.refreshToken)
-                self?.didAuthorize.send()
-                self?.coordinator?.openEnterNameScreen()
+                self.keychainManager.saveAccessToken(response.accessToken)
+                self.keychainManager.saveRefreshToken(response.refreshToken)
+                self.didAuthorize.send()
+                self.coordinator?.openEnterNameScreen()
             }
             .store(in: &bag)
     }
     
     private func errorMessage(for error: Error) -> String {
-        if let afError = error.asAFError, afError.isResponseValidationError {
-            return "Неверный код подтверждения"
-        }
-        return "Ошибка сети. Проверьте соединение"
+        return "Неверный код подтверждения"
     }
 }

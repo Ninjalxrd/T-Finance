@@ -9,6 +9,7 @@ import UIKit
 import DGCharts
 import SnapKit
 import Combine
+import SkeletonView
 
 final class DistributionView: UIView {
     // MARK: - Publishers
@@ -35,7 +36,7 @@ final class DistributionView: UIView {
     // MARK: - UI Components
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 2, text: "Распределите\nбюджет")
+        let label = DefaultTitleLabel(numberOfLines: 2, text: "Распределите\nбюджет")
         return label
     }()
     
@@ -53,6 +54,18 @@ final class DistributionView: UIView {
         return collection
     }()
     
+    func showCollectionSkeletonAnimations() {
+        categoriesCollectionView.showAnimatedGradientSkeleton()
+    }
+    
+    func hideSkeletonAnimations() {
+        categoriesCollectionView.stopSkeletonAnimation()
+        categoriesCollectionView.hideSkeleton(reloadDataAfter: true)
+    }
+    func reloadData() {
+        categoriesCollectionView.reloadData()
+    }
+
     // MARK: - CollectionView Internal Methods
     
     func setCollectionViewDelegate(_ delegate: UICollectionViewDelegate) {
@@ -61,10 +74,6 @@ final class DistributionView: UIView {
     
     func setCollectionViewDataSource(_ dataSource: UICollectionViewDataSource) {
         categoriesCollectionView.dataSource = dataSource
-    }
-    
-    func collectionViewReloadData() {
-        categoriesCollectionView.reloadData()
     }
     
     private lazy var nextScreenButton: UIButton = {
@@ -116,6 +125,8 @@ final class DistributionView: UIView {
     // MARK: - Setup UI
     
     private func setupUI() {
+        isSkeletonable = true
+        categoriesCollectionView.isSkeletonable = true
         addSubview(titleLabel)
         addSubview(chartView)
         addSubview(categoriesCollectionView)

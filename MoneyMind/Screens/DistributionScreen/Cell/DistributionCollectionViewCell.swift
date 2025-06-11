@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 final class DistributionCollectionViewCell: UICollectionViewCell {
     // MARK: - Properties
@@ -33,15 +34,18 @@ final class DistributionCollectionViewCell: UICollectionViewCell {
         stack.isLayoutMarginsRelativeArrangement = true
         stack.layoutMargins = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
         stack.spacing = Spacing.smallest
+        stack.isSkeletonable = true
         return stack
     }()
     
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.font = Font.subtitle.font
+        label.text = "PlaceholderPlaceholder"
         label.textColor = .white
         label.numberOfLines = 1
         label.textAlignment = .left
+        label.isSkeletonable = true
         return label
     }()
     
@@ -50,12 +54,15 @@ final class DistributionCollectionViewCell: UICollectionViewCell {
         image.contentMode = .scaleAspectFit
         image.clipsToBounds = true
         image.tintColor = .white
+        image.isSkeletonable = true
         return image
     }()
     
     // MARK: - Setup UI
     
     private func setupUI() {
+        contentView.isSkeletonable = true
+        isSkeletonable = true
         contentView.addSubview(categoryStackView)
         setupConstraints()
     }

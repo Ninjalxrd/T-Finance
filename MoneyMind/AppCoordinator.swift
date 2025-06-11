@@ -11,7 +11,7 @@ protocol Coordinator: AnyObject {
 }
 
 final class AppCoordinator: Coordinator {
-    private let window: UIWindow
+    private unowned let window: UIWindow
     private let diContainer: AppDIContainer
     var childCoordinators: [Coordinator] = []
     
@@ -26,7 +26,7 @@ final class AppCoordinator: Coordinator {
         if !userManager.isRegistered {
             startAuthFlow()
         } else if !userManager.hasIncome {
-            startBudgetInputFlow()
+            startDistributionFlow()
         } else {
             startMainFlow()
         }
@@ -35,23 +35,26 @@ final class AppCoordinator: Coordinator {
     private func startAuthFlow() {
         let enterNumberCoordinator = EnterNumberCoordinator(
             navigationController: UINavigationController(),
-            diContainer: diContainer
+            diContainer: diContainer,
+            window: window
         )
         childCoordinators.append(enterNumberCoordinator)
         window.rootViewController = enterNumberCoordinator.navigationController
         enterNumberCoordinator.start()
     }
     
-    private func startBudgetInputFlow() {
-        let budgetInputCoordinator = BudgetInputCoordinator(
-            navigationController: UINavigationController(), diContainer: diContainer)
-        childCoordinators.append(budgetInputCoordinator)
-        window.rootViewController = budgetInputCoordinator.navigationController
-        budgetInputCoordinator.start()
+    private func startDistributionFlow() {
+        let distributionCoordinator = DistributionCoordinator(
+            navigationController: UINavigationController(),
+            diContainer: diContainer,
+            window: window)
+        childCoordinators.append(distributionCoordinator)
+        window.rootViewController = distributionCoordinator.navigationController
+        distributionCoordinator.start()
     }
     
     private func startMainFlow() {
-        let tabBarCoordinator = TabBarCoordinator(diContainer: diContainer)
+        let tabBarCoordinator = TabBarCoordinator(diContainer: diContainer, window: window)
         childCoordinators.append(tabBarCoordinator)
         window.rootViewController = tabBarCoordinator.tabBarController
         tabBarCoordinator.start()

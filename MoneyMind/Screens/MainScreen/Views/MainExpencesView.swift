@@ -32,7 +32,7 @@ final class MainExpenсesView: UIView {
     // MARK: - UI Elements
     
     private(set) lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "Последние")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "Последние")
         label.font = Font.smallViewTitle.font
         label.skeletonCornerRadius = CGFloat.skeletonCornerRadius
         label.heightAnchor.constraint(equalToConstant: CGFloat.expenceTitleLabel).isActive = true
@@ -41,6 +41,7 @@ final class MainExpenсesView: UIView {
     
     private(set) lazy var tableView: UITableView = {
         let tableView = UITableView()
+        tableView.backgroundColor = .clear
         tableView.separatorColor = .clear
         tableView.isSkeletonable = true
         tableView.skeletonCornerRadius = CGFloat.skeletonCornerRadius
@@ -50,7 +51,6 @@ final class MainExpenсesView: UIView {
     
     private(set) lazy var detailsButton: UIButton = {
         let button = DefaultButton(title: "Подробнее", action: detailsAction)
-        button.isSkeletonable = true
         button.heightAnchor.constraint(equalToConstant: CGFloat.buttonHeight).isActive = true
         return button
     }()

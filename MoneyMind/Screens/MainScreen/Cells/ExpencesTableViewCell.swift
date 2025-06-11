@@ -34,14 +34,14 @@ class ExpencesTableViewCell: UITableViewCell {
     }()
     
     private lazy var expencePlaceLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.text = "Default Skeleton Placeholder"
         label.font = Font.subtitle.font
         return label
     }()
     
     private lazy var expenceCategoryLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.font = Font.bigBody.font
         label.text = "Default Skeleton Placeholder"
         label.textColor = .secondaryText
@@ -49,7 +49,7 @@ class ExpencesTableViewCell: UITableViewCell {
     }()
     
     private lazy var expenceSumLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.font = Font.subtitle.font
         label.text = "Placeholder"
         return label
@@ -87,6 +87,7 @@ class ExpencesTableViewCell: UITableViewCell {
     // MARK: - Setup UI
     
     private func setupUI() {
+        backgroundColor = .clear
         selectionStyle = .none
         isSkeletonable = true
         contentView.isSkeletonable = true
@@ -109,10 +110,13 @@ class ExpencesTableViewCell: UITableViewCell {
     }
     
     func configureCell(with expence: Expence) {
-        categoryImage.image = expence.image
-        expencePlaceLabel.text = expence.shop
-        expenceCategoryLabel.text = expence.category
-        expenceSumLabel.text = "-\(expence.sum) ₽"
+        expencePlaceLabel.text = expence.name
+        expenceCategoryLabel.text = expence.category.name
+        expenceSumLabel.text = "-\(Int(expence.amount.rounded())) ₽"
+    }
+    
+    func configureCellIcon(with image: UIImage?) {
+        categoryImage.image = image ?? UIImage(named: "expenceImage")
     }
     
     private func setupSkeleton() {

@@ -8,28 +8,42 @@
 import UIKit
 import Swinject
 
-final class MainCoordinator: Coordinator {
+protocol MainCoordinatorProtocol {
+    func start()
+    func openExpencesScreen()
+    func openGoalsScreen()
+}
+
+final class MainCoordinator: Coordinator, MainCoordinatorProtocol {
     // MARK: - Properties
     
     private let navigationController: UINavigationController
     private let diContainer: AppDIContainer
-    
+    private weak var tabBarCoordinator: TabBarCoordinator?
+
     // MARK: - Init
     
-    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
+    init(
+        navigationController: UINavigationController,
+        diContainer: AppDIContainer,
+        tabBarCoordinator: TabBarCoordinator
+    ) {
         self.navigationController = navigationController
         self.diContainer = diContainer
+        self.tabBarCoordinator = tabBarCoordinator
     }
 
     // MARK: - Public
     
     func start() {
-        let expencesManager = diContainer.resolve(ExpencesManagerProtocol.self)
-        let goalsManager = diContainer.resolve(GoalsManagerProtocol.self)
+        let expencesService = diContainer.resolve(ExpencesServiceProtocol.self)
+        let goalsService = diContainer.resolve(GoalsServiceProtocol.self)
+        let imageService = diContainer.resolve(ImageServiceProtocol.self)
         let viewModel = MainViewModel(
-            expencesManager: expencesManager,
-            goalsManager: goalsManager,
-            coordinator: self
+            expencesService: expencesService,
+            goalsService: goalsService,
+            coordinator: self,
+            imageService: imageService
         )
         let controller = MainViewController(viewModel: viewModel)
         controller.tabBarItem = UITabBarItem(
@@ -38,5 +52,17 @@ final class MainCoordinator: Coordinator {
             selectedImage: UIImage(named: "home_selected")
         )
         navigationController.setViewControllers([controller], animated: false)
+    }
+
+    func openExpencesScreen() {
+        let expencesCoordinator = ExpencesCoordinator(
+            navigationController: navigationController,
+            diContainer: diContainer
+        )
+        expencesCoordinator.start()
+    }
+    
+    func openGoalsScreen() {
+        tabBarCoordinator?.switchTab(to: .goals)
     }
 }

@@ -31,7 +31,7 @@ final class MainGoalsView: UIView {
     // MARK: - UI
 
     private lazy var goalsTitleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "Цели")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "Цели")
         label.font = Font.smallViewTitle.font
         label.skeletonCornerRadius = CGFloat.skeletonCornerRadius
         label.heightAnchor.constraint(equalToConstant: CGFloat.expenceTitleLabel).isActive = true
@@ -40,6 +40,7 @@ final class MainGoalsView: UIView {
 
     let tableView: UITableView = {
         let tableView = UITableView()
+        tableView.backgroundColor = .clear
         tableView.separatorColor = .clear
         tableView.isSkeletonable = true
         tableView.skeletonCornerRadius = CGFloat.skeletonCornerRadius
@@ -49,7 +50,6 @@ final class MainGoalsView: UIView {
 
     private lazy var detailsButton: UIButton = {
         let button = DefaultButton(title: "Подробнее", action: buttonAction)
-        button.isSkeletonable = true
         button.heightAnchor.constraint(equalToConstant: CGFloat.buttonHeight).isActive = true
         return button
     }()

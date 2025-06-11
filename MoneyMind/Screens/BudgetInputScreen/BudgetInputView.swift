@@ -11,6 +11,7 @@ import Combine
 
 final class BudgetInputView: UIView {
     // MARK: - Publishers
+    
     private let nextScreenSubject = PassthroughSubject<Void, Never>()
     var nextScreenPublisher: AnyPublisher<Void, Never> {
         nextScreenSubject.eraseToAnyPublisher()
@@ -30,7 +31,7 @@ final class BudgetInputView: UIView {
     // MARK: - UI Components
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 2, text: "Введите сумму\nвашего дохода")
+        let label = DefaultTitleLabel(numberOfLines: 2, text: "Введите сумму\nвашего дохода")
         return label
     }()
     

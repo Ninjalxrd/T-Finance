@@ -30,7 +30,7 @@ final class ConfirmationView: UIView {
     // MARK: - UI Components
     
     private lazy var titleLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "Подтверждение")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "Подтверждение")
         return label
     }()
     
@@ -45,13 +45,22 @@ final class ConfirmationView: UIView {
         return label
     }()
     
+    private lazy var errorLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .systemRed
+        label.font = Font.subtitle.font
+        label.numberOfLines = 1
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
+    
     private lazy var codeTextField: UITextField = {
         let textField = DefaultTextField(
             placeholder: "СМС-код",
             textAlignment: .center,
             keyboardType: .numberPad
         )
-        textField.widthAnchor.constraint(equalToConstant: CGFloat.codeStackWidth).isActive = true
         return textField
     }()
     
@@ -127,6 +136,7 @@ final class ConfirmationView: UIView {
             arrangedSubviews: [
                 codeSentLabel,
                 codeTextField,
+                errorLabel,
                 newCodeButton
             ])
         stack.axis = .vertical
@@ -159,6 +169,11 @@ final class ConfirmationView: UIView {
             make.centerX.equalToSuperview()
         }
         
+        codeTextField.snp.makeConstraints { make in
+            make.width.equalTo(CGFloat.codeStackWidth)
+            make.height.equalTo(Size.buttonHeight)
+        }
+
         timerLabel.snp.makeConstraints { make in
             make.centerX.centerY.equalTo(newCodeButton)
         }
@@ -166,6 +181,11 @@ final class ConfirmationView: UIView {
     
     func configureLabel(with number: String) {
         codeSentLabel.text = "Код отправлен на номер \n \(number)"
+    }
+    
+    func showErrorMessage(_ message: String) {
+        errorLabel.text = message
+        errorLabel.isHidden = false
     }
 }
 

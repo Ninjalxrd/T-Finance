@@ -12,12 +12,14 @@ final class EnterNameCoordinator: Coordinator {
     
     private let navigationController: UINavigationController
     private let diContainer: AppDIContainer
+    private unowned let window: UIWindow
     var childCoordinators: [Coordinator] = []
     // MARK: - Init
     
-    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
+    init(navigationController: UINavigationController, diContainer: AppDIContainer, window: UIWindow) {
         self.navigationController = navigationController
         self.diContainer = diContainer
+        self.window = window
     }
     
     // MARK: - Public Methods
@@ -31,7 +33,8 @@ final class EnterNameCoordinator: Coordinator {
     func openBudgetInputScreen() {
         let budgetInputCoordinator = BudgetInputCoordinator(
             navigationController: navigationController,
-            diContainer: diContainer
+            diContainer: diContainer,
+            window: window
         )
         budgetInputCoordinator.start()
     }

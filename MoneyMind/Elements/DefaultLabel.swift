@@ -2,7 +2,7 @@
 //  DefaultLabel.swift
 //  MoneyMind
 //
-//  Created by Павел on 30.04.2025.
+//  Created by Павел on 08.06.2025.
 //
 
 import Foundation
@@ -26,7 +26,7 @@ final class DefaultLabel: UILabel {
     
     private func setupUI() {
         textAlignment = .left
-        font = Font.title.font
+        font = Font.subtitle.font
         textColor = .text
     }
 }

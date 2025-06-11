@@ -19,7 +19,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
+        window.overrideUserInterfaceStyle = UserManager.shared.theme.getUserInterfaceStyle()
         self.window = window
+        UserManager.shared.clearUserData()
         let diContainer = registerAppDIContainer()
         let appCoordinator = AppCoordinator(window: window, diContainer: diContainer)
         self.appCoordinator = appCoordinator
@@ -28,16 +30,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func registerAppDIContainer() -> AppDIContainer {
         let assemblies: [Assembly] = [
-            MainAssembly()
+            ServicesAssembly()
         ]
         let diContainer = AppDIContainer(assemblies: assemblies)
         return diContainer
-    }
-
-    func sceneDidEnterBackground(_ scene: UIScene) {
-        (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
-        if let appDomain = Bundle.main.bundleIdentifier {
-            UserDefaults.standard.removePersistentDomain(forName: appDomain)
-        }
     }
 }

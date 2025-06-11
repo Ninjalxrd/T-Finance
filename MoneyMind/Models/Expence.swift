@@ -6,10 +6,11 @@
 //
 import UIKit
 
-struct Expence {
-    var id: Int
-    var image: UIImage
-    var shop: String
-    var category: String
-    var sum: Int
+struct Expence: Identifiable, Codable {
+    let id: Int
+    let name: String
+    let date: Date
+    let category: TransactionCategory
+    let amount: Double
+    let description: String
 }

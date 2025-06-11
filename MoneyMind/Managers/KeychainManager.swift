@@ -2,38 +2,56 @@
 //  KeychainManager.swift
 //  MoneyMind
 //
-//  Created by Павел on 21.05.2025.
+//  Created by Павел on 28.05.2025.
 //
 
 import Security
 import Foundation
 
-final class KeychainManager {
-    static let shared = KeychainManager()
+protocol KeychainManagerProtocol: Sendable {
+    func saveAccessToken(_ token: String)
+    func getAccessToken() -> String?
+    func saveRefreshToken(_ token: String)
+    func getRefreshToken() -> String?
+}
+
+final class KeychainManager: KeychainManagerProtocol {
+    // MARK: - Properties
     
-    private init() {}
+    private let accessTokenKey = "accessToken"
+    private let refreshTokenKey = "refreshToken"
+    private let service = Bundle.main.bundleIdentifier ?? "com.moneymind.app"
+    
+    // MARK: - Initialization
+    
+    init() {}
+    
+    // MARK: - Public Methods
     
     func saveAccessToken(_ token: String) {
-        save(token, forKey: "accessToken")
+        save(token, forKey: accessTokenKey)
     }
     
     func getAccessToken() -> String? {
-        return load(forKey: "accessToken")
+        return load(forKey: accessTokenKey)
     }
     
     func saveRefreshToken(_ token: String) {
-        save(token, forKey: "refreshToken")
+        save(token, forKey: refreshTokenKey)
     }
     
     func getRefreshToken() -> String? {
-        return load(forKey: "refreshToken")
+        return load(forKey: refreshTokenKey)
     }
     
+    // MARK: - Private Methods
+    
     private func save(_ value: String, forKey key: String) {
-        let data = value.data(using: .utf8)!
+        guard let data = value.data(using: .utf8) else { return }
         let query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
-            kSecAttrAccount: key,
+            kSecAttrService: service as CFString,
+            kSecAttrAccount: key as CFString,
             kSecValueData: data
         ]
         SecItemDelete(query as CFDictionary)
@@ -43,8 +61,9 @@ final class KeychainManager {
     private func load(forKey key: String) -> String? {
         let query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
-            kSecAttrAccount: key,
-            kSecReturnData: kCFBooleanTrue!,
+            kSecAttrService: service as CFString,
+            kSecAttrAccount: key as CFString,
+            kSecReturnData: kCFBooleanTrue,
             kSecMatchLimit: kSecMatchLimitOne
         ]
         

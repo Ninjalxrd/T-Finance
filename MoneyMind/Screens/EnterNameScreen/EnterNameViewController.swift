@@ -32,6 +32,7 @@ final class EnterNameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCallbacks()
+        setupNavigationBar()
     }
     
     // MARK: - Setup Methods
@@ -41,5 +42,9 @@ final class EnterNameViewController: UIViewController {
                 self?.viewModel.openBudgetInputScreen()
             }
             .store(in: &bag)
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 }

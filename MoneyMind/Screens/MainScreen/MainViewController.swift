@@ -35,9 +35,17 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        bindViewModel()
         setupChart()
         setupView()
+        setupCallbacks()
+        setupNavigationBar()
+        bindViewModel()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        viewModel.getLastGoals()
+        viewModel.getLastExpences()
+        bindViewModel()
     }
     
     // MARK: - Private Methods
@@ -87,6 +95,34 @@ class MainViewController: UIViewController {
                 }
             }
             .store(in: &bag)
+        
+        viewModel.$balance
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.mainView.setupBudget(with: self.viewModel.balance)
+            }
+            .store(in: &bag)
+    }
+    
+    private func setupCallbacks() {
+        mainView.expensesScreenPublisher
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.viewModel.openExpencesScreen()
+            }
+            .store(in: &bag)
+        
+        mainView.goalsScreenPublisher
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.viewModel.openGoalsScreen()
+            }
+            .store(in: &bag)
+    }
+    
+    private func setupNavigationBar() {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
 }
 
@@ -111,7 +147,14 @@ extension MainViewController: UITableViewDelegate, SkeletonTableViewDataSource {
             else {
                 return UITableViewCell()
             }
-            cell.configureCell(with: lastExpences[indexPath.row])
+            let expence = lastExpences[indexPath.row]
+            cell.configureCell(with: expence)
+            
+            viewModel.getImageByURL(expence.category.icon) { image in
+                DispatchQueue.main.async {
+                    cell.configureCellIcon(with: image)
+                }
+            }
             return cell
         } else {
             guard

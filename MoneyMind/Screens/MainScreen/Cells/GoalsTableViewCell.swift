@@ -25,15 +25,14 @@ class GoalsTableViewCell: UITableViewCell {
     // MARK: - Private UI Elements
     
     private lazy var goalName: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.text = "Default Skeleton Placeholder"
         label.font = Font.subtitle.font
-
         return label
     }()
     
     private lazy var goalSumLabel: UILabel = {
-        let label = DefaultLabel(numberOfLines: 1, text: "")
+        let label = DefaultTitleLabel(numberOfLines: 1, text: "")
         label.text = "Placeholder"
         label.font = Font.subtitle.font
 
@@ -57,17 +56,14 @@ class GoalsTableViewCell: UITableViewCell {
     }()
     
     private lazy var progressView: UIProgressView = {
-        let progress = UIProgressView(progressViewStyle: .default)
-        progress.progress = 0
-        progress.trackTintColor = .lightGray
-        progress.progressTintColor = UIColor.appBlue
-        progress.heightAnchor.constraint(equalToConstant: CGFloat.progressBarHeight).isActive = true
+        let progress = DefaultProgressView(progressViewStyle: .default)
         return progress
     }()
     
     // MARK: - Setup UI
     
     private func setupUI() {
+        backgroundColor = .clear
         selectionStyle = .none
         isSkeletonable = true
         contentView.isSkeletonable = true
@@ -93,8 +89,8 @@ class GoalsTableViewCell: UITableViewCell {
     func configureCell(with goal: Goal) {
         goalName.text = goal.name
         goalSumLabel.text =
-        "\(String(format: "%.0f", goal.currentAmount))₽ из \(String(format: "%.0f", goal.targetAmount))₽"
-        configureProgressBar(current: goal.currentAmount, total: goal.targetAmount)
+        "\(String(format: "%.0f", goal.accumulatedAmount))₽ из \(String(format: "%.0f", goal.amount))₽"
+        configureProgressBar(current: goal.accumulatedAmount, total: goal.amount)
     }
     
     func configureProgressBar(current: Double, total: Double) {

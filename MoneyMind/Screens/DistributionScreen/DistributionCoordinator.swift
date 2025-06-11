@@ -17,13 +17,19 @@ final class DistributionCoordinator: Coordinator {
     private let transitionDelegate = CustomTransitioningDelegate()
     private var cancellables = Set<AnyCancellable>()
     private var distributionViewModel: DistributionViewModel?
+    private unowned var window: UIWindow
     private var budget: Int?
     
     // MARK: - Init
 
-    init(navigationController: UINavigationController, diContainer: AppDIContainer) {
+    init(
+        navigationController: UINavigationController,
+        diContainer: AppDIContainer,
+        window: UIWindow
+    ) {
         self.navigationController = navigationController
         self.diContainer = diContainer
+        self.window = window
     }
     
     // MARK: - Start
@@ -38,9 +44,14 @@ final class DistributionCoordinator: Coordinator {
             assertionFailure("Budget must be set for start Distribution screen")
             return
         }
+        let expenceService = diContainer.resolve(ExpencesServiceProtocol.self)
+        let budgetService = diContainer.resolve(BudgetServiceProtocol.self)
         let distributionViewModel = DistributionViewModel(
             totalBudget: budget,
-            coordinator: self)
+            coordinator: self,
+            expenceService: expenceService,
+            budgetService: budgetService
+        )
         let distributionViewController = DistributionViewController(
             distributionViewModel: distributionViewModel)
         distributionViewController.tabBarItem = UITabBarItem(
@@ -72,11 +83,31 @@ final class DistributionCoordinator: Coordinator {
         navigationController.present(alert, animated: true)
     }
     
+    func showWarningAlert(confirm: @escaping () -> Void) {
+        let alert = UIAlertController(
+            title: "Обратите внимание!",
+            message: """
+                     Вы распределили не все проценты!
+                     Оставшаяся часть будет перенесена в категорию «Другое».
+                     """,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Хорошо", style: .default) { _ in
+            confirm()
+        })
+        alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
+        navigationController.present(alert, animated: true)
+    }
+    
     func openMainScreen() {
-        let tabBarCoordinator = TabBarCoordinator(diContainer: diContainer)
+        let tabBarCoordinator = TabBarCoordinator(
+            diContainer: diContainer,
+            window: window
+        )
         childCoordinators.append(tabBarCoordinator)
         tabBarCoordinator.start()
             
-        navigationController.setViewControllers([tabBarCoordinator.tabBarController], animated: true)
+        window.rootViewController = tabBarCoordinator.tabBarController
+        window.makeKeyAndVisible()
     }
 }
